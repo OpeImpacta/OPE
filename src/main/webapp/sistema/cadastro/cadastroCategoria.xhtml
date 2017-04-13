@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+                
+       <ui:define name="head-end">
+	       <style type="text/css">
+	            .ui-datatable .ui-datatable-header {
+	                text-align: right !important;
+	       }
+	       </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Cadastro de Categoria
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Cadastro de Categoria"/>
+		<h:form id="frmList">
+			<p:growl id="msg" showSummary="false" severity="info,error"/>	
+	        
+		<div class="box box-primary">
+        	<div class="box-header with-border">
+				<div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton icon="fa fa-plus"
+                                         value="Novo" styleClass="btn-primary" 
+                                         actionListener="#{categoriaControl.doStartAddRecord()}" 
+                                         update="frmCadastro" />
+                                         
+                        <p:spacer width="5"/>
+                        
+                        <p:commandButton value="Excluir" icon="fa fa-trash" styleClass="btn-danger"
+                                         action="#{categoriaControl.deleteRecord()}"
+                                         actionListener="#{categoriaControl.unRowSelect()}"
+                                         type="submit" update="frmList:tabela @(.ui-button)"
+                                         disabled="#{categoriaControl.disableButton}">
+                        	<p:confirm header="Excluir" message="Tem certeza que você deseja excluir este item?" icon="ui-icon-alert" />
+                                <p:confirmDialog global="true" closable="true" closeOnEscape="true">
+                                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" style="margin-left: 20px" />
+                                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        	</p:confirmDialog>
+                        </p:commandButton>    
+                                     
+                        <p:spacer width="5"/>
+                        
+                        <p:commandButton value="Visualizar" update="@(.ui-dialog)" styleClass="btn-info"
+                        				 disabled="#{categoriaControl.disableButton}"
+                                         oncomplete="PF('dlgCadastro').show()" icon="fa fa-search">
+                        </p:commandButton>                 
+                    </div>
+                   
+                    <p:separator/>
+
+			<p:dataTable id="tabela" var="registro" value="#{categoriaControl.list}" rowKey="#{registro.idCategoria}" selectionMode="single" selection="#{categoriaControl.selected}"
+							paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {JumpToPageDropdown}"
+                                 currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]"
+                                 rowsPerPageTemplate="10,20,30,40,50">
+							
+                <p:ajax event="rowSelect" listener="#{categoriaControl.onRowSelect()}" update="@(.ui-button)"/>
+
+				<p:column headerText="Código">
+					<h:outputText value="#{registro.idCategoria}" />
+				</p:column>
+
+				<p:column headerText="Descrição">
+					<h:outputText value="#{registro.nome}" />
+				</p:column>
+
+				<p:column headerText="Ativo" resizable="false" toggleable="true" style="text-align:center; padding: 0;">
+					<p:graphicImage  value="#{utilityTela.getBooleanImg(registro.ativo)}"
+                                     style="width: 20px;  height: 20px;" 
+                                     alt="#{registro.ativo ? Não : Sim}" />
+				</p:column>
+
+				<f:facet name="footer">
+					Total: #{categoriaControl.list.size()}
+				</f:facet>
+			</p:dataTable>
+			     </div>
+            </div>
+
+		</h:form>
+			<p:dialog width="350px" height="180px" widgetVar="dlgCadastro"
+				resizable="false" header="Cadastro de Categoria" focus="frmCadastro:txtNome" styleClass="box-primary">
+				<h:form id="frmCadastro">
+					<h:panelGrid columns="2" style="width:100%">
+						<p:column width="50%">
+							<p:outputLabel value="Código: "><br />
+								<p:inputText value="#{categoriaControl.selected.idCategoria}" disabled="true"/>
+							</p:outputLabel>
+						</p:column>
+			        		<p:inputSwitch value="#{categoriaControl.selected.ativo}" onLabel="Ativo" offLabel="Inativo" immediate="true" style="font-size: 10px" />	
+					</h:panelGrid>
+				<h:panelGrid columns="1">		
+					<p:column>
+						<p:outputLabel value="Nome: " />
+						<br />
+						<p:inputText id="txtNome"
+							value="#{categoriaControl.selected.nome}" required="true" requiredMessage="O campo nome é obrigatório!"/>
+					</p:column>
+				</h:panelGrid>
+				<p:commandButton icon="ui-icon-check" value="Salvar"
+					style="margin-top: 10px"
+					update="frmList:tabela @(.ui-button)"
+					action="#{categoriaControl.saveRecord()}"
+					actionListener="#{categoriaControl.unRowSelect()}"
+					type="submit" oncomplete="PF('dlgCadastro').hide()"/>
+			</h:form>
+			</p:dialog>
+	</ui:define>
+</ui:composition>
+
