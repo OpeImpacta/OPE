@@ -43,9 +43,20 @@ public class UtilityTela implements Serializable{
             return null;
         }
         if (boo) {
-            return "/resources/images/ball_green.png";
+            return "/resources/images/bus_green.png";
         } else {
-            return "/resources/images/ball_red.png";
+            return "/resources/images/bus_red.png";
+        }
+    }
+    
+    public static String getDescBoolean(Boolean boo) {
+        if ( boo == null) {
+            return "Não";
+        }
+        if (boo) {
+            return "Sim";
+        } else {
+            return "Não";
         }
     }
 

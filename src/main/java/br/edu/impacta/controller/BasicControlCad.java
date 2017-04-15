@@ -21,6 +21,7 @@ public abstract class BasicControlCad<C> implements Serializable {
 	private List<C> listAtivo;
 	private GenericDAO<C> dao;
 	private C selected;
+	private C selectedTemp;
 	private Class<C> classToCastMatrix;
 
 	// **************************************************************************
@@ -35,6 +36,15 @@ public abstract class BasicControlCad<C> implements Serializable {
 
 	public BasicControlCad() {
 
+	}
+	
+	public void treatRecord(){
+		if(selectedTemp != selected){
+			saveRecord();
+			return;
+		} else {
+			updateRecord();
+		}
 	}
 
 	// Salvar
@@ -134,6 +144,16 @@ public abstract class BasicControlCad<C> implements Serializable {
 	}
 
 	public void setSelected(C selected) {
+		selectedTemp = selected;
 		this.selected = (C) selected;
 	}
+
+	public C getSelectedTemp() {
+		return selectedTemp;
+	}
+
+	public void setSelectedTemp(C selectedTemp) {
+		this.selectedTemp = selectedTemp;
+	}
+
 }

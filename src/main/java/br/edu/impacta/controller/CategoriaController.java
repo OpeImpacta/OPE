@@ -1,11 +1,8 @@
 package br.edu.impacta.controller;
 
 import java.io.Serializable;
-import javax.annotation.PostConstruct;
-import javax.ejb.PostActivate;
 import javax.inject.Named;
 import org.omnifaces.cdi.ViewScoped;
-
 import br.edu.impacta.dao.CategoriaDAO;
 import br.edu.impacta.entity.Categoria;
 
@@ -40,18 +37,19 @@ public class CategoriaController extends BasicControlCad<Categoria> implements S
 		super(Categoria.class,  categoriaDAO);
 	}
 
-	@PostConstruct
-	@PostActivate
-	public void init(){
-
-	}
-
 	public boolean isDisableButton() {
 		return disableButton;
 	}
 
 	public void setDisableButton(boolean disableButton) {
 		this.disableButton = disableButton;
+	}
+	
+	//Ao gravar fexa o dialog na tela
+	@Override
+	public void treatRecord() {
+		super.treatRecord();
+		UtilityTela.executarJavascript("PF('dlgCadastro').hide()");
 	}
 
 }
