@@ -58,7 +58,7 @@
                    
                     <p:separator/>
 
-			<p:dataTable id="tabela" var="registro" value="#{usuarioControl.list}" rowKey="#{registro.idCategoria}" selectionMode="single" selection="#{usuarioControl.selected}"
+			<p:dataTable id="tabela" var="registro" value="#{usuarioControl.list}" rowKey="#{registro.id}" selectionMode="single" selection="#{usuarioControl.selected}"
 							paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                  currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]"
                                  widgetVar="wvTable">
@@ -69,8 +69,8 @@
                 	<p:rowToggler />
                 </p:column>
 
-				<p:column headerText="Código" sortBy="#{registro.idCategoria}" filterBy="#{registro.idCategoria}" filterMatchMode="contains">
-					<h:outputText value="#{registro.idCategoria}" />
+				<p:column headerText="Código" sortBy="#{registro.id}" filterBy="#{registro.id}" filterMatchMode="contains">
+					<h:outputText value="#{registro.id}" />
 				</p:column>
 
 				<p:column headerText="Descrição" filterBy="#{registro.nome}" sortBy="#{registro.nome}" filterMatchMode="contains">
@@ -95,7 +95,7 @@
 				<p:rowExpansion>
 	                <p:panelGrid  columns="2" style="width:100%"   >
 		                	<h:outputText value="Código : "/>
-		                <h:outputText value="#{registro.idCategoria}"  />
+		                <h:outputText value="#{registro.id}"  />
 		                <h:outputText value="Descrição : " />
 		                <h:outputText value="#{registro.nome}" />
 						<h:outputText value="Ativo : " />
@@ -109,37 +109,81 @@
 			</p:dataTable>
 			     </div>
             </div>
-
 		</h:form>
-			<p:dialog width="400px" height="auto" widgetVar="dlgCadastro" resizable="false" 
-					header="Cadastro de Categoria" focus="frmCadastro:nome" styleClass="box-primary"
-					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true">
-				<h:form id="frmCadastro">
-					<h:panelGrid columns="2" style="width:100%">
-							<p:column width="50%">
-								<p:outputLabel value="Código: "><br />
-									<p:inputText value="#{usuarioControl.selected.idCategoria}" disabled="true"/>
-								</p:outputLabel>
-							</p:column>
-							<p:column width="50%" style="text-align: left">
-								<p:selectOneButton id="manyBtn" value="#{usuarioControl.selected.ativo}">
-									<f:converter converterId="javax.faces.Boolean" />
-			                        <f:selectItem itemLabel="Ativo" itemValue="true"/>
-			                        <f:selectItem itemLabel="Inativo" itemValue="false"/>
-	                    		</p:selectOneButton>
-	                    	</p:column>	
-	                </h:panelGrid>    	
-	                <h:panelGrid columns="2" style="width:100%">
-							<p:column width="100%" colspan="2">
-								<p:outputLabel for="nome" value="Nome: " />
-								<br />
-								<p:inputText id="nome"
-									value="#{usuarioControl.selected.nome}" required="true" style="width: 100%"/>
-									<p:message id="msgDefault" for="nome"/>
-							</p:column>	
+
+		<p:dialog width="50%" height="auto" widgetVar="dlgCadastro" resizable="false" 
+				header="Cadastro de Usuario" focus="frmCadastro:nome" styleClass="box-primary"
+				modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true">
+			<h:form id="frmCadastro">
+				<h:panelGrid columns="2" style="width:100%">
+					<p:column width="50%">
+						<p:outputLabel value="Código: "><br />
+							<p:inputText value="#{usuarioControl.selected.id}" disabled="true"/>
+						</p:outputLabel>
+					</p:column>
+					<p:column width="50%" style="text-align: left">
+						<p:selectOneButton id="manyBtn" value="#{usuarioControl.selected.ativo}">
+							<f:converter converterId="javax.faces.Boolean" />
+	                        <f:selectItem itemLabel="Ativo" itemValue="true"/>
+	                        <f:selectItem itemLabel="Inativo" itemValue="false"/>
+                   		</p:selectOneButton>
+                   	</p:column>	
+                </h:panelGrid><br />
+
+                <h:panelGrid columns="2" style="width:100%">
+					<p:column width="100%" colspan="2">
+						<p:outputLabel for="nome" value="Nome: " />
+						<br />
+						<p:inputText id="nome"
+							value="#{usuarioControl.selected.nome}" required="true" style="width: 100%"/>
+					</p:column>	
+				</h:panelGrid><br />
+				
+				<h:panelGrid columns="2" style="width:100%">
+					<p:column width="100%" colspan="2">
+						<p:outputLabel for="email" value="Email: " />
+						<br />
+						<p:inputText id="email"
+							value="#{usuarioControl.selected.email}" required="true" style="width: 100%"/>
+					</p:column>	
+				</h:panelGrid><br />
+				
+				<h:panelGrid columns="2" style="width:100%">
+					<p:column width="50%">
+						<p:outputLabel for="telefone" value="Telefone: " />
+						<br />
+						<p:inputText id="telefone"
+							value="#{usuarioControl.selected.telefone}" required="true" style="width: 50%"/>
+					</p:column>	
+					<p:column width="50%">
+						<p:outputLabel for="documento" value="Documento: " />
+						<br />
+						<p:inputText id="documento"
+							value="#{usuarioControl.selected.documento}" required="true" style="width: 50%"/>
+					</p:column>	
+				</h:panelGrid><br />
+				
+				<h:panelGrid columns="2" style="width:100%">
+					<p:column width="50%">
+						<p:outputLabel for="senha" value="Senha: " />
+						<br />
+						<p:inputText id="senha"
+							value="#{usuarioControl.selected.senha}" required="true" style="width: 50%"/>
+					</p:column>	
+					<p:column width="50%" style="text-align: left">
+						<p:outputLabel for="manyBtnTipo" value="Tipo: " />
+						<br />
+						<p:selectOneButton id="manyBtnTipo" value="#{usuarioControl.selected.tipo}">
+							<f:converter converterId="javax.faces.Integer" />
+	                        <f:selectItem itemLabel="Admin" itemValue="1"/>
+	                        <f:selectItem itemLabel="Usuario" itemValue="2"/>
+	                        <f:selectItem itemLabel="Cliente" itemValue="3"/>
+                   		</p:selectOneButton>
+                   	</p:column>	
 				</h:panelGrid>
+				
 				<p:separator/>
-				<p:commandButton value="Efetivar"
+				<p:commandButton value="Salvar"
 					style="margin-top: -10px; width: auto"
 					update="frmList:tabela frmCadastro @(.ui-button)"
 					action="#{usuarioControl.treatRecord()}"
@@ -147,7 +191,7 @@
 					type="submit"
 					styleClass="btn-block btn-success" icon="fa fa-floppy-o"/>
 			</h:form>
-			</p:dialog>
+		</p:dialog>
 	</ui:define>
 </ui:composition>
 

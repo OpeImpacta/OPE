@@ -12,7 +12,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Usuario")
+@Table(name = "USUARIO")
 @NamedQueries({
 	@NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u ")
 })
@@ -24,10 +24,10 @@ public class Usuario implements Serializable{
 	@Column(name = "id")
 	private Long id;
 
-	@Column(name="nome", nullable =  false, length =  255)
+	@Column(name="nome", nullable =  false)
 	private String nome;
 	
-	@Column(name="email", nullable =  false, length =  255)
+	@Column(name="email", nullable =  false)
 	private String email;
 	
 	@Column(name="senha", nullable =  false, length =  50)
@@ -36,88 +36,93 @@ public class Usuario implements Serializable{
 	@Column(name="tipo")
 	private int tipo;
 	
-	@Column(name="telefone", nullable =  true, length =  15)
+	@Column(name="telefone", length =  15)
 	private String telefone;
 	
-	@Column(name="documento", nullable =  false, length =  20)
+	@Column(name="documento", nullable =  false, length = 20)
 	private String documento;
 	
-	@Column(name="ativo", nullable =  false, length =  1)
+	@Column(name="ativo", nullable =  false)
 	private boolean ativo;
 	
 	public Usuario() {}
-	
-	public Usuario(Long id) {
-		this.id = id;
-	}
 
+	public Usuario(Long id, boolean ativo, int tipo, String nome, 
+			String email, String senha, String telefone, String documento) {
+		this.id = id;
+		this.ativo = ativo;
+		this.tipo = tipo;
+		this.nome = nome;
+		this.email = email;
+		this.senha = senha;
+		this.telefone = telefone;
+		this.documento = documento;
+	}
+	
 	public Long getId() {
 		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getNome() {
 		return nome;
 	}
 
-	public Usuario setNome(String nome) {
+	public void setNome(String nome) {
 		this.nome = nome;
-		return this;
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	public Usuario setEmail(String email) {
+	public void setEmail(String email) {
 		this.email = email;
-		return this;
 	}
 
 	public String getSenha() {
 		return senha;
 	}
 
-	public Usuario setSenha(String senha) {
+	public void setSenha(String senha) {
 		this.senha = senha;
-		return this;
 	}
 
 	public int getTipo() {
 		return tipo;
 	}
 
-	public Usuario setTipo(int tipo) {
+	public void setTipo(int tipo) {
 		this.tipo = tipo;
-		return this;
 	}
 
 	public String getTelefone() {
 		return telefone;
 	}
 
-	public Usuario setTelefone(String telefone) {
+	public void setTelefone(String telefone) {
 		this.telefone = telefone;
-		return this;
 	}
 
 	public String getDocumento() {
 		return documento;
 	}
 
-	public Usuario setDocumento(String documento) {
+	public void setDocumento(String documento) {
 		this.documento = documento;
-		return this;
 	}
 
 	public boolean isAtivo() {
 		return ativo;
 	}
 
-	public Usuario setAtivo(boolean ativo) {
+	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
-		return this;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -26,9 +26,6 @@ public class UsuarioController extends BasicControlCad<Usuario> implements Seria
 		disableButton = true;
 	}
 
-	// *******************************************
-	// * Alterar somente neste construtor
-	// *******************************************
 	public UsuarioController() throws Exception {
 		super(Usuario.class, usuarioDAO);
 	}
@@ -45,6 +42,6 @@ public class UsuarioController extends BasicControlCad<Usuario> implements Seria
 	@Override
 	public void treatRecord() {
 		super.treatRecord();
-		/*UtilityTela.executarJavascript("PF('dlgCadastro').hide()");*/
+		UtilityTela.executarJavascript("PF('dlgCadastro').hide()");
 	}
 }
