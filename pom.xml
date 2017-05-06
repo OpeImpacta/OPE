@@ -19,6 +19,37 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
+		<!-- GSON -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.7</version>
+		</dependency>
+		<!-- JERSEY CLIENT -->
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>1.19</version>
+		</dependency>
+		<!-- JERSEY CORE -->
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-core</artifactId>
+			<version>1.19</version>
+		</dependency>
+		<!-- JERSEY JSON -->
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-json</artifactId>
+			<version>1.19</version>
+		</dependency>
+		<!-- Commons Lang -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
+		</dependency>
+
 		<!-- CDI -->
 		<dependency>
 			<groupId>javax.enterprise</groupId>
@@ -48,7 +79,7 @@
 		<!-- API do JPA e EJB para o Admin Template (View de OptimisticLockException) 
 			TODO: Fork para depender apenas de Servlet/JSF -->
 
-		
+
 		<!-- PROVIDER JPA(HIBERNATE) -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -62,13 +93,13 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.37</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.ejb</groupId>
 			<artifactId>javax.ejb-api</artifactId>
 			<version>3.2</version>
 		</dependency>
-		
+
 		<!-- usado pelo Weld -->
 		<dependency>
 			<groupId>org.jboss</groupId>
@@ -81,15 +112,8 @@
 			<groupId>com.github.adminfaces</groupId>
 			<artifactId>admin-template</artifactId>
 			<version>1.0.0-RC1</version>
-			<!-- Update lib 
-			<exclusions>
-        		<exclusion>
-					<dependency>
-						<groupId>org.omnifaces</groupId>
-						<artifactId>omnifaces</artifactId>
-					</dependency>
-				</exclusion>
-			</exclusions> -->
+			<!-- Update lib <exclusions> <exclusion> <dependency> <groupId>org.omnifaces</groupId> 
+				<artifactId>omnifaces</artifactId> </dependency> </exclusion> </exclusions> -->
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces.extensions</groupId>
@@ -101,11 +125,7 @@
 			<artifactId>font-awesome</artifactId>
 			<version>4.7.0</version>
 		</dependency>
-		<!-- 
-			Tomcat 8.5.4:
-			http://stackoverflow.com/a/39286497/2956677
-			https://github.com/omnifaces/omnifaces/issues/2431
-		-->
+		<!-- Tomcat 8.5.4: http://stackoverflow.com/a/39286497/2956677 https://github.com/omnifaces/omnifaces/issues/2431 -->
 		<dependency>
 			<groupId>org.omnifaces</groupId>
 			<artifactId>omnifaces</artifactId>
@@ -115,19 +135,19 @@
 	<build>
 		<finalName>ope</finalName>
 		<plugins>
-		   <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <webResources>
-                        <resource>
-                            <directory>${build.sourceDirectory}</directory>
-                            <targetPath>sources</targetPath>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin>
-	  </plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<webResources>
+						<resource>
+							<directory>${build.sourceDirectory}</directory>
+							<targetPath>sources</targetPath>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>

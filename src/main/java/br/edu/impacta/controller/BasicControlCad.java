@@ -37,7 +37,7 @@ public abstract class BasicControlCad<C> implements Serializable {
 	public BasicControlCad() {
 
 	}
-	
+
 	public void treatRecord(){
 		if(selectedTemp != selected){
 			saveRecord();
@@ -104,6 +104,14 @@ public abstract class BasicControlCad<C> implements Serializable {
 		// Para funcionar, todos os dialog de cadastro devem ter
 		// widgetVar="dlgCadastro"
 		UtilityTela.executarJavascript("PF('dlgCadastro').show();");
+	}
+
+	// **************************************************************************
+	// * Prepara para inclusao - quando não tem dialog
+	// **************************************************************************
+	public void doStartAddRecordComum() throws Exception {
+		System.out.println("BasicControlCad:doStartAddRegistroComum");
+		newInSelected();
 	}
 
 	public void newInSelected() {
