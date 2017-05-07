@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Named
 @ViewScoped
 public class LogonMB implements Serializable {
-
+	
     private String email;
 
     private String password;

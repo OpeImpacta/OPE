@@ -25,6 +25,10 @@ public class UtilityTela implements Serializable{
     public static void criarMensagemErro(String titulo, String texto) {
     	Messages.create(titulo).error().detail(texto).add();
     }
+    
+    public static void criarMensagemErroSemDetail(String texto) {
+    	Messages.create(texto).error().add();
+    }
 
     public static void criarMensagemAviso(String titulo, String texto) {
     	Messages.create(titulo).warn().detail(texto).add();
