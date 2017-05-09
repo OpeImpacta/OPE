@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+				xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml"
+                >
+                
+  
+	<ui:define name="title">
+        Cadastro de Fornecedor
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Cadastro de Fornecedor"/>
+		<h:form id="frmList">
+			<p:growl id="msgOk" showSummary="false" severity="info"/>
+            <p:growl id="msgErro" showSummary="false" strick="true" severity="warn,error,fatal"/>
+	        
+		<div class="box box-primary">
+        	<div class="box-header with-border">
+				<div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton icon="fa fa-plus"
+                                         value="Novo" styleClass="btn-primary" 
+                                         actionListener="#{fornecedorControl.doStartAddRecord()}" 
+                                         update="frmCadastro" />
+                                         
+                        <p:spacer width="5"/>
+                        
+                        <p:commandButton value="Excluir" icon="fa fa-trash" styleClass="btn-danger"
+                                         action="#{fornecedorControl.deleteRecord()}"
+                                         actionListener="#{fornecedorControl.unRowSelect()}"
+                                         type="submit" update="frmList:tabela @(.ui-button)"
+                                         disabled="#{fornecedorControl.disableButton}">
+                        	<p:confirm header="Confirmação" message="Você tem certeza que deseja excluir este item?" global="true" showEffect="fade" hideEffect="fade" styleClass="box-warning" />
+                                <p:confirmDialog global="true" closable="true" closeOnEscape="true">
+                                    <p:commandButton value="Sim" type="button" styleClass="btn-primary ui-confirmdialog-yes" icon="fa fa-check" />
+                                    <p:commandButton value="Não" type="button" styleClass="btn-danger ui-confirmdialog-no" icon="fa fa-close" />
+                        	</p:confirmDialog>
+                        </p:commandButton>    
+                                     
+                        <p:spacer width="5"/>
+                        
+                        <p:commandButton value="Editar" update="@(.ui-dialog)" styleClass="btn-info"
+                        				 disabled="#{fornecedorControl.disableButton}"
+                        				 oncomplete="PF('dlgCadastro').show()" icon="fa fa-edit">
+                        </p:commandButton>                 
+                    </div>
+                   
+                    <p:separator/>
+
+			<p:dataTable id="tabela" var="registro" value="#{fornecedorControl.list}" rowKey="#{registro.idFornecedor}" selectionMode="single" selection="#{fornecedorControl.selected}"
+							paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" sortBy="#{registro.razaoSocial}"
+                                 widgetVar="wvTable">
+							
+                <p:ajax event="rowSelect" listener="#{fornecedorControl.onRowSelect()}" update="@(.ui-button)"/>
+                
+                <p:column styleClass="align-center" width="5%">
+                	<p:rowToggler />
+                </p:column>
+
+				<p:column headerText="Código" sortBy="#{registro.idFornecedor}" filterBy="#{registro.idFornecedor}" filterMatchMode="contains">
+					<h:outputText value="#{registro.idFornecedor}" />
+				</p:column>
+
+				<p:column headerText="Razão Social" filterStyle="width: 200px" filterBy="#{registro.razaoSocial}" sortBy="#{registro.razaoSocial}" filterMatchMode="contains">
+					<h:outputText value="#{registro.razaoSocial}" />
+				</p:column>
+				
+				<p:column headerText="CNPJ" filterBy="#{registro.cnpj}" filterStyle="width: 150px" sortBy="#{registro.cnpj}" filterMatchMode="contains" style="text-align:center">
+					<h:outputText value="#{registro.cnpj}" />
+				</p:column>
+				
+				<p:column headerText="Ativo" sortBy="#{registro.ativo}" filterBy="#{registro.ativo}" resizable="false" toggleable="true" style="text-align:center; padding: 0;">
+					<f:facet id="idFilter" name="filter" >
+	                    <p:selectOneButton onchange="PF('wvTable').filter()">
+		                    <f:converter converterId="javax.faces.Boolean" />
+		                    <f:selectItem itemLabel="Todos" itemValue="" />
+		                    <f:selectItem itemLabel="Sim" itemValue="true" />
+		                    <f:selectItem itemLabel="Não" itemValue="false" />
+	                    </p:selectOneButton>
+                    </f:facet>
+				
+					<p:graphicImage  value="#{utilityTela.getBooleanImg(registro.ativo)}"
+                                     style="width: 25px;  height: 25px;" 
+                                     alt="#{registro.ativo ? Não : Sim}" />
+				</p:column>
+				
+				<p:rowExpansion>
+	                <p:panelGrid  columns="2" style="width:100%"   >
+		                	<h:outputText value="Código : "/>
+		                <h:outputText value="#{registro.idFornecedor}"  />
+		                <h:outputText value="Razão Social : " />
+		                <h:outputText value="#{registro.razaoSocial}" />
+		                <h:outputText value="CNPJ : " />
+		                <h:outputText value="#{registro.cnpj}" />
+		                <h:outputText value="Email : " />
+		                <h:outputText value="#{registro.email}" />
+						<h:outputText value="Ativo : " />
+						<h:outputText value="#{utilityTela.getDescBoolean(registro.ativo)}" />
+	                </p:panelGrid>
+                </p:rowExpansion>
+
+				<f:facet name="footer">
+					Total: #{fornecedorControl.list.size()}
+				</f:facet>
+			</p:dataTable>
+			     </div>
+            </div>
+
+		</h:form>
+			<p:dialog width="850px" height="480px" widgetVar="dlgCadastro" resizable="false" responsive="true" 
+					header="Cadastro de Fornecedor" focus="frmCadastro:tabView:razaoSocial" styleClass="box-primary" 
+					modal="true" appendTo="@(body)" closable="true" closeOnEscape="true">
+					<h:form id="frmCadastro">
+					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
+					<p:tabView id="tabView">
+						<p:tab title="Dados" id="tabPrincipal" >
+							<p:panel id="panelPrincipal" style="margin-top: 10px">
+								<h:panelGrid columns="2" style="width:100%" cellpadding="10" >
+										<p:column width="50%">
+											<p:outputLabel value="Código: "><br />
+												<p:inputText value="#{fornecedorControl.selected.idFornecedor}" disabled="true"/>
+											</p:outputLabel>
+										</p:column>
+										<p:column width="50%" style="text-align: left">
+											<p:selectOneButton id="manyBtn" value="#{fornecedorControl.selected.ativo}">
+												<f:converter converterId="javax.faces.Boolean" />
+						                        <f:selectItem itemLabel="Ativo" itemValue="true"/>
+						                        <f:selectItem itemLabel="Inativo" itemValue="false"/>
+				                    		</p:selectOneButton>
+				                    	</p:column>	
+				                </h:panelGrid>    	
+				                <h:panelGrid width="100%" columns="2" >
+									<p:column width="100%" colspan="2">
+										<p:outputLabel for="razaoSocial" value="Razão Social: " ><br />
+											<p:inputText id="razaoSocial" value="#{fornecedorControl.selected.razaoSocial}" style="width: 250%" required="true" requiredMessage="Campo Razão Social é Necessário" maxlength="100"/>
+										</p:outputLabel>
+									</p:column>	
+									<p:column width="100%" colspan="2">
+										<p:outputLabel for="nomeFantasia"  value="Nome Fantasia: " ><br />
+											<p:inputText id="nomeFantasia" value="#{fornecedorControl.selected.nomeFantasia}" style="width: 250%" maxlength="100"/>
+										</p:outputLabel>
+									</p:column>	
+								</h:panelGrid>
+								<h:panelGrid width="100%" columns="3" >	
+									<p:column width="100%" colspan="2" >
+										<p:outputLabel for="cnpj" value="CNPJ: " ><br/>
+										 	<p:inputMask id="cnpj" value="#{fornecedorControl.selected.cnpj}" style="width: 180%" mask="99.999.999/9999-99" required="true" requiredMessage="Campo CNPJ é Necessário" >
+										 		<f:validateLength minimum="18" />
+										 	</p:inputMask>
+										</p:outputLabel>
+									</p:column>	
+									<p:column width="100%" colspan="2" >
+										<p:outputLabel for="ie" value="IE: "><br/>
+										 	<p:inputText id="ie" value="#{fornecedorControl.selected.ie}" style="width: 150%" maxlength="12" />
+										</p:outputLabel>
+									</p:column>	
+								</h:panelGrid>
+								<h:panelGrid width="100%" columns="1" >	
+									<p:column width="100%" colspan="2">
+										<p:outputLabel for="email" value="Email: "  ><br />
+											<p:inputText id="email" value="#{fornecedorControl.selected.email}" validatorMessage="Email Inválido!" style="width: 180%" maxlength="50" >
+												<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+											</p:inputText>
+										</p:outputLabel>
+									</p:column>
+								</h:panelGrid>
+							</p:panel>
+						</p:tab>
+						<p:tab title="Endereço" id="tabEndereco" >
+							<p:panel id="panelEndereco" style="margin-top: 10px">
+								<h:panelGrid columns="4">
+									<p:column width="100%" colspan="2" >
+										<p:outputLabel for="cep" value="CEP: "  ><br/>
+									 		<p:inputMask id="cep" value="#{fornecedorControl.selected.endereco.cep}" style="width: 80%" mask="99999-999" >
+									 			<f:validateLength minimum="9" />
+									 			<p:ajax event="blur" listener="#{fornecedorControl.buscarCep()}"  async="false" 
+										 			process="@this"
+										 			update="frmCadastro:tabView:logradouro frmCadastro:tabView:complemento frmCadastro:tabView:bairro frmCadastro:tabView:cidade frmCadastro:tabView:uf " 
+									 			/>
+									 		</p:inputMask>
+										</p:outputLabel>
+									</p:column>
+									<p:column width="100%" colspan="2" >
+											<p:outputLabel for="logradouro" value="Logradouro: " style="margin-left: 8px"  ><br/>
+										 		<p:inputText id="logradouro" value="#{fornecedorControl.selected.endereco.logradouro}" style="width: 180%" maxlength="100" />
+											</p:outputLabel>
+									</p:column>
+									<p:column width="100%" colspan="2" >
+										<p:outputLabel for="num" value="Nº " style="margin-left: 130px"  ><br/>
+									 		<p:inputText id="num" value="#{fornecedorControl.selected.endereco.numero}" style="width: 80px" maxlength="20" />
+										</p:outputLabel>
+									</p:column>
+									<p:column width="100%" colspan="2" >
+										<p:outputLabel for="complemento" value="Complemento: "  style="margin-left: 10px"   ><br/>
+									 		<p:inputText id="complemento" value="#{fornecedorControl.selected.endereco.complemento}" style="width: 90%" maxlength="20" />
+										</p:outputLabel>
+									</p:column>
+								</h:panelGrid>
+								<h:panelGrid columns="3" >
+									<p:column width="100%" colspan="2" >
+										<p:outputLabel for="bairro" value="Bairro: "  ><br/>
+									 		<p:inputText id="bairro" value="#{fornecedorControl.selected.endereco.bairro}" style="width: 160px" maxlength="50" />
+										</p:outputLabel>
+									</p:column>
+									<p:column width="100%" colspan="2" >
+										<p:outputLabel for="cidade" value="Cidade: " style="margin-left: 30px" ><br/>
+									 		<p:inputText id="cidade" value="#{fornecedorControl.selected.endereco.cidade}" style="width: 160px" maxlength="50" />
+										</p:outputLabel>
+									</p:column>
+									<p:column width="100%">
+						               	<p:outputLabel value="UF" for="uf" style="margin-left: 70px" ><br/>
+						               		<p:selectOneMenu value="#{fornecedorControl.selected.endereco.estado}" id="uf" style="width:100px">
+										            <f:selectItem itemLabel="" noSelectionOption="true" itemValue=""/>
+							                        <f:selectItem itemLabel="AC" itemValue="AC"/>
+							                        <f:selectItem itemLabel="AL" itemValue="AL"/>
+							                        <f:selectItem itemLabel="AP" itemValue="AP"/>
+							                        <f:selectItem itemLabel="AM" itemValue="AM"/>
+							                        <f:selectItem itemLabel="BA" itemValue="BA"/>
+							                        <f:selectItem itemLabel="CE" itemValue="CE"/>
+							                        <f:selectItem itemLabel="DF" itemValue="DF"/>
+							                        <f:selectItem itemLabel="ES" itemValue="ES"/>
+							                        <f:selectItem itemLabel="GO" itemValue="GO"/>
+							                        <f:selectItem itemLabel="MA" itemValue="MA"/>
+							                        <f:selectItem itemLabel="MT" itemValue="MT"/>
+							                        <f:selectItem itemLabel="MS" itemValue="MS"/>
+							                        <f:selectItem itemLabel="MG" itemValue="MG"/>
+							                        <f:selectItem itemLabel="PA" itemValue="PA"/>
+							                        <f:selectItem itemLabel="PB" itemValue="PB"/>
+							                        <f:selectItem itemLabel="PR" itemValue="PR"/>
+							                        <f:selectItem itemLabel="PE" itemValue="PE"/>
+							                        <f:selectItem itemLabel="PI" itemValue="PI"/>
+							                        <f:selectItem itemLabel="RJ" itemValue="RJ"/>
+							                        <f:selectItem itemLabel="RN" itemValue="RN"/>
+							                        <f:selectItem itemLabel="RS" itemValue="RS"/>
+							                        <f:selectItem itemLabel="RO" itemValue="RO"/>
+							                        <f:selectItem itemLabel="RR" itemValue="RR"/>
+							                        <f:selectItem itemLabel="SC" itemValue="SC"/>
+							                        <f:selectItem itemLabel="SP" itemValue="SP"/>
+							                        <f:selectItem itemLabel="SE" itemValue="SE"/>
+							                        <f:selectItem itemLabel="TO" itemValue="TO"/>
+										        </p:selectOneMenu>
+							                </p:outputLabel>
+							            </p:column>
+						        </h:panelGrid>
+						    </p:panel>
+						</p:tab>
+						<p:tab title="Telefones" id="tabTelefone" >
+							<p:panel id="panelContato" style="margin-top: 10px">
+				                <h:panelGrid columns="4" >
+				                	<p:column width="100%">
+					                	<p:outputLabel value="Tipo:" for="tpFone" ><br/>
+					                		<p:selectOneMenu value="#{fornecedorControl.telFornecedor.tipo}" id="tpFone" style="width:125px">
+									            <f:selectItem itemLabel="" noSelectionOption="true" itemValue=""/>
+						                        <f:selectItem itemLabel="Residencial" itemValue="Residencial"/>
+						                        <f:selectItem itemLabel="Celular" itemValue="Celular"/>
+						                        <f:selectItem itemLabel="Comercial" itemValue="Comercial"/>
+									        </p:selectOneMenu>
+						                </p:outputLabel>
+						            </p:column>
+						            <p:column width="100%"> 	   
+					                	<p:outputLabel for="numero" value="Número:" style="margin-left: -550px" ><br/>
+						                	<p:inputMask id="numero" mask="(99)999999999" value="#{fornecedorControl.telFornecedor.numero}" />
+						                </p:outputLabel>
+					                </p:column>
+					                <p:column width="100%"> 	   
+					                	<p:outputLabel for="compl" value="Complemento" style="margin-left: -370px" ><br/>
+						                	<p:inputText id="compl" value="#{fornecedorControl.telFornecedor.complemento}" maxlength="20" />
+						                </p:outputLabel>
+					                </p:column>
+					                <p:column width="100%"> 
+						                <p:commandButton icon="fa fa-plus" style="margin-left: -200px; margin-top: 15px"
+						                				 actionListener="#{fornecedorControl.addTelefone()}"
+				                                         value="Adicionar" styleClass="btn-primary"
+				                                         id="btnAddFone"
+				                                         update="frmCadastro:tabView:panelContato" process="frmCadastro:tabView:panelContato" />
+						            </p:column>
+						             
+					                <h:panelGrid columns="1" style="width:430px" >
+					                	<p:dataTable var="registro" emptyMessage="Nenhum Telefone Adicionado" paginator="true" rows="2" 
+					                	paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		                                		value="#{fornecedorControl.selected.telefones}" reflow="true" 
+					                			style="margin-top:5px; width:700px" tableStyle="table-layout: auto;">
+								            <f:facet name="header">
+									            	Telefones
+									        </f:facet>
+								            <p:column headerText="Tipo">
+							                       <h:outputText value="#{registro.tipo}"/>
+							                </p:column>
+										    <p:column headerText="Número">
+							                     <h:outputText value="#{registro.numero}"/>
+							                </p:column>
+							                <p:column headerText="Complemento">
+							                     <h:outputText value="#{registro.complemento}"/>
+							                </p:column>
+							                <p:column>
+							                     <p:commandButton id="btnDelFone" title="Excluir" 
+							                     	styleClass="btn-default" 
+							                     	style="font-size: 11px"
+							                     	process="frmCadastro:tabView:panelContato"
+							                     	update="frmCadastro:tabView:panelContato"
+							                     	actionListener="#{fornecedorControl.delTelefone(registro)}" 
+							                     	icon="fa fa-trash" />
+							                     <p:commandButton id="btnAltFone" title="Alterar" 
+							                     	styleClass="btn-default btn-block" 
+							                     	style="font-size: 11px; 
+							                     	margin-left: 5px"
+							                     	process="frmCadastro:tabView:panelContato"
+							                     	update="frmCadastro:tabView:panelContato"
+							                     	actionListener="#{fornecedorControl.upTelefone(registro)}"
+							                     	icon="fa fa-pencil" />
+							                </p:column>
+										</p:dataTable>
+					                </h:panelGrid>
+				                </h:panelGrid>
+		           			 </p:panel>
+	           			 </p:tab>
+				</p:tabView>
+				<p:separator/>
+					<p:commandButton value="Efetivar"
+						id="btnEfetiva"
+						style="margin-top: -10px; width: auto"
+						update="frmList:tabela frmCadastro @(.ui-button)"
+						action="#{fornecedorControl.treatRecord()}"
+						actionListener="#{fornecedorControl.unRowSelect()}"
+						type="submit"
+						styleClass="btn-block btn-success" icon="fa fa-floppy-o"/>
+						
+					<p:commandButton value="Cancelar"
+						id="brnCancelar"
+						style="margin-top: -10px; width: auto"
+						update="frmList:tabela frmCadastro @(.ui-button)"
+						onclick="PF('dlgCadastro').hide()"
+						styleClass="btn-block btn-danger" icon="fa fa-close"/>
+			</h:form>
+			</p:dialog>
+	</ui:define>
+</ui:composition>
+
