@@ -12,6 +12,10 @@ li.header {
     text-overflow: clip;
 }
 
+.sidebar-toggle{
+	display: none !important;
+}
+
 #userImage {
     float: left;
     width: 25px;
@@ -20,13 +24,17 @@ li.header {
     margin-right: 10px;
     margin-top: -2px;
 }
-
+ 
 ul.dropdown-menu > li.user-header {
       height: auto!important;
 }
 
 a#logout {
     color: #3c8dbc!important;
+}
+
+.ui-selectonemenu-panel{
+ 	z-index: 99999 !important;
 }
 
 .ui-theme {background: url("#{resource['demo/images/themes.png']}") no-repeat top left;display: block;}
