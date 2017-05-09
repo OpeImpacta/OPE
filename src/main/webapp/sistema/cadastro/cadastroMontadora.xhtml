@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+				xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+                
+       <ui:define name="head-end">
+	       <style type="text/css">
+	            .ui-datatable .ui-datatable-header {
+	                text-align: right !important;
+	       }
+	       </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Cadastro de Montadora
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb link="/sitema/cadastro/cadastroMontadora" title="Cadastro de Montadora"/>
+		<h:form id="frmList">
+			<p:growl id="msgOk" showSummary="false" severity="info"/>
+            <p:growl id="msgErro" showSummary="false" strick="true" severity="warn,error,fatal"/>
+	        
+		<div class="box box-primary">
+        	<div class="box-header with-border">
+				<div id="main-buttons" class="hidden-sm hidden-xs">
+                        <p:commandButton icon="fa fa-plus"
+                                         value="Novo" styleClass="btn-primary" 
+                                         actionListener="#{montadoraControl.doStartAddRecord()}" 
+                                         update="frmCadastro" />
+                                         
+                        <p:spacer width="5"/>
+                        
+                        <p:commandButton value="Excluir" icon="fa fa-trash" styleClass="btn-danger"
+                                         action="#{montadoraControl.deleteRecord()}"
+                                         actionListener="#{montadoraControl.unRowSelect()}"
+                                         type="submit" update="frmList:tabela @(.ui-button)"
+                                         disabled="#{montadoraControl.disableButton}">
+                        	<p:confirm header="Confirmação" message="Você tem certeza que deseja excluir este item?" global="true" showEffect="fade" hideEffect="fade" styleClass="box-warning" />
+                                <p:confirmDialog global="true" closable="true" closeOnEscape="true">
+                                    <p:commandButton value="Sim" type="button" styleClass="btn-primary ui-confirmdialog-yes" icon="fa fa-check" />
+                                    <p:commandButton value="Não" type="button" styleClass="btn-danger ui-confirmdialog-no" icon="fa fa-close" />
+                        	</p:confirmDialog>
+                        </p:commandButton>    
+                                     
+                        <p:spacer width="5"/>
+                        
+                        <p:commandButton value="Editar" update="@(.ui-dialog)" styleClass="btn-info"
+                        				 disabled="#{montadoraControl.disableButton}"
+                                         oncomplete="PF('dlgCadastro').show()" icon="fa fa-edit">
+                        </p:commandButton>                 
+                    </div>
+                   
+                    <p:separator/>
+
+			<p:dataTable id="tabela" var="registro" value="#{montadoraControl.list}" rowKey="#{registro.idMontadora}" selectionMode="single" selection="#{montadoraControl.selected}"
+							paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]"
+                            widgetVar="wvTable">
+							
+                <p:ajax event="rowSelect" listener="#{montadoraControl.onRowSelect()}" update="@(.ui-button)"/>
+                
+                <p:column styleClass="align-center" width="5%">
+                	<p:rowToggler />
+                </p:column>
+
+				<p:column headerText="Código" sortBy="#{registro.idMontadora}" filterBy="#{registro.idMontadora}" filterMatchMode="contains">
+					<h:outputText value="#{registro.idMontadora}" />
+				</p:column>
+
+				<p:column headerText="Nome" filterBy="#{registro.nome}" sortBy="#{registro.nome}" filterMatchMode="contains">
+					<h:outputText value="#{registro.nome}" />
+				</p:column>
+
+				<p:column headerText="Ativo" sortBy="#{registro.ativo}"  filterBy="#{registro.ativo}" resizable="false" toggleable="true" style="text-align:center; padding: 0;">
+					<f:facet id="idFilter" name="filter" >
+	                    <p:selectOneButton onchange="PF('wvTable').filter()">
+		                    <f:converter converterId="javax.faces.Boolean" />
+		                    <f:selectItem itemLabel="Todos" itemValue="" />
+		                    <f:selectItem itemLabel="Sim" itemValue="true" />
+		                    <f:selectItem itemLabel="Não" itemValue="false" />
+	                    </p:selectOneButton>
+                    </f:facet>
+				
+					<p:graphicImage  value="#{utilityTela.getBooleanImg(registro.ativo)}"
+                                     style="width: 25px;  height: 25px;" 
+                                     alt="#{registro.ativo ? Não : Sim}" />
+				</p:column>
+				
+				<p:rowExpansion>
+	                <p:panelGrid  columns="2" style="width:100%"   >
+		                	<h:outputText value="Código : "/>
+		                <h:outputText value="#{registro.idMontadora}"  />
+		                <h:outputText value="Nome : " />
+		                <h:outputText value="#{registro.nome}" />
+						<h:outputText value="Ativo : " />
+						<h:outputText value="#{utilityTela.getDescBoolean(registro.ativo)}" />
+	                </p:panelGrid>
+                </p:rowExpansion>
+
+				<f:facet name="footer">
+					Total: #{montadoraControl.list.size()}
+				</f:facet>
+			</p:dataTable>
+			     </div>
+            </div>
+
+		</h:form>
+			<p:dialog width="400px" height="auto" widgetVar="dlgCadastro" resizable="false" 
+					header="Cadastro de Montadora" focus="frmCadastro:nome" styleClass="box-primary"
+					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
+				<h:form id="frmCadastro">
+					<h:panelGrid columns="2" style="width:100%">
+							<p:column width="50%">
+								<p:outputLabel value="Código: "><br />
+									<p:inputText value="#{montadoraControl.selected.idMontadora}" disabled="true"/>
+								</p:outputLabel>
+							</p:column>
+							<p:column width="50%">
+								<p:selectOneButton id="manyBtn" value="#{montadoraControl.selected.ativo}" style="float:right">
+									<f:converter converterId="javax.faces.Boolean" />
+			                        <f:selectItem itemLabel="Ativo" itemValue="true"/>
+			                        <f:selectItem itemLabel="Inativo" itemValue="false"/>
+	                    		</p:selectOneButton>
+	                    	</p:column>	
+	                </h:panelGrid>    	
+	                <h:panelGrid columns="2" style="width:100%">
+							<p:column width="100%" colspan="2">
+								<p:outputLabel for="nome" value="Nome: " />
+								<br />
+								<p:inputText id="nome"
+									value="#{montadoraControl.selected.nome}" required="true" style="width: 100%"/>
+									<p:message id="msgDefault" for="nome"/>
+							</p:column>	
+				</h:panelGrid>
+				<p:separator/>
+				<p:commandButton value="Efetivar"
+					style="margin-top: -10px; width: auto"
+					update="frmList:tabela frmCadastro @(.ui-button)"
+					action="#{montadoraControl.treatRecord()}"
+					actionListener="#{montadoraControl.unRowSelect()}"
+					type="submit"
+					styleClass="btn-block btn-success" icon="fa fa-floppy-o"/>
+			</h:form>
+			</p:dialog>
+	</ui:define>
+</ui:composition>
+
