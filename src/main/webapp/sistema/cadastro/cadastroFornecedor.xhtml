@@ -215,8 +215,8 @@
 									</p:column>
 									<p:column width="100%">
 						               	<p:outputLabel value="UF" for="uf" style="margin-left: 70px" ><br/>
-						               		<p:selectOneMenu value="#{fornecedorControl.selected.endereco.estado}" id="uf" style="width:100px">
-										            <f:selectItem itemLabel="" noSelectionOption="true" itemValue=""/>
+						               		<p:selectOneMenu filter="true" filterMatchMode="contains" value="#{fornecedorControl.selected.endereco.estado}" id="uf" style="width:100px">
+										            <f:selectItem itemLabel="Selecione" noSelectionOption="true" itemValue=""/>
 							                        <f:selectItem itemLabel="AC" itemValue="AC"/>
 							                        <f:selectItem itemLabel="AL" itemValue="AL"/>
 							                        <f:selectItem itemLabel="AP" itemValue="AP"/>
@@ -256,7 +256,7 @@
 				                	<p:column width="100%">
 					                	<p:outputLabel value="Tipo:" for="tpFone" ><br/>
 					                		<p:selectOneMenu value="#{fornecedorControl.telFornecedor.tipo}" id="tpFone" style="width:125px">
-									            <f:selectItem itemLabel="" noSelectionOption="true" itemValue=""/>
+									            <f:selectItem itemLabel="Selecione" noSelectionOption="true" itemValue=""/>
 						                        <f:selectItem itemLabel="Residencial" itemValue="Residencial"/>
 						                        <f:selectItem itemLabel="Celular" itemValue="Celular"/>
 						                        <f:selectItem itemLabel="Comercial" itemValue="Comercial"/>
@@ -322,7 +322,7 @@
 	           			 </p:tab>
 				</p:tabView>
 				<p:separator/>
-					<p:commandButton value="Efetivar"
+					<p:commandButton value="Salvar"
 						id="btnEfetiva"
 						style="margin-top: -10px; width: auto"
 						update="frmList:tabela frmCadastro @(.ui-button)"
