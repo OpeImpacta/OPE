@@ -100,7 +100,7 @@ public abstract class GenericDAO<T> implements Serializable{
 		return entities;
 	}
 
-	public T findById(Long id) {
+	public T findById(Integer id) {
 		EntityManager manager = getEntityManager();
 		manager.getTransaction().begin();
 

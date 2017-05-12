@@ -121,6 +121,7 @@
 					header="Cadastro de Modelo" focus="frmCadastro:nome" styleClass="box-primary"
 					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
 				<h:form id="frmCadastro">
+					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
 					<h:panelGrid columns="2" style="width:100%">
 							<p:column width="50%">
 								<p:outputLabel value="Código: "><br />
@@ -138,16 +139,14 @@
 	                <h:panelGrid style="width:100%">
 	                	<p:row>
 							<p:outputLabel for="nome" value="Nome: " />
-							<p:inputText id="nome" value="#{modeloControl.selected.nome}" required="true" style="width: 100%"/>
-							<p:message id="msgDefault" for="nome"/>
+							<p:inputText id="nome" value="#{modeloControl.selected.nome}" required="true" style="width: 100%" requiredMessage="Campo Nome é necessário"/>
 						</p:row>
 						<p:row>
 							<p:outputLabel for="selectCategoria" value="Montadora: "/>
-							<p:selectOneMenu id="selectCategoria" value="#{modeloControl.selected.montadora}" filter="true" filterMatchMode="contains" converter="omnifaces.SelectItemsConverter" style="width:100%; height: 30px" required="true">
+							<p:selectOneMenu id="selectCategoria" value="#{modeloControl.selected.montadora}" filter="true" filterMatchMode="contains" converter="omnifaces.SelectItemsConverter" style="width:100%; height: 30px" required="true" requiredMessage="Campo Montadora é necessário">
 	                           	<f:selectItem itemLabel="Selecione..." itemValue="" />
 	                           	<f:selectItems value="#{montadoraControl.listAtivo}" var="item" itemLabel="#{item.idMontadora} - #{item.nome}" itemValue="#{item}" />
-	                       </p:selectOneMenu>
-	                       <p:message id="msgSelectCategoria" for="selectCategoria"/>    
+	                       </p:selectOneMenu> 
 						</p:row>
 					</h:panelGrid>
 				<p:separator/>
@@ -158,6 +157,13 @@
 					actionListener="#{modeloControl.unRowSelect()}"
 					type="submit"
 					styleClass="btn-block btn-success" icon="fa fa-floppy-o"/>
+					
+				<p:commandButton value="Cancelar"
+					id="brnCancelar"
+					style="margin-top: -10px; width: auto"
+					update="frmList:tabela frmCadastro @(.ui-button)"
+					onclick="PF('dlgCadastro').hide()"
+					styleClass="btn-block btn-danger" icon="fa fa-close"/>	
 			</h:form>
 			</p:dialog>
 	</ui:define>

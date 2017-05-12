@@ -17,11 +17,11 @@
     </ui:define>
 
     <ui:define name="title">
-        Cadastro de Usuario
+        Cadastro de Usuário
     </ui:define>
 
 	<ui:define name="body">
-		<adm:breadcrumb title="Cadastro de Usuario"/>
+		<adm:breadcrumb title="Cadastro de Usuário"/>
 		<h:form id="frmList">
 			<p:growl id="msgOk" showSummary="false" severity="info"/>
             <p:growl id="msgErro" showSummary="false" strick="true" severity="warn,error,fatal"/>
@@ -94,10 +94,14 @@
 				
 				<p:rowExpansion>
 	                <p:panelGrid  columns="2" style="width:100%"   >
-		                	<h:outputText value="Código : "/>
+		                <h:outputText value="Código : "/>
 		                <h:outputText value="#{registro.id}"  />
-		                <h:outputText value="Descrição : " />
+		                <h:outputText value="Nome : " />
 		                <h:outputText value="#{registro.nome}" />
+		                <h:outputText value="CPF : " />
+		                <h:outputText value="#{registro.cpf}" />
+		                <h:outputText value="Telefone : " />
+		                <h:outputText value="#{registro.telefone}" />
 						<h:outputText value="Ativo : " />
 						<h:outputText value="#{utilityTela.getDescBoolean(registro.ativo)}" />
 	                </p:panelGrid>
@@ -111,10 +115,11 @@
             </div>
 		</h:form>
 
-		<p:dialog width="50%" height="auto" widgetVar="dlgCadastro" resizable="false" 
-				header="Cadastro de Usuario" focus="frmCadastro:nome" styleClass="box-primary"
+		<p:dialog width="30%" height="auto" widgetVar="dlgCadastro" resizable="false" 
+				header="Cadastro de Usuário" focus="frmCadastro:nome" styleClass="box-primary"
 				modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
 			<h:form id="frmCadastro">
+				<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
 				<h:panelGrid columns="2" style="width:100%">
 					<p:column width="50%">
 						<p:outputLabel value="Código: "><br />
@@ -135,51 +140,43 @@
 						<p:outputLabel for="nome" value="Nome: " />
 						<br />
 						<p:inputText id="nome"
-							value="#{usuarioControl.selected.nome}" required="true" style="width: 100%"/>
+							value="#{usuarioControl.selected.nome}" required="true" style="width: 100%" requiredMessage="Campo Nome é necessário"/>
 					</p:column>	
-				</h:panelGrid><br />
+				</h:panelGrid>
 				
 				<h:panelGrid columns="2" style="width:100%">
 					<p:column width="100%" colspan="2">
 						<p:outputLabel for="email" value="Email: " />
 						<br />
 						<p:inputText id="email"
-							value="#{usuarioControl.selected.email}" required="true" style="width: 100%"/>
+							value="#{usuarioControl.selected.email}" required="true" style="width: 100%" requiredMessage="Campo Email é necessário" validatorMessage="Email inválido!">
+							<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+						</p:inputText>	
 					</p:column>	
-				</h:panelGrid><br />
+				</h:panelGrid>
 				
 				<h:panelGrid columns="2" style="width:100%">
 					<p:column width="50%">
 						<p:outputLabel for="telefone" value="Telefone: " />
 						<br />
-						<p:inputText id="telefone"
-							value="#{usuarioControl.selected.telefone}" required="true" style="width: 50%"/>
+						<p:inputMask id="telefone" mask="(99)9?99999999" value="#{usuarioControl.selected.telefone}" required="true" style="width: 90%" requiredMessage="Campo Telefone é necessário"/>
 					</p:column>	
 					<p:column width="50%">
-						<p:outputLabel for="documento" value="Documento: " />
-						<br />
-						<p:inputText id="documento"
-							value="#{usuarioControl.selected.documento}" required="true" style="width: 50%"/>
+						<p:outputLabel for="cpf" value="CPF: " />
+						<br/>
+						<p:inputMask id="cpf" value="#{usuarioControl.selected.cpf}" style="width: 100%" mask="999.999.999-99" required="true" requiredMessage="Campo CPF é necessário" >
+							 <f:validateLength minimum="14" />
+						</p:inputMask>
 					</p:column>	
-				</h:panelGrid><br />
+				</h:panelGrid>
 				
 				<h:panelGrid columns="2" style="width:100%">
 					<p:column width="50%">
 						<p:outputLabel for="senha" value="Senha: " />
 						<br />
 						<p:inputText id="senha"
-							value="#{usuarioControl.selected.senha}" required="true" style="width: 50%"/>
+							value="#{usuarioControl.selected.senha}" required="true" style="width: 40%" requiredMessage="Campo Senha é necessário"/>
 					</p:column>	
-					<p:column width="50%" style="text-align: left">
-						<p:outputLabel for="manyBtnTipo" value="Tipo: " />
-						<br />
-						<p:selectOneButton id="manyBtnTipo" value="#{usuarioControl.selected.tipo}">
-							<f:converter converterId="javax.faces.Integer" />
-	                        <f:selectItem itemLabel="Admin" itemValue="1"/>
-	                        <f:selectItem itemLabel="Usuario" itemValue="2"/>
-	                        <f:selectItem itemLabel="Cliente" itemValue="3"/>
-                   		</p:selectOneButton>
-                   	</p:column>	
 				</h:panelGrid>
 				
 				<p:separator/>
@@ -190,6 +187,13 @@
 					actionListener="#{usuarioControl.unRowSelect()}"
 					type="submit"
 					styleClass="btn-block btn-success" icon="fa fa-floppy-o"/>
+					
+				<p:commandButton value="Cancelar"
+					id="brnCancelar"
+					style="margin-top: -10px; width: auto"
+					update="frmList:tabela frmCadastro @(.ui-button)"
+					onclick="PF('dlgCadastro').hide()"
+					styleClass="btn-block btn-danger" icon="fa fa-close"/>	
 			</h:form>
 		</p:dialog>
 	</ui:define>

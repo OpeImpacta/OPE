@@ -2,7 +2,6 @@ package br.edu.impacta.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -118,6 +117,6 @@ public class Modelo implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Modelo [idModelo=" + idModelo + "]";
+		return nome;
 	}
 }

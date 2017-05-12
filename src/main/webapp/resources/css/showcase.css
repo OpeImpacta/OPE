@@ -12,8 +12,10 @@ li.header {
     text-overflow: clip;
 }
 
-.sidebar-toggle{
-	display: none !important;
+@media screen and (min-width: 800px){
+	.sidebar-toggle{
+		display: none !important;
+	}
 }
 
 #userImage {

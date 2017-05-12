@@ -33,30 +33,26 @@ public class Usuario implements Serializable{
 	@Column(name="senha", nullable =  false, length =  50)
 	private String senha;
 	
-	@Column(name="tipo")
-	private int tipo;
-	
 	@Column(name="telefone", length =  15)
 	private String telefone;
 	
-	@Column(name="documento", nullable =  false, length = 20)
-	private String documento;
+	@Column(name="cpf", nullable =  false, length = 20)
+	private String cpf;
 	
 	@Column(name="ativo", nullable =  false)
-	private boolean ativo;
+	private boolean ativo = true;
 	
 	public Usuario() {}
 
 	public Usuario(Long id, boolean ativo, int tipo, String nome, 
-			String email, String senha, String telefone, String documento) {
+			String email, String senha, String telefone, String cpf) {
 		this.id = id;
 		this.ativo = ativo;
-		this.tipo = tipo;
 		this.nome = nome;
 		this.email = email;
 		this.senha = senha;
 		this.telefone = telefone;
-		this.documento = documento;
+		this.cpf = cpf;
 	}
 	
 	public Long getId() {
@@ -91,14 +87,6 @@ public class Usuario implements Serializable{
 		this.senha = senha;
 	}
 
-	public int getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(int tipo) {
-		this.tipo = tipo;
-	}
-
 	public String getTelefone() {
 		return telefone;
 	}
@@ -107,12 +95,12 @@ public class Usuario implements Serializable{
 		this.telefone = telefone;
 	}
 
-	public String getDocumento() {
-		return documento;
+	public String getCpf() {
+		return cpf;
 	}
 
-	public void setDocumento(String documento) {
-		this.documento = documento;
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
 	}
 
 	public boolean isAtivo() {

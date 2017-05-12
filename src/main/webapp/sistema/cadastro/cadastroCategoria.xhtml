@@ -113,8 +113,9 @@
 		</h:form>
 			<p:dialog width="400px" height="auto" widgetVar="dlgCadastro" resizable="false"
 					header="Cadastro de Categoria" focus="frmCadastro:nome" styleClass="box-primary"
-					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true">
+					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
 				<h:form id="frmCadastro">
+					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
 					<h:panelGrid columns="2" style="width:100%">
 							<p:column width="50%">
 								<p:outputLabel value="Código: "><br />
@@ -134,8 +135,7 @@
 								<p:outputLabel for="nome" value="Nome: " />
 								<br />
 								<p:inputText id="nome"
-									value="#{categoriaControl.selected.nome}" required="true" style="width: 100%"/>
-									<p:message id="msgDefault" for="nome"/>
+									value="#{categoriaControl.selected.nome}" required="true" style="width: 100%" requiredMessage="Campo Nome é necessário"/>
 							</p:column>	
 				</h:panelGrid>
 				<p:separator/>
@@ -146,6 +146,13 @@
 					actionListener="#{categoriaControl.unRowSelect()}"
 					type="submit"
 					styleClass="btn-block btn-success" icon="fa fa-floppy-o"/>
+					
+				<p:commandButton value="Cancelar"
+					id="brnCancelar"
+					style="margin-top: -10px; width: auto"
+					update="frmList:tabela frmCadastro @(.ui-button)"
+					onclick="PF('dlgCadastro').hide()"
+					styleClass="btn-block btn-danger" icon="fa fa-close"/>	
 			</h:form>
 			</p:dialog>
 	</ui:define>
