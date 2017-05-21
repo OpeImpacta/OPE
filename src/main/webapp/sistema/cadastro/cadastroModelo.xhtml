@@ -17,11 +17,11 @@
     </ui:define>
 
     <ui:define name="title">
-        Cadastro de Modelo
+        Modelo
     </ui:define>
 
 	<ui:define name="body">
-		<adm:breadcrumb link="/sitema/cadastro/cadastroModelo" title="Cadastro de Modelo"/>
+		<adm:breadcrumb link="/sitema/cadastro/cadastroModelo" title="Modelo"/>
 		<h:form id="frmList">
 			<p:growl id="msgOk" showSummary="false" severity="info"/>
             <p:growl id="msgErro" showSummary="false" strick="true" severity="warn,error,fatal"/>
@@ -60,7 +60,7 @@
 
 			<p:dataTable id="tabela" var="registro" value="#{modeloControl.list}" rowKey="#{registro.idModelo}" selectionMode="single" selection="#{modeloControl.selected}"
 							paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                            currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]"
+                            currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" emptyMessage="Nenhum Registro Encontrado"
                             widgetVar="wvTable">
 							
                 <p:ajax event="rowSelect" listener="#{modeloControl.onRowSelect()}" update="@(.ui-button)"/>
@@ -118,7 +118,7 @@
 
 		</h:form>
 			<p:dialog width="400px" height="auto" widgetVar="dlgCadastro" resizable="false" 
-					header="Cadastro de Modelo" focus="frmCadastro:nome" styleClass="box-primary"
+					header="Modelo" focus="frmCadastro:nome" styleClass="box-primary"
 					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
 				<h:form id="frmCadastro">
 					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
@@ -139,12 +139,12 @@
 	                <h:panelGrid style="width:100%">
 	                	<p:row>
 							<p:outputLabel for="nome" value="Nome: " />
-							<p:inputText id="nome" value="#{modeloControl.selected.nome}" required="true" style="width: 100%" requiredMessage="Campo Nome é necessário"/>
+							<p:inputText id="nome" value="#{modeloControl.selected.nome}" maxlength="50" required="true" style="width: 100%" requiredMessage="Campo Nome é necessário"/>
 						</p:row>
 						<p:row>
 							<p:outputLabel for="selectCategoria" value="Montadora: "/>
 							<p:selectOneMenu id="selectCategoria" value="#{modeloControl.selected.montadora}" filter="true" filterMatchMode="contains" converter="omnifaces.SelectItemsConverter" style="width:100%; height: 30px" required="true" requiredMessage="Campo Montadora é necessário">
-	                           	<f:selectItem itemLabel="Selecione..." itemValue="" />
+	                           	<f:selectItem itemLabel="Selecione" itemValue="" />
 	                           	<f:selectItems value="#{montadoraControl.listAtivo}" var="item" itemLabel="#{item.idMontadora} - #{item.nome}" itemValue="#{item}" />
 	                       </p:selectOneMenu> 
 						</p:row>

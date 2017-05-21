@@ -24,10 +24,10 @@ public class Usuario implements Serializable{
 	@Column(name = "id")
 	private Long id;
 
-	@Column(name="nome", nullable =  false)
+	@Column(name="nome", nullable =  false, length = 50)
 	private String nome;
 	
-	@Column(name="email", nullable =  false)
+	@Column(name="email", nullable =  false, length = 50)
 	private String email;
 	
 	@Column(name="senha", nullable =  false, length =  50)

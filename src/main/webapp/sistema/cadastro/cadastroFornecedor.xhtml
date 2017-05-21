@@ -11,11 +11,11 @@
                 
   
 	<ui:define name="title">
-        Cadastro de Fornecedor
+        Fornecedor
     </ui:define>
 
 	<ui:define name="body">
-		<adm:breadcrumb title="Cadastro de Fornecedor"/>
+		<adm:breadcrumb title="Fornecedor"/>
 		<h:form id="frmList">
 			<p:growl id="msgOk" showSummary="false" severity="info"/>
             <p:growl id="msgErro" showSummary="false" strick="true" severity="warn,error,fatal"/>
@@ -54,7 +54,7 @@
 
 			<p:dataTable id="tabela" var="registro" value="#{fornecedorControl.list}" rowKey="#{registro.idFornecedor}" selectionMode="single" selection="#{fornecedorControl.selected}"
 							paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" sortBy="#{registro.razaoSocial}"
+                                 currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" sortBy="#{registro.razaoSocial}" emptyMessage="Nenhum Registro Encontrado"
                                  widgetVar="wvTable">
 							
                 <p:ajax event="rowSelect" listener="#{fornecedorControl.onRowSelect()}" update="@(.ui-button)"/>
@@ -114,7 +114,7 @@
 
 		</h:form>
 			<p:dialog width="850px" height="480px" widgetVar="dlgCadastro" resizable="false" responsive="true" 
-					header="Cadastro de Fornecedor" focus="frmCadastro:tabView:razaoSocial" styleClass="box-primary" 
+					header="Fornecedor" focus="frmCadastro:tabView:razaoSocial" styleClass="box-primary" 
 					modal="true" appendTo="@(body)" closable="true" closeOnEscape="true">
 					<h:form id="frmCadastro">
 					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>

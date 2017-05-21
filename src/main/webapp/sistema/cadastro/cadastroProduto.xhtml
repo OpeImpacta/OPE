@@ -25,11 +25,11 @@
     </ui:define>
 
     <ui:define name="title">
-        Cadastro de Produto
+        Produto
     </ui:define>
 
 	<ui:define name="body">
-		<adm:breadcrumb link="/sistema/cadastro/cadastroProduto" title="Cadastro de Produto"/>
+		<adm:breadcrumb link="/sistema/cadastro/cadastroProduto" title="Produto"/>
 		<h:form id="frmList">
 			<p:growl id="msgOk" showSummary="false" severity="info"/>
             <p:growl id="msgErro" showSummary="false" strick="true" severity="warn,error,fatal"/>
@@ -68,7 +68,7 @@
 
 			<p:dataTable id="tabela" var="registro" value="#{produtoControl.list}" rowKey="#{registro.idProduto}" selectionMode="single" selection="#{produtoControl.selected}"
 							paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                            currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]"
+                            currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" emptyMessage="Nenhum Registro Encontrado"
                             widgetVar="wvTable">
 							
                 <p:ajax event="rowSelect" listener="#{produtoControl.onRowSelect()}" update="@(.ui-button)"/>
@@ -133,7 +133,7 @@
 
 		</h:form>
 			<p:dialog width="700px" height="auto" widgetVar="dlgCadastro" resizable="false" 
-					header="Cadastro de Produto" focus="frmCadastro:nome" styleClass="box-primary"
+					header="Produto" focus="frmCadastro:nome" styleClass="box-primary"
 					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
 				<h:form id="frmCadastro">
 					#{produtoControl.verificaModeloList()}

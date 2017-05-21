@@ -12,11 +12,11 @@
              
    
 	<ui:define name="title">
-        Cadastro de Cliente
+        Cliente
     </ui:define>
 
 	<ui:define name="body">
-		<adm:breadcrumb title="Cadastro de Cliente"/>
+		<adm:breadcrumb title="Cliente"/>
 		<h:form id="frmList">
 			<p:growl id="msgOk" showSummary="false" severity="info"/>
             <p:growl id="msgErro" showSummary="false" strick="true" severity="warn,error,fatal"/>
@@ -55,7 +55,7 @@
 
 			<p:dataTable id="tabela" var="registro"  value="#{clienteControl.list}" rowKey="#{registro.idCliente}" selectionMode="single" selection="#{clienteControl.selected}"
 							paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" sortBy="#{registro.nome}"
+                                 currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" sortBy="#{registro.nome}" emptyMessage="Nenhum Registro Encontrado"
                                  widgetVar="wvTable">
 							
                 <p:ajax event="rowSelect" listener="#{clienteControl.onRowSelect()}" update="@(.ui-button)"/>
@@ -115,7 +115,7 @@
 
 		</h:form>
 			<p:dialog width="750px" height="auto" widgetVar="dlgCadastro" resizable="false" responsive="true" 
-					header="Cadastro de Cliente" focus="frmCadastro:nome" styleClass="box-primary" 
+					header="Cliente" focus="frmCadastro:nome" styleClass="box-primary" 
 					modal="true" appendTo="@(body)" closable="true" closeOnEscape="true">
 					<h:form id="frmCadastro">
 					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
