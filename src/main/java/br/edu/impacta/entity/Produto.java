@@ -1,6 +1,7 @@
 package br.edu.impacta.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,27 @@ public class Produto implements Serializable {
 	
 	@Column(name="nome", nullable =  false, length =  50)
 	private String nome;
+	
+	@Column(name = "quantidade", nullable = true)
+	private Integer quantidade;
+	
+	@Column(name = "qtd_minima", nullable = true)
+	private Integer qtdMinima;
+	
+	@Column(name = "mostra_vitrine", nullable = false)
+	private Boolean mostraVitrine;
+	
+	@Column(name = "preco_compra", nullable = true)
+	private BigDecimal precoCompra;
+	
+	@Column(name =  "preco_venda", nullable = false)
+	private BigDecimal precoVenda;
+	
+	@Column(name = "margem", nullable = true)
+	private BigDecimal margem;
+	
+	@Column(name = "controla_estoque")
+	private Boolean controlaEstoque;
 
 	@Column(name="ativo")
 	private boolean ativo = true;
@@ -76,6 +98,62 @@ public class Produto implements Serializable {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public Integer getQuantidade() {
+		return quantidade;
+	}
+
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
+	}
+
+	public Integer getQtdMinima() {
+		return qtdMinima;
+	}
+
+	public void setQtdMinima(Integer qtdMinima) {
+		this.qtdMinima = qtdMinima;
+	}
+
+	public Boolean getMostraVitrine() {
+		return mostraVitrine;
+	}
+
+	public void setMostraVitrine(Boolean mostraVitrine) {
+		this.mostraVitrine = mostraVitrine;
+	}
+
+	public BigDecimal getPrecoCompra() {
+		return precoCompra;
+	}
+
+	public void setPrecoCompra(BigDecimal precoCompra) {
+		this.precoCompra = precoCompra;
+	}
+
+	public BigDecimal getPrecoVenda() {
+		return precoVenda;
+	}
+
+	public void setPrecoVenda(BigDecimal precoVenda) {
+		this.precoVenda = precoVenda;
+	}
+
+	public BigDecimal getMargem() {
+		return margem;
+	}
+
+	public void setMargem(BigDecimal margem) {
+		this.margem = margem;
+	}
+
+	public Boolean getControlaEstoque() {
+		return controlaEstoque;
+	}
+
+	public void setControlaEstoque(Boolean controlaEstoque) {
+		this.controlaEstoque = controlaEstoque;
 	}
 
 	public boolean isAtivo() {
