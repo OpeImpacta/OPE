@@ -67,6 +67,58 @@
         
         <li class="treeview">
             <a href="#">
+                <i class="fa fa-dropbox"></i>
+                <span>Estoque</span>
+            <span class="pull-right-container">
+                     <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <p:link href="/sistema/estoque/movimentacao.xhtml">
+                        <i class="fa fa-bars"></i>
+                        <span>Gerencimento</span>
+                    </p:link>
+                </li>
+            </ul>
+            <ul class="treeview-menu">
+                <li>
+                   <p:link href="/sistema/estoque/consultarEstoque.xhtml">
+                       <i class="fa fa-bars"></i>
+                       <span>Consulta</span>
+                   </p:link>
+               </li>
+            </ul>
+         </li>
+         
+             <li class="treeview">
+            <a href="#">
+                <i class="fa fa-cart-plus"></i>
+                <span>Vendas</span>
+	            <span class="pull-right-container">
+	                     <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li>
+                    <p:link href="/sistema/venda/vendas.xhtml">
+                        <i class="fa fa-bars"></i>
+                        <span>Nova Venda</span>
+                    </p:link>
+                </li>
+            </ul>
+            <ul class="treeview-menu">
+                <li>
+                   <p:link href="/sistema/venda/devolucao.xhtml">
+                       <i class="fa fa-bars"></i>
+                       <span>Devolução</span>
+                   </p:link>
+               </li>
+            </ul>
+         </li>
+        
+        <li class="treeview">
+            <a href="#">
                 <i class="fa fa-cog"></i>
                 <span>Configurações</span>
             <span class="pull-right-container">
@@ -77,7 +129,7 @@
             	<li>
 		            <p:link href="/pages/layout/skin.xhtml">
 		                <i class="fa fa-gears"></i>
-		                <span>Skins</span>
+		                <span>Alterar cor do sistema</span>
 		            </p:link>
 		        </li>
             </ul>
