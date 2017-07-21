@@ -40,11 +40,16 @@ public class Cliente implements Serializable {
 	@Column(name="email", nullable =  true, length =  50)
 	private String email;
 	
-	@Column(name="cpf", nullable =  false, length =  14)
+	//CPF ou CNPJ
+	@Column(name="cpf", nullable =  false, length =  20)
 	private String cpf;
 
 	@Column(name="senha", nullable =  true, length =  100)
 	private String senha;
+	
+	// 1 - Pessoa Fisica | 2 - Pessoa Juridica
+	@Column(name = "tipo", nullable = false)
+	private Integer tipo;
 
 	@Column(name="ativo")
 	private boolean ativo = true;
@@ -127,6 +132,14 @@ public class Cliente implements Serializable {
 
 	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
+	}
+
+	public Integer getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(Integer tipo) {
+		this.tipo = tipo;
 	}
 
 	public List<TelCliente> getTelefones() {

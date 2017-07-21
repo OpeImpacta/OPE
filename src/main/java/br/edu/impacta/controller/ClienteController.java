@@ -24,8 +24,13 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 
 	private static ClienteDAO clienteDAO = new ClienteDAO();
 	private TelCliente telCliente = new TelCliente();
-	
+
 	private boolean disableButton = true;
+
+	private String maskCpf;
+	private String valueNome;
+	private String valueCpf;
+	private String pessoa;
 
 
 	// *******************************************
@@ -65,14 +70,14 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 		((Cliente)this.getSelected()).delTelefone(telefone);
 
 	}
-	
+
 	//Verifica se todos os campos do telefone estão preenchidos
 	public boolean verificaTelefone(){
 		if(telCliente.getNumero().equals("")){
 			UtilityTela.criarMensagemErroSemDetail("Campo Número do Telefone é Necessário");
 			return false;
 		}
-		
+
 		if(telCliente.getTipo().equals("")){
 			UtilityTela.criarMensagemErroSemDetail("Campo Tipo é Necessário");
 			return false;
@@ -90,9 +95,54 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 		disableButton = true;
 	}
 
+	//Altera mascara e nome do campo dependendo do tipo de pessoa
+	public void updateForm(){
+		if(this.getPessoa().equals("1") || this.getPessoa() == null){
+			this.maskCpf = "999.999.999-99";
+			this.valueNome = "Nome";
+			this.valueCpf = "CPF";
+		}else{
+			this.maskCpf = "99.999.999/9999-99";
+			this.valueNome = "Razão Social";
+			this.valueCpf = "CNPJ";
+		}
+	}
+
+	//Verifica qual tipo de pessoa quando for alterar
+	public void setaPessoa(){
+		if(getSelected() != null){
+			if(((Cliente)this.getSelected()).getTipo() == 1){
+				this.setPessoa("1");
+			}else{
+				this.setPessoa("2");
+			}
+			this.updateForm();
+		}
+	}
+	
+	public void limpaFormulario(){
+		this.maskCpf = null;
+		this.pessoa = null;
+		this.valueCpf = null;
+		this.valueNome = null;
+	}
+
+	@Override
+	public void doStartAddRecord() throws Exception {
+		this.updateForm();
+		super.doStartAddRecord();
+	}
+
+
 	@Override
 	public void treatRecord() {
+		if(this.getPessoa() == "1" || this.getPessoa().equals("1")){
+			((Cliente)this.getSelected()).setTipo(1);
+		}else{
+			((Cliente)this.getSelected()).setTipo(2);
+		}
 		super.treatRecord();
+		this.limpaFormulario();
 		UtilityTela.executarJavascript("PF('dlgCadastro').hide()");
 	}
 
@@ -111,6 +161,51 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 
 	public void setTelCliente(TelCliente telCliente) {
 		this.telCliente = telCliente;
+	}
+
+	public String getMaskCpf() {
+		if(maskCpf == null){
+			return "999.999.999-99";
+		}
+
+		return maskCpf;
+	}
+
+	public void setMaskCpf(String maskCpf) {
+		this.maskCpf = maskCpf;
+	}
+
+	public String getValueNome() {
+		if(valueNome == null){
+			return "Nome";
+		}
+		return valueNome;
+	}
+
+	public void setValueNome(String valueNome) {
+		this.valueNome = valueNome;
+	}
+
+	public String getPessoa() {
+		if(pessoa == null){
+			return "1";
+		}
+		return pessoa;
+	}
+
+	public void setPessoa(String pessoa) {
+		this.pessoa = pessoa;
+	}
+
+	public String getValueCpf() {
+		if(valueCpf == null){
+			return "CPF";
+		}
+		return valueCpf;
+	}
+
+	public void setValueCpf(String valueCpf) {
+		this.valueCpf = valueCpf;
 	}
 
 }

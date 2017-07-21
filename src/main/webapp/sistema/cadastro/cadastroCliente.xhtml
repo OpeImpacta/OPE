@@ -45,8 +45,8 @@
                                      
                         <p:spacer width="5"/>
                         
-                        <p:commandButton value="Editar" update="@(.ui-dialog)" styleClass="btn-info"
-                        				 disabled="#{clienteControl.disableButton}"
+                        <p:commandButton value="Editar" update="@(.ui-dialog)" process="frmCadastro" styleClass="btn-info"
+                        				 disabled="#{clienteControl.disableButton}" onclick="#{clienteControl.setaPessoa()}"
                         				 oncomplete="PF('dlgCadastro').show()" icon="fa fa-edit">
                         </p:commandButton>                 
                     </div>
@@ -68,11 +68,11 @@
 					<h:outputText value="#{registro.idCliente}" />
 				</p:column>
 
-				<p:column headerText="Nome" filterBy="#{registro.nome}" sortBy="#{registro.nome}" filterMatchMode="contains">
+				<p:column headerText="Nome/Razão Social" filterBy="#{registro.nome}" filterStyle="width: 200px" sortBy="#{registro.nome}" filterMatchMode="contains">
 					<h:outputText value="#{registro.nome}" />
 				</p:column>
 				
-				<p:column headerText="CPF" filterBy="#{registro.cpf}" sortBy="#{registro.cpf}" filterMatchMode="contains" style="text-align:center">
+				<p:column headerText="CPF/CNPJ" filterBy="#{registro.cpf}" sortBy="#{registro.cpf}" filterStyle="width: 130px" filterMatchMode="contains" style="text-align:center">
 					<h:outputText value="#{registro.cpf}" />
 				</p:column>
 				
@@ -95,9 +95,9 @@
 	                <p:panelGrid  columns="2" style="width:100%"   >
 		                	<h:outputText value="Código : "/>
 		                <h:outputText value="#{registro.idCliente}"  />
-		                <h:outputText value="Nome : " />
+		                <h:outputText value="Nome/Razão Social : " />
 		                <h:outputText value="#{registro.nome}" />
-		                <h:outputText value="CPF : " />
+		                <h:outputText value="CPF/CNPJ : " />
 		                <h:outputText value="#{registro.cpf}" />
 		                <h:outputText value="Email : " />
 		                <h:outputText value="#{registro.email}" />
@@ -114,19 +114,29 @@
             </div>
 
 		</h:form>
-			<p:dialog width="750px" height="auto" widgetVar="dlgCadastro" resizable="false" responsive="true" 
+			<p:dialog width="800px" height="auto" widgetVar="dlgCadastro" resizable="false" responsive="true" 
 					header="Cliente" focus="frmCadastro:nome" styleClass="box-primary" 
 					modal="true" appendTo="@(body)" closable="true" closeOnEscape="true">
+					<p:ajax event="close" listener="#{clienteControl.limpaFormulario}" update="frmCadastro" />
+					
 					<h:form id="frmCadastro">
 					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
-					<h:panelGrid columns="2" style="width:100%">
+					<h:panelGrid columns="3" style="width:100%">
 							<p:column width="50%">
 								<p:outputLabel value="Código: "><br />
 									<p:inputText value="#{clienteControl.selected.idCliente}" disabled="true"/>
 								</p:outputLabel>
 							</p:column>
+							<p:outputLabel for="tipoPessoa" value="Pessoa:"><br/>
+		                    	<p:selectOneButton id="tipoPessoa" value="#{clienteControl.pessoa}" >
+			                        <f:selectItem itemLabel="Física" itemValue="1"/>
+			                        <f:selectItem itemLabel="Jurídica" itemValue="2"/>
+			                        
+			                        <p:ajax event="change" update="frmCadastro:lblNome frmCadastro:lblCpf frmCadastro:cpf" listener="#{clienteControl.updateForm}" />
+			                    </p:selectOneButton>
+		                    </p:outputLabel>
 							<p:column width="50%" style="text-align: left">
-								<p:selectOneButton id="manyBtn" value="#{clienteControl.selected.ativo}">
+								<p:selectOneButton id="manyBtn" style="margin-top: 15px" value="#{clienteControl.selected.ativo}">
 									<f:converter converterId="javax.faces.Boolean" />
 			                        <f:selectItem itemLabel="Ativo" itemValue="true"/>
 			                        <f:selectItem itemLabel="Inativo" itemValue="false"/>
@@ -135,19 +145,17 @@
 	                </h:panelGrid>    	
 	                <h:panelGrid width="100%" columns="3" >
 						<p:column width="100%" colspan="2">
-							<p:outputLabel for="nome" value="Nome: " ><br />
+							<p:outputLabel for="nome" id="lblNome" value="#{clienteControl.valueNome}: " ><br />
 								<p:inputText id="nome" value="#{clienteControl.selected.nome}" style="width: 180%"  required="true" requiredMessage="Campo Nome é Necessário" maxlength="50"/>
 							</p:outputLabel>
 						</p:column>	
 						<p:column width="100%" colspan="2" >
-							<p:outputLabel for="cpf" value="CPF: " style="margin-left: 100px" ><br/>
-							 	<p:inputMask id="cpf" value="#{clienteControl.selected.cpf}" style="width: 90%" mask="999.999.999-99" required="true" requiredMessage="Campo CPF é Necessário" >
-							 		<f:validateLength minimum="14" />
-							 	</p:inputMask>
+							<p:outputLabel for="cpf" value="#{clienteControl.valueCpf}: " id="lblCpf" style="margin-left: 120px" ><br/>
+							 	<p:inputMask id="cpf" value="#{clienteControl.selected.cpf}" style="width: 90%" mask="#{clienteControl.maskCpf}" required="true" requiredMessage="Campo CPF é Necessário" />
 							</p:outputLabel>
 						</p:column>	
-						<p:column width="100%" colspan="2">
-							<p:outputLabel for="email" value="Email " style="margin-right: 50px"><br />
+						<p:column colspan="2">
+							<p:outputLabel for="email" value="Email " style="margin-right: 90px"><br />
 								<p:inputText id="email" value="#{clienteControl.selected.email}" validatorMessage="Email Inválido!" style="width: 170%" maxlength="50" >
 									<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 								</p:inputText>
@@ -241,6 +249,7 @@
 				<p:commandButton value="Cancelar"
 					id="brnCancelar"
 					style="margin-top: -10px; width: auto"
+					actionListener="#{clienteControl.limpaFormulario}"
 					update="frmList:tabela frmCadastro @(.ui-button)"
 					onclick="PF('dlgCadastro').hide()"
 					styleClass="btn-block btn-danger" icon="fa fa-close"/>
