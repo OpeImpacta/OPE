@@ -1,0 +1,5 @@
+Obs:
+Tabela Venda: 
+    formaPgto ( 1 - Dinheiro | 2 - Debito | 3 - Credito | 4 - Cheque)
+    tipo (1 - Venda | 2 - Orçamento)
+     
