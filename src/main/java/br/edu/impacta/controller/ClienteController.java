@@ -31,6 +31,8 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 	private String valueNome;
 	private String valueCpf;
 	private String pessoa;
+	
+	private String maskTelefone;
 
 
 	// *******************************************
@@ -120,6 +122,25 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 		}
 	}
 	
+	//altera a mascara do telefone de acordo com o tipo
+	public void updateMaskTelefone() {
+		if(telCliente != null) {
+			switch (telCliente.getTipo()) {
+			case "Residencial":
+				maskTelefone = "(99)9999-9999";
+				break;
+			case "Comercial":
+				maskTelefone = "(99)9999-9999";
+				break;
+			case "Celular":
+				maskTelefone = "(99)99999-9999";
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	
 	public void limpaFormulario(){
 		this.maskCpf = null;
 		this.pessoa = null;
@@ -206,6 +227,17 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 
 	public void setValueCpf(String valueCpf) {
 		this.valueCpf = valueCpf;
+	}
+
+	public String getMaskTelefone() {
+		if(maskTelefone == null) {
+			return "(99)9999-9999";
+		}
+		return maskTelefone;
+	}
+
+	public void setMaskTelefone(String maskTelefone) {
+		this.maskTelefone = maskTelefone;
 	}
 
 }

@@ -31,6 +31,8 @@ public class FornecedorController extends BasicControlCad<Fornecedor> implements
 
 	private boolean disableButton = true;
 
+	private String maskTelefone;
+
 
 	// *******************************************
 	// * Alterar somente neste construtor
@@ -43,7 +45,7 @@ public class FornecedorController extends BasicControlCad<Fornecedor> implements
 	public void buscarCep(){
 		String cep = ((Fornecedor)this.getSelected()).getEndereco().getCep();
 		String cepAux = cep.replace('-',' ').replace('_', ' ').trim();
-		
+
 		//Verifica se o cep é valido
 		if(cepAux == null || cepAux.length() < 8 || cepAux.equals("")){
 			return;
@@ -109,6 +111,25 @@ public class FornecedorController extends BasicControlCad<Fornecedor> implements
 		disableButton = true;
 	}
 
+	//altera a mascara do telefone de acordo com o tipo
+	public void updateMaskTelefone() {
+		if(telFornecedor != null) {
+			switch (telFornecedor.getTipo()) {
+			case "Residencial":
+				maskTelefone = "(99)9999-9999";
+				break;
+			case "Comercial":
+				maskTelefone = "(99)9999-9999";
+				break;
+			case "Celular":
+				maskTelefone = "(99)99999-9999";
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
 	@Override
 	public void treatRecord() {
 		super.treatRecord();
@@ -141,6 +162,17 @@ public class FornecedorController extends BasicControlCad<Fornecedor> implements
 
 	public void setCepWebService(CepWebService cepWebService) {
 		this.cepWebService = cepWebService;
+	}
+
+	public String getMaskTelefone() {
+		if(maskTelefone == null) {
+			return "(99)9999-9999";
+		}
+		return maskTelefone;
+	}
+
+	public void setMaskTelefone(String maskTelefone) {
+		this.maskTelefone = maskTelefone;
 	}
 
 

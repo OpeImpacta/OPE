@@ -123,7 +123,7 @@
 
 		</h:form>
 			<!-- ENTRADA -->
-			<p:dialog width="850px" height="auto" widgetVar="dlgEntrada" resizable="false"
+			<p:dialog width="920px" height="auto" widgetVar="dlgEntrada" resizable="false"
 					header="Entrada de Produtos" focus="frmEntrada:cbProduto"  styleClass="box-primary"
 					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
 					<p:ajax event="close" listener="#{movimentacaoControl.limparForm}" />
@@ -211,7 +211,7 @@
 				<p:separator/>
 				<p:commandButton value="Salvar"
 					style="margin-top: -10px; width: auto"
-					update="frmList:tabela"
+					update="frmList @(.ui-button)"
 					action="#{movimentacaoControl.recordMovimentacao()}"
 					onsuccess="PF('dlgEntrada').hide()"
 					type="submit"
@@ -228,7 +228,7 @@
 			</p:dialog>
 			
 			<!-- SAIDA -->
-			<p:dialog width="850px" height="auto" widgetVar="dlgSaida" resizable="false"
+			<p:dialog width="920px" height="auto" widgetVar="dlgSaida" resizable="false"
 					header="Saída de Produtos" focus="frmSaida:cbProduto"  styleClass="box-primary"
 					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
 					<p:ajax event="close" listener="#{movimentacaoControl.limparForm}" />
@@ -284,7 +284,7 @@
 				<p:separator/>
 				<p:commandButton value="Salvar"
 					style="margin-top: -10px; width: auto"
-					update="frmList:tabela"
+					update="frmList @(.ui-button)"
 					action="#{movimentacaoControl.recordMovimentacao()}"
 					onsuccess="PF('dlgSaida').hide()"
 					type="submit"
@@ -301,7 +301,7 @@
 			</p:dialog>
 			
 			<!-- AJUSTE -->
-			<p:dialog width="850px" height="auto" widgetVar="dlgAjuste" resizable="false"
+			<p:dialog width="940px" height="auto" widgetVar="dlgAjuste" resizable="false"
 					header="Ajuste de Produtos" focus="frmAjuste:cbProduto"  styleClass="box-primary"
 					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
 					<p:ajax event="close" listener="#{movimentacaoControl.limparForm}" />
@@ -397,7 +397,7 @@
 				<p:separator/>
 				<p:commandButton value="Salvar"
 					style="margin-top: -10px; width: auto"
-					update="frmList:tabela"
+					update="frmList @(.ui-button)"
 					action="#{movimentacaoControl.recordMovimentacao()}"
 					onsuccess="PF('dlgAjuste').hide()"
 					type="submit"

@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

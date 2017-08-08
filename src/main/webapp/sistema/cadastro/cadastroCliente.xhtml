@@ -64,7 +64,7 @@
                 	<p:rowToggler />
                 </p:column>
 
-				<p:column headerText="Código" sortBy="#{registro.idCliente}" filterBy="#{registro.idCliente}" filterMatchMode="contains">
+				<p:column headerText="Código" style="text-align:center" sortBy="#{registro.idCliente}" filterBy="#{registro.idCliente}" filterMatchMode="contains">
 					<h:outputText value="#{registro.idCliente}" />
 				</p:column>
 
@@ -114,7 +114,7 @@
             </div>
 
 		</h:form>
-			<p:dialog width="800px" height="auto" widgetVar="dlgCadastro" resizable="false" responsive="true" 
+			<p:dialog width="900px" height="auto" widgetVar="dlgCadastro" resizable="false" responsive="true" 
 					header="Cliente" focus="frmCadastro:nome" styleClass="box-primary" 
 					modal="true" appendTo="@(body)" closable="true" closeOnEscape="true">
 					<p:ajax event="close" listener="#{clienteControl.limpaFormulario}" update="frmCadastro" />
@@ -150,12 +150,12 @@
 							</p:outputLabel>
 						</p:column>	
 						<p:column width="100%" colspan="2" >
-							<p:outputLabel for="cpf" value="#{clienteControl.valueCpf}: " id="lblCpf" style="margin-left: 120px" ><br/>
+							<p:outputLabel for="cpf" value="#{clienteControl.valueCpf}: " id="lblCpf" style="margin-left: 150px" ><br/>
 							 	<p:inputMask id="cpf" value="#{clienteControl.selected.cpf}" style="width: 90%" mask="#{clienteControl.maskCpf}" required="true" requiredMessage="Campo CPF é Necessário" />
 							</p:outputLabel>
 						</p:column>	
 						<p:column colspan="2">
-							<p:outputLabel for="email" value="Email " style="margin-right: 90px"><br />
+							<p:outputLabel for="email" value="Email " style="margin-right: 110px"><br />
 								<p:inputText id="email" value="#{clienteControl.selected.email}" validatorMessage="Email Inválido!" style="width: 170%" maxlength="50" >
 									<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 								</p:inputText>
@@ -176,29 +176,31 @@
 				                        <f:selectItem itemLabel="Residencial" itemValue="Residencial"/>
 				                        <f:selectItem itemLabel="Celular" itemValue="Celular"/>
 				                        <f:selectItem itemLabel="Comercial" itemValue="Comercial"/>
+				                        
+				                        <p:ajax event="change" update="frmCadastro:numero" listener="#{clienteControl.updateMaskTelefone}" />
 							        </p:selectOneMenu>
 				                </p:outputLabel>
 				                 
 				            </p:column>
 				            <p:column width="100%"> 	   
 			                	<p:outputLabel for="numero" value="Número:" style="margin-left: -550px" ><br/>
-				                	<p:inputMask id="numero" mask="(99)999999999" value="#{clienteControl.telCliente.numero}" />
+				                	<p:inputMask id="numero" mask="#{clienteControl.maskTelefone}" value="#{clienteControl.telCliente.numero}" />
 				                </p:outputLabel>
 			                </p:column>
 			                <p:column width="100%"> 	   
-			                	<p:outputLabel for="compl" value="Complemento" style="margin-left: -370px" ><br/>
+			                	<p:outputLabel for="compl" value="Complemento" style="margin-left: -340px" ><br/>
 				                	<p:inputText id="compl" value="#{clienteControl.telCliente.complemento}" maxlength="20" />
 				                </p:outputLabel>
 			                </p:column>
 			                <p:column width="100%"> 
-				                <p:commandButton icon="fa fa-plus" style="margin-left: -200px; margin-top: 15px"
+				                <p:commandButton icon="fa fa-plus" style="margin-left: -150px; margin-top: 15px"
 				                				 actionListener="#{clienteControl.addTelefone()}"
 		                                         value="Adicionar" styleClass="btn-primary"
 		                                         id="btnAddFone"
 		                                         update="frmCadastro:panelContato" process="frmCadastro:panelContato" />
 				            </p:column>
 				             
-			                <h:panelGrid columns="1" style="width:430px" >
+			                <h:panelGrid columns="1" style="width:500px" >
 			                	<p:dataTable var="registro" emptyMessage="Nenhum Telefone Adicionado" paginator="true" rows="2" 
 			                	paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                 		value="#{clienteControl.selected.telefones}" reflow="true" 

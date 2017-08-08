@@ -50,7 +50,7 @@
 				        </p:selectOneButton>
 				        
 						
-						<p:dataTable id="tbProdutos" var="produto" tableStyle="table-layout: auto;" style="margin-top: 10px" value="#{movimentacaoControl.produtos}"
+						<p:dataTable id="tbProdutos" var="produto" tableStyle="table-layout: auto;" style="margin-top: 10px" value="#{movimentacaoControl.produtos}" lazy="true"
 							paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                             currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" emptyMessage="Nenhum Registro Encontrado">
 							
