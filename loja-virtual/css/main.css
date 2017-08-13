@@ -1,0 +1,74 @@
+html, body {
+	padding: 0;
+	margin: 0;
+	border: none;
+	font-family: 'Montserrat', 'Trebuchet MS', sans-serif;
+	font-size: 12px;
+}
+body {
+	padding-top: 70px;
+}
+.help {
+	cursor: help;
+}
+.bold{
+	font-weight: bold;
+}
+.navbar .navbar-nav .dropdown-menu a{
+	font-size: 12px;
+}
+.align-right{
+	text-align: right !important;
+}
+footer {
+	background-color: #101010;
+	width: 100%;
+	height: auto;
+	position: absolute;
+	left: 0;
+	color: #eee;
+	font-size: 12px;
+	margin-top: 25px;
+	padding-top: 10px;
+}
+footer a {
+	color: #9d9d9d;
+	font-size: 12px;
+}
+footer a:hover {
+	color: #ffffff;
+}
+.login {
+	padding: 20px;
+	min-height: 400px;
+	background-color: #ffffff;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+    text-align: center;
+	box-shadow: 0px 0px 10px 3px #c5c5c5;
+}
+.login .login-inner {
+	margin:0 auto;
+	max-width: 380px;
+	width: auto;
+}
+.login > h3 {
+	margin-left: 5px;
+	line-height: 35px;
+}
+.login .email,
+.login .password {
+	margin-bottom: 5px;
+	height: 45px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.login .login-inner .submit {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	margin-bottom: 20px;
+	text-transform: uppercase;
+}
