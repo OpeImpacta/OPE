@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+				xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="head-end">
+		<style type="text/css">
+			.ui-datatable .ui-datatable-header 
+			{
+				text-align: right !important;
+			}
+		</style>
+
+		<script type="text/javascript">
+			function focusCampo(campo) {
+				document.getElementById(campo).focus();
+			}
+		</script>
+
+	</ui:define>
+
+	<ui:define name="title">
+      	Orçamento
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Orçamento"/>
+		<h:form id="frmVenda">
+			<style type="text/css">
+	        	.styleAutoComplete input
+	        	{
+	        		width: 350px !important;
+        		}
+        	</style>
+		
+			<p:remoteCommand onstart="focusCampo('frmVenda:cmbProduto_input')" autoRun="true" />
+			
+			<p:growl id="msgOk" showSummary="false" severity="info"/>
+            <p:growl id="msgErro" showSummary="false" strick="true" severity="warn,error,fatal"/>
+	        
+			<div class="box box-primary">
+	        	<div class="box-header with-border">
+					<div id="main-buttons" class="hidden-sm hidden-xs">
+						<p:panelGrid columns="1" style="margin-top: 10px; width: 100%" id="panelProduto">
+							<p:row>
+								<div class="ui-g">
+									<div class="ui-g-3">
+										<p:outputLabel for="cmbProduto" value="Produto:">
+											<br />
+
+											<p:autoComplete id="cmbProduto"
+												value="#{vendaControl.itemVenda.produto}"
+												completeMethod="#{vendaControl.completeProdutos}"
+												styleClass="styleAutoComplete" var="item"
+												itemLabel="#{item.nome}" itemValue="#{item}"
+												converter="produtoConverter" forceSelection="true">
+
+												<p:ajax event="itemSelect" update="frmVenda:inPreco"
+													oncomplete="focusCampo('frmVenda:inQuantidade_input')" />
+												<p:column style="width:10%">
+													<h:outputText value="#{item.idProduto}" />
+												</p:column>
+
+												<p:column>
+													<h:outputText value="#{item.nome}" />
+												</p:column>
+											</p:autoComplete>
+										</p:outputLabel>
+									</div>
+
+									<div class="ui-g-3">
+										<p:outputLabel for="inPreco" value="Preço:" style="margin-left: 110px"><br />
+											<p:inputNumber id="inPreco" symbol="R$" decimalSeparator="," thousandSeparator="." value="#{vendaControl.itemVenda.produto.precoVenda}" readonly="true" />
+										</p:outputLabel>
+									</div>
+
+									<div class="ui-g-3">
+										<p:outputLabel for="inQuantidade" value="Quantidade:" style="margin-left: 40px"><br />
+											<p:inputNumber id="inQuantidade" value="#{vendaControl.itemVenda.quantidade}" />
+										</p:outputLabel>
+									</div>
+
+									<div class="ui-g-3">
+										<p:defaultCommand target="btnAdicionar" />
+										<p:commandButton value="Adicionar" id="btnAdicionar" update="frmVenda:toolValores frmVenda:dtVenda frmVenda:cmbProduto frmVenda:inPreco"
+											actionListener="#{vendaControl.addItem}" oncomplete="focusCampo('frmVenda:cmbProduto_input')"
+											styleClass="btn-primary" icon="fa fa-plus" style="margin-top: 20px; margin-left: -20px" />
+									</div>
+								</div>
+							</p:row>
+						</p:panelGrid>
+						
+						<p:panelGrid columns="1" style="margin-top: 10px; width: 100%; margin-bottom: 10px" id="panelDesconto">
+							<p:row>
+								<div class="ui-g">
+		    						<div class="ui-g-2">
+										<p:outputLabel for="inDesconto" value="Desconto:"><br />
+											<p:inputNumber id="inDesconto" value="#{vendaControl.desconto}" />
+										</p:outputLabel>
+									</div>
+									
+									<div class="ui-g-2">
+										<p:commandButton value="%" id="btndescPorc" styleClass="btn-primary" actionListener="#{vendaControl.calculaDescontoPorcentagem}" 
+												update="@form" style="margin-left: 13px; margin-top: 20px" />
+									</div>
+										
+									<div class="ui-g-2">	
+										<p:commandButton value="R$" id="btndescReal" styleClass="btn-primary" actionListener="#{vendaControl.calculaDescontoReal}"  
+												update="@form" style="margin-top: 20px; margin-left: -110px" />
+									</div>	
+									<div class="ui-g-2">
+										<p:commandButton value="Excluir Item" actionListener="#{vendaControl.delItem}" id="btnDelItem" disabled="#{vendaControl.disableExcluir}" styleClass="btn-danger" 
+												 update="@form" icon="fa fa-trash-o" style="margin-top: 20px; margin-left: -210px" />
+									</div>
+										
+									<div class="ui-g-2">
+										<p:outputLabel for="cmbCliente" value="Cliente:" style="margin-left: -120px" ><br />
+											<p:selectOneMenu id="cmbCliente" value="#{vendaControl.selected.cliente}" converter="omnifaces.SelectItemsConverter" filter="true"
+													filterMatchMode="contains" style="width: 330px">
+			
+												<f:selectItem itemLabel="" noSelectionOption="true" />
+												<f:selectItems var="item" value="#{clienteControl.listAtivo}" itemLabel="#{item.cpf} : #{item.nome}" itemDescription="#{item.cpf} : #{item.nome}" itemValue="#{item}" />
+			
+											</p:selectOneMenu>
+										</p:outputLabel>
+									</div>
+										
+									<div class="ui-g-2">
+										<p:commandButton value="Finalizar" id="btnFinalizar" icon="fa fa-check"  styleClass="btn-success" ajax="false"
+												 update="frmVenda" actionListener="#{vendaControl.recordOrcamento()}" style="margin-top: 20px; margin-left: 50px"  />
+									</div>
+								</div>
+							</p:row>
+						</p:panelGrid>
+					
+						<p:toolbar id="toolValores" style="margin-bottom: 10px" >
+					        
+					         <f:facet name="left">
+						         <p:outputLabel style="margin-top: 7px; font-size: 15px; font-weight: bold" value="Subtotal #{vendaControl.subTotalFormatado}" />
+									
+						 		<span class="ui-separator">
+						        	<span class="ui-icon ui-icon-grip-dotted-vertical" />
+						        </span>
+						            
+						       <p:outputLabel style="font-size: 15px; font-weight: bold" value="Total Desconto #{vendaControl.descontoTotalFormatado}" />
+					         </f:facet>
+					        
+					        <f:facet name="right">
+					        	<span class="ui-separator">
+					                <span class="ui-icon ui-icon-grip-dotted-vertical" />
+					            </span>
+					        
+						        <p:outputLabel style="font-size: 20px; font-weight: bold" value="Total #{vendaControl.totalFormatado}" />
+						    </f:facet>
+					 
+					    </p:toolbar>
+						
+						<p:dataTable id="dtVenda" var="item" tableStyle="table-layout: auto" value="#{vendaControl.selected.itens}" emptyMessage="Nenhum Item Adicionado"
+							selection="#{vendaControl.itemVendaSelecionado}" selectionMode="single" rowKey="#{item.produto.idProduto}"
+							 >
+							
+							<p:ajax event="rowSelect" listener="#{vendaControl.onRowSelect}" update="@form" />
+							
+							<p:column headerText="Código" style="text-align: center" >
+								<h:outputText value="#{item.produto.idProduto}" />
+							</p:column>
+							
+							<p:column headerText="Produto" >
+								<h:outputText value="#{item.produto.nome}" />
+							</p:column>
+							
+							<p:column headerText="Quantidade" style="text-align: center" >
+								<h:outputText value="#{item.quantidade}" />
+							</p:column>
+							
+							<p:column headerText="Vl. Unitário" style="text-align: center" >
+								<h:outputText value="#{item.produto.precoVendaFormatado}" />
+							</p:column>
+							
+							<p:column headerText="Vl. Total" style="text-align: center" >
+								<h:outputText value="#{item.totalItemFormatado}" />
+							</p:column>
+							
+						</p:dataTable>
+	                </div>
+	            </div>
+	        </div>  
+        </h:form>  
+    </ui:define>
+</ui:composition>
+

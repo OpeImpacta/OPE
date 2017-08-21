@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+				xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="head-end">
+		<style type="text/css">
+			.ui-datatable .ui-datatable-header 
+			{
+				text-align: right !important;
+			}
+		</style>
+
+		<script type="text/javascript">
+			function focusCampo(campo) {
+				document.getElementById(campo).focus();
+			}
+		</script>
+
+	</ui:define>
+
+	<ui:define name="title">
+       Venda
+    </ui:define>
+
+	<ui:define name="body">
+	
+		<!--Altera o idioma do calendario-->
+		<h:outputScript library="js" name="locale-primefaces.js"/>
+		
+		<adm:breadcrumb title="Venda"/>
+		<h:form id="frmVenda">
+			<style type="text/css">
+	        	.styleAutoComplete input
+	        	{
+	        		width: 350px !important;
+        		}
+        	</style>
+		
+			<p:remoteCommand name="focaProduto" onstart="focusCampo('frmVenda:cmbProduto_input')" autoRun="true" />
+			
+			<p:growl id="msgOk" showSummary="false" severity="info"/>
+            <p:growl id="msgErro" showSummary="false" strick="true" severity="warn,error,fatal"/>
+	        
+			<div class="box box-primary">
+	        	<div class="box-header with-border">
+					<div id="main-buttons" class="hidden-sm hidden-xs">
+	
+							<p:panelGrid columns="1" id="panelOrcamento">
+								<p:column>
+									<p:outputLabel value="Nº Orçamento:"><br />
+										<p:inputNumber value="#{vendaControl.idOrcamento}" style="margin-right: 15px" >
+											<p:ajax listener="#{vendaControl.setaOrcamento()}" ajax="false" update="frmVenda:toolValores frmVenda:dtVenda frmVenda:panelDesconto" event="change" />
+										</p:inputNumber>
+									</p:outputLabel>
+									
+									<p:commandButton update="frmOrcamentos" 
+										icon="fa fa-search" id="btnBuscarOrcamento" actionListener="#{vendaControl.buscaOrcamentosPendentes()}" styleClass="btn-success" style="margin-top: -5px; margin-right: 15px" />
+									<p:tooltip value="Pesquisar Orçamentos" for="btnBuscarOrcamento" position="top" />
+									
+									<p:commandButton update="frmVenda" 
+										icon="fa fa-close" id="btnCancel" actionListener="#{vendaControl.cancelOrcamento()}" styleClass="btn-danger" style="margin-top: -5px" />
+									<p:tooltip value="Limpar Itens" for="btnCancel" position="top" />
+								</p:column>
+							</p:panelGrid>
+	
+							<p:panelGrid columns="1" style="margin-top: 10px; width: 100%" id="panelProduto">
+								<p:row>
+									<div class="ui-g">
+		   								<div class="ui-g-3">
+											<p:outputLabel for="cmbProduto" value="Produto:" ><br />
+												<p:autoComplete id="cmbProduto" value="#{vendaControl.itemVenda.produto}" completeMethod="#{vendaControl.completeProdutos}" 
+																styleClass="styleAutoComplete"
+				                                                var="item" itemLabel="#{item.nome}" itemValue="#{item}" converter="produtoConverter" forceSelection="true">
+				                                    
+				                                    <p:ajax event="itemSelect" update="frmVenda:inPreco" oncomplete="focusCampo('frmVenda:inQuantidade_input')" />
+				                                    
+				                                    <p:column style="width:10%">
+				                                        <h:outputText value="#{item.idProduto}" />
+				                                    </p:column>
+				
+				                                    <p:column>
+				                                        <h:outputText value="#{item.nome}" />
+				                                    </p:column>
+				                                </p:autoComplete>
+				                            </p:outputLabel>
+										</div>
+		
+										<div class="ui-g-3">
+											<p:outputLabel for="inPreco" value="Preço:" style="margin-left: 110px" ><br />
+												<p:inputNumber id="inPreco" symbol="R$" decimalSeparator="," thousandSeparator="."  value="#{vendaControl.itemVenda.produto.precoVenda}" readonly="true" />
+											</p:outputLabel>
+										</div>
+										
+										<div class="ui-g-3">	
+											<p:outputLabel for="inQuantidade" value="Quantidade:" style="margin-left: 40px" ><br />
+												<p:inputNumber id="inQuantidade" value="#{vendaControl.itemVenda.quantidade}" />
+											</p:outputLabel>
+										</div>
+										
+										<div class="ui-g-3">
+											<p:defaultCommand target="btnAdicionar" />
+											<p:commandButton value="Adicionar" id="btnAdicionar" styleClass="btn-primary" icon="fa fa-plus" style="margin-top: 20px; margin-left: -20px"
+												update="frmVenda:toolValores frmVenda:dtVenda frmVenda:cmbProduto frmVenda:inPreco frmVenda:btnFinalizar" 
+												actionListener="#{vendaControl.addItem}" oncomplete="focusCampo('frmVenda:cmbProduto_input')" />
+										</div>
+									</div>
+								</p:row>
+						</p:panelGrid>
+						
+						<p:panelGrid columns="1" style="margin-top: 10px; width: 100%; margin-bottom: 10px" id="panelDesconto">
+							<p:row>
+								<div class="ui-g">
+		    						<div class="ui-g-2">
+										<p:outputLabel for="inDesconto" value="Desconto:"><br />
+											<p:inputNumber id="inDesconto" value="#{vendaControl.desconto}" />
+										</p:outputLabel>
+									</div>
+									
+									<div class="ui-g-2">
+										<p:commandButton value="%" id="btndescPorc" styleClass="btn-primary" actionListener="#{vendaControl.calculaDescontoPorcentagem}" 
+												update="@form" style="margin-left: 13px; margin-top: 20px" />
+									</div>
+										
+									<div class="ui-g-2">	
+										<p:commandButton value="R$" id="btndescReal" styleClass="btn-primary" actionListener="#{vendaControl.calculaDescontoReal}"  
+												update="@form" style="margin-top: 20px; margin-left: -110px" />
+									</div>	
+									
+									<div class="ui-g-2">
+										<p:commandButton value="Excluir Item" actionListener="#{vendaControl.delItem}" id="btnDelItem" disabled="#{vendaControl.disableExcluir}" styleClass="btn-danger" 
+												 update="@form" icon="fa fa-trash-o" style="margin-top: 20px; margin-left: -210px" />
+									</div>
+										
+									<div class="ui-g-2">
+										<p:outputLabel for="cmbCliente" value="Cliente:" style="margin-left: -120px" ><br />
+											<p:selectOneMenu id="cmbCliente" value="#{vendaControl.selected.cliente}" converter="omnifaces.SelectItemsConverter" filter="true"
+													filterMatchMode="contains" style="width: 330px">
+			
+												<f:selectItem itemLabel="" noSelectionOption="true" />
+												<f:selectItems var="item" value="#{clienteControl.listAtivo}" itemLabel="#{item.cpf} : #{item.nome}" itemDescription="#{item.cpf} : #{item.nome}" itemValue="#{item}" />
+			
+											</p:selectOneMenu>
+										</p:outputLabel>
+									</div>
+										
+									<div class="ui-g-2">
+										<p:commandButton update="frmFinalizacao" style="margin-top: 20px; margin-left: 50px"  value="Finalizar" disabled="#{vendaControl.selected.itens.isEmpty()}"
+											icon="fa fa fa-usd" id="btnFinalizar" actionListener="#{vendaControl.abrirDialog()}" styleClass="btn-success"  />
+									</div>
+								</div>
+							</p:row>
+						</p:panelGrid>
+
+						<p:toolbar id="toolValores" style="margin-bottom: 10px">
+							<f:facet name="left">
+								<p:outputLabel style="margin-top: 7px; font-size: 15px; font-weight: bold" value="Subtotal #{vendaControl.subTotalFormatado}" />
+
+								<span class="ui-separator"> 
+									<span class="ui-icon ui-icon-grip-dotted-vertical" />
+								</span>
+
+								<p:outputLabel style="font-size: 15px; font-weight: bold" value="Total Desconto #{vendaControl.descontoTotalFormatado}" />
+							</f:facet>
+
+							<f:facet name="right">
+								<span class="ui-separator"> 
+									<span class="ui-icon ui-icon-grip-dotted-vertical" />
+								</span>
+
+								<p:outputLabel style="font-size: 20px; font-weight: bold" value="Total #{vendaControl.totalFormatado}" />
+							</f:facet>
+
+						</p:toolbar>
+
+						<p:dataTable id="dtVenda" var="item" tableStyle="table-layout: auto" value="#{vendaControl.selected.itens}" emptyMessage="Nenhum Item Adicionado"
+								 selection="#{vendaControl.itemVendaSelecionado}" selectionMode="single" rowKey="#{item.produto.idProduto}" >
+							
+							<p:ajax event="rowSelect" listener="#{vendaControl.onRowSelect}" update="@form" />
+							
+							<p:column headerText="Código" style="text-align: center" >
+								<h:outputText value="#{item.produto.idProduto}" />
+							</p:column>
+							
+							<p:column headerText="Produto" >
+								<h:outputText value="#{item.produto.nome}" />
+							</p:column>
+							
+							<p:column headerText="Quantidade" style="text-align: center" >
+								<h:outputText value="#{item.quantidade}" />
+							</p:column>
+							
+							<p:column headerText="Vl. Unitário" style="text-align: center" >
+								<h:outputText value="#{item.produto.precoVendaFormatado}" />
+							</p:column>
+							
+							<p:column headerText="Vl. Total" style="text-align: center" >
+								<h:outputText value="#{item.totalItemFormatado}" />
+							</p:column>
+							
+						</p:dataTable>
+	                </div>
+	            </div>
+	        </div>  
+	      </h:form>  
+        
+      
+          <p:dialog  modal="true" appendTo="@(body)" widgetVar="dlgFinalizacao" responsive="true" header="Finalização" width="415px" height="auto" resizable="false" closable="true" closeOnEscape="true" dynamic="true"  >
+                
+                <p:ajax event="close" listener="#{vendaControl.onCloseDialog()}" update="frmFinalizacao frmVenda" />
+                
+                <h:form id="frmFinalizacao" >
+                	
+                	<p:remoteCommand autoRun="true" onstart="focusCampo('frmFinalizacao:inVlRecebido_input')" />
+                	
+                	<style type="text/css">
+	        			.styleInNumber input{
+		        			font-size: 25px !important; 
+		        			font-weight: bold !important; 
+		        			text-align: center !important; 
+		        			color: black !important;
+		        		}
+	        		</style>
+                	
+                	<p:panelGrid layout="grid" id="panelFinal" columns="1" >
+		        		<p:outputLabel for="outTotal" value="Total:"><br/>
+		        			<p:inputText id="outTotal" style="font-size: 25px; font-weight: bold; text-align: center; color: black" value="#{vendaControl.totalFormatado}" readonly="true" />
+		        		</p:outputLabel>
+		        		
+		        		<p:outputLabel for="inVlRecebido" value="Valor Recebido:"><br />
+							<p:inputNumber styleClass="styleInNumber" id="inVlRecebido" symbol="R$ " decimalSeparator="," thousandSeparator="."  value="#{vendaControl.vlRecebido}"  >
+								<p:ajax update="frmFinalizacao:outTroco" event="change" process="@form" listener="#{vendaControl.calculaTroco()}" async="true" />
+							</p:inputNumber>
+						</p:outputLabel>
+						
+		        		<p:outputLabel for="outTroco" value="Troco:"><br/>
+		        			<p:inputText id="outTroco"  style="font-size: 25px; font-weight: bold; text-align: center; color: black" value="#{vendaControl.trocoFormatado}" readonly="true" />
+		        		</p:outputLabel>
+		        		
+		        		<p:outputLabel for="manyBtnPgto" value="Pagamento:"><br/>
+		                    <p:selectOneButton id="manyBtnPgto" value="#{vendaControl.pagamento}" >
+		                        <f:selectItem itemLabel="Dinheiro" itemValue="1"/>
+		                        <f:selectItem itemLabel="Débito" itemValue="2"/>
+		                        <f:selectItem itemLabel="Credito" itemValue="3"/>
+		                        <f:selectItem itemLabel="Cheque" itemValue="4"/>
+		                    </p:selectOneButton>
+		                </p:outputLabel>   
+		                
+		                <p:row>
+		                	<p:defaultCommand target="btnSalvar" />
+		                	<p:commandButton value="Salvar" styleClass="btn-success" icon="fa fa-check" async="true" id="btnSalvar"
+		                		type="submit" onclick="PF('dlgFinalizacao').hide();" ajax="false"
+		                		actionListener="#{vendaControl.recordVenda()}" update="frmVenda" process="@form" />
+		                	
+		                	<p:commandButton value="Cancelar" id="btnCancelar" update="frmFinalizacao frmVenda"
+									onclick="PF('dlgFinalizacao').hide()" styleClass="btn-danger" icon="fa fa-close"/>	
+		                </p:row> 
+	        		</p:panelGrid>
+                	
+                </h:form>
+          
+         </p:dialog>
+          
+         <p:dialog  modal="true" appendTo="@(body)" widgetVar="dlgOrcamentos" responsive="true"
+                width="800px" height="auto" resizable="false" closable="true" closeOnEscape="true" dynamic="true"  >
+                
+         	<h:form id="frmOrcamentos" >
+            	<p:panel header="Selecione o orçamento" styleClass="box-info">	
+	            	<p:panelGrid layout="grid" columns="1">
+	                	
+	                	<p:dataTable var="orc" id="dtOrcamentos" value="#{vendaControl.orcamentosPendentes}" emptyMessage="Nenhum orçamento encontrado"
+	                			selection="#{vendaControl.orcamentoSelecionado}" selectionMode="single" rowKey="#{orc.idVenda}"
+	                			paginator="true" rows="5" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" 
+	                			tableStyle="table-layout: auto" widgetVar="wvTable" >
+	                	
+	                			<p:ajax event="rowSelect" listener="#{vendaControl.onRowSelectOrc()}" oncomplete="PF('dlgOrcamentos').hide();" update="frmVenda" />
+	                		
+	                			<p:column headerText="Código" style="text-align: center" filterBy="#{orc.idVenda}" >
+	                				<h:outputText value="#{orc.idVenda}" />
+	                			</p:column>
+	                			
+	                			<p:column headerText="Cliente" filterStyle="width: 190px" style="text-align: center" filterBy="#{orc.cliente.nome}" >
+	                				<h:outputText value="#{orc.cliente.nome}" />
+	                			</p:column>
+	                			
+	                			<p:column id="date" style="text-align: center" headerText="Date" filterFunction="#{utilityTela.filterByDate}" filterBy="#{orc.data}">
+							    	<f:facet name="filter">
+							            <p:calendar id="cal1" pattern="dd.MM.yyyy">
+							               <p:ajax event="dateSelect" oncomplete="PF('wvTable').filter()" update="frmOrcamentos:dtOrcamentos" />
+							               <p:ajax event="change" execute="@this" oncomplete="PF('wvTable').filter()" update="frmOrcamentos:dtOrcamentos"/>
+							            </p:calendar>
+							         </f:facet>
+								     <p:outputLabel value="#{orc.data}">
+								        <f:convertDateTime pattern="dd.MM.yyyy" />
+								     </p:outputLabel>
+							   </p:column>
+	                			
+	                			<p:column headerText="Total" style="text-align: center" >
+	                				<h:outputText value="#{orc.totalFormatado}" />
+	                			</p:column>
+	                			
+	                		</p:dataTable>
+	                		
+	                	</p:panelGrid>
+                	</p:panel>
+                </h:form>
+          
+          </p:dialog>
+	</ui:define>
+</ui:composition>
+
