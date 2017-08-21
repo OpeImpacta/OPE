@@ -2,6 +2,7 @@ package br.edu.impacta.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author Paulo Pasinato
@@ -29,52 +31,56 @@ import javax.persistence.Table;
 	@NamedQuery(name = "Produto.findAll", query = "SELECT p FROM Produto p ")
 })
 public class Produto implements Serializable {
-	
+
 	private static final long serialVersionUID = 8317633278916954682L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_produto")
 	private Integer idProduto;
-	
+
 	@Column(name="nome", nullable =  false, length =  50)
 	private String nome;
-	
+
 	@Column(name = "quantidade", nullable = true)
 	private Integer quantidade;
-	
+
 	@Column(name = "qtd_minima", nullable = true)
 	private Integer qtdMinima;
-	
-	@Column(name = "mostra_vitrine", nullable = false)
+
+	@Column(name = "mostra_vitrine", nullable = true)
 	private Boolean mostraVitrine;
-	
+
 	@Column(name = "preco_compra", nullable = true)
 	private BigDecimal precoCompra;
-	
-	@Column(name =  "preco_venda", nullable = false)
+
+	@Column(name =  "preco_venda", nullable = true)
 	private BigDecimal precoVenda;
-	
+
 	@Column(name = "margem", nullable = true)
 	private BigDecimal margem;
-	
+
 	@Column(name = "controla_estoque")
 	private Boolean controlaEstoque;
 
 	@Column(name="ativo")
 	private boolean ativo = true;
-	
-	@OneToOne
-    @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
-    private Categoria categoria;
-	
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
+	private Categoria categoria;
+
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@JoinColumn(name = "id_imagem", referencedColumnName = "id_imagem")
 	private Imagem imagem;
-	
+
 	@OneToMany(mappedBy="produto", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, orphanRemoval = true )
 	private List<ProdutoModelo> produtoModeloList;
-	
+
+	@Transient
+	private String precoVendaFormatado;
+
+
 	public Produto() {}
 
 	public Produto(Integer idProduto, String nome, boolean ativo) {
@@ -99,7 +105,7 @@ public class Produto implements Serializable {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
+
 	public Integer getQuantidade() {
 		return quantidade;
 	}
@@ -174,7 +180,7 @@ public class Produto implements Serializable {
 
 	public Imagem getImagem() {
 		if (imagem == null) {
-          this.imagem = new Imagem();
+			this.imagem = new Imagem();
 		}
 		return imagem;
 	}
@@ -192,6 +198,17 @@ public class Produto implements Serializable {
 
 	public void setProdutoModeloList(List<ProdutoModelo> produtoModeloList) {
 		this.produtoModeloList = produtoModeloList;
+	}
+
+	public String getPrecoVendaFormatado() {
+		if (this.precoVenda != null) {
+			return NumberFormat.getCurrencyInstance().format(precoVenda);
+		}
+		return precoVendaFormatado;
+	}
+
+	public void setPrecoVendaFormatado(String precoVendaFormatado) {
+		this.precoVendaFormatado = precoVendaFormatado;
 	}
 
 	@Override

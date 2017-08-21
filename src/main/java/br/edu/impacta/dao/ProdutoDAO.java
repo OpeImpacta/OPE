@@ -17,18 +17,22 @@ public class ProdutoDAO extends GenericDAO<Produto> implements Serializable {
 	}
 	
 	public List<Produto> findEstoqueMinimo(){
-		String jpql = "from Produto p where p.qtdMinima = p.quantidade";
+		String jpql = "from Produto p where (p.quantidade <= p.qtdMinima) and (p.controlaEstoque = 1) and (p.quantidade <> 0)";
 		return find(jpql);
 	}
 	
 	public List<Produto> findSemEstoque(){
-		String jpql = "from Produto p where p.quantidade = 0";
+		String jpql = "from Produto p where (p.quantidade <= 0) and (p.controlaEstoque = 1)";
 		return find(jpql);
 	}
 	
 	public List<Produto> findEstoqueBom(){
-		String jpql = "from Produto p where p.quantidade > p.qtdMinima";
+		String jpql = "from Produto p where (p.quantidade > p.qtdMinima) and (p.controlaEstoque = 1)";
 		return find(jpql);
 	}
 	
+	public List<Produto> findControleEstoque(){
+		String jpql = "from Produto p where p.controlaEstoque = 1";
+		return find(jpql);
+	}
 }

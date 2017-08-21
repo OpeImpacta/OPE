@@ -40,6 +40,8 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
 	
 	private ProdutoModelo produtoModeloSelected;
 	
+	private List<Produto> produtosControlaEstoque;
+	
 	@Inject
 	private ModeloController modeloControl;
 	
@@ -146,4 +148,16 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
 	public void setProdutoModeloSelected(ProdutoModelo produtoModeloSelected) {
 		this.produtoModeloSelected = produtoModeloSelected;
 	}
+
+	public List<Produto> getProdutosControlaEstoque() {
+		if(produtosControlaEstoque == null) {
+			produtosControlaEstoque = produtoDAO.findControleEstoque();
+		}
+		return produtosControlaEstoque;
+	}
+
+	public void setProdutosControlaEstoque(List<Produto> produtosControlaEstoque) {
+		this.produtosControlaEstoque = produtosControlaEstoque;
+	}
+	
 }

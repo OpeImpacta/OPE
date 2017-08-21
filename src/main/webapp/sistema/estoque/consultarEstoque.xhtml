@@ -17,11 +17,11 @@
 	</ui:define>
 
 	<ui:define name="title">
-       Consultar Estoque
+       Consulta Estoque
     </ui:define>
 
 	<ui:define name="body">
-		<adm:breadcrumb title="Consultar Estoque" />
+		<adm:breadcrumb title="Consulta Estoque" />
 		<h:form id="frmList">
 			<p:growl id="msgOk" showSummary="false" severity="info" />
 			<p:growl id="msgErro" showSummary="false" strick="true"
@@ -42,7 +42,7 @@
 						
 						<p:selectOneButton styleClass="bg-success" value="#{movimentacaoControl.opcao}">
 				            <f:selectItem itemLabel="Sem Estoque" itemValue="1" />
-				            <f:selectItem itemLabel="Estoque Baixo" itemValue="2" />
+				            <f:selectItem itemLabel="Estoque Mínimo" itemValue="2" />
 				            <f:selectItem itemLabel="Estoque Alto" itemValue="3" />
 				            <f:selectItem itemLabel="Todos" itemValue="4" />
 				            

@@ -116,6 +116,7 @@ public class MovimentacaoController extends BasicControlCad<Movimentacao> implem
 		disableInputs = null;
 		movList = null;
 	}
+	
 
 	//verifica se os campos do produto foram preenchidos, senão forem mostra mensagem na tela
 	public boolean validaCamposProduto(){
@@ -148,8 +149,9 @@ public class MovimentacaoController extends BasicControlCad<Movimentacao> implem
 	}
 
 	public void finalRecord(){
-		UtilityTela.criarMensagemSemDetail("Item gravado com sucesso!");
+		UtilityTela.criarMensagem("Sucesso","Item gravado com sucesso!");
 		this.setSelected(null);
+		limparForm();
 	}
 
 	//calcula total da venda atraves da porcentagem estipulada
@@ -167,9 +169,10 @@ public class MovimentacaoController extends BasicControlCad<Movimentacao> implem
 
 	//calcula valor da margem se campo valor da compra estiver preenchido
 	public void calculaMargem(){
-		if((movimentacao.getProduto().getMargem() == null || movimentacao.getProduto().getMargem() == BigDecimal.ZERO) &&
-				movimentacao.getProduto().getPrecoCompra() != null && movimentacao.getProduto().getPrecoCompra() != BigDecimal.ZERO &&
-				movimentacao.getProduto().getPrecoVenda() != null && movimentacao.getProduto().getPrecoVenda() != BigDecimal.ZERO){
+		if(		movimentacao.getProduto().getPrecoCompra() != null && movimentacao.getProduto().getPrecoCompra() != BigDecimal.ZERO &&
+				movimentacao.getProduto().getPrecoVenda() != null && movimentacao.getProduto().getPrecoVenda() != BigDecimal.ZERO &&
+				movimentacao.getProduto().getMargem() != null &&  movimentacao.getProduto().getMargem() != BigDecimal.ZERO &&
+				movimentacao.getProduto().getPrecoVenda().compareTo(movimentacao.getProduto().getPrecoCompra()) == 1){
 
 			BigDecimal prCompra = movimentacao.getProduto().getPrecoCompra();
 			BigDecimal prVenda = movimentacao.getProduto().getPrecoVenda();
@@ -190,7 +193,7 @@ public class MovimentacaoController extends BasicControlCad<Movimentacao> implem
 	//preenche lista de produtos conforme opção selecionada
 	public void preencheProdutos(){
 		if(opcao == null || opcao.equals("2")){
-			headerDt = "Produtos com estoque baixo";
+			headerDt = "Produtos com estoque mínimo";
 			produtos = produtoDAO.findEstoqueMinimo();
 		}else if(opcao.equals("1")){
 			headerDt = "Produtos sem estoque";
@@ -200,7 +203,7 @@ public class MovimentacaoController extends BasicControlCad<Movimentacao> implem
 			produtos = produtoDAO.findEstoqueBom();
 		}else{
 			headerDt = "Lista de Produtos";
-			produtos = produtoDAO.findAll();
+			produtos = produtoDAO.findControleEstoque();
 		}
 	}
 
