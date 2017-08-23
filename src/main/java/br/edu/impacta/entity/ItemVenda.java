@@ -47,6 +47,12 @@ public class ItemVenda implements Serializable,  Cloneable {
 	@Transient
 	private String totalItemFormatado;
 	
+	@Transient
+	private String corFundo;
+	
+	@Transient 
+	private String corTexto;
+	
 	
 	@Override
 	public ItemVenda clone()  {
@@ -115,7 +121,39 @@ public class ItemVenda implements Serializable,  Cloneable {
 	public void setTotalItemFormatado(String totalItemFormatado) {
 		this.totalItemFormatado = totalItemFormatado;
 	}
-	
+
+	public String getCorFundo() {
+		if(getProduto() != null) {
+			if((getProduto().getQuantidade() <= 0 || getProduto().getQuantidade() < getQuantidade()) && getProduto().getControlaEstoque() == true) {
+				corFundo = "FF7F50";
+			}
+		}else {
+			corFundo = "";
+		}
+		return corFundo;
+	}
+
+	public void setCorFundo(String corFundo) {
+		this.corFundo = corFundo;
+	}
+
+
+	public String getCorTexto() {
+		if(getProduto() != null) {
+			if((getProduto().getQuantidade() <= 0 || getProduto().getQuantidade() < getQuantidade()) && getProduto().getControlaEstoque() == true) {
+				corTexto = "FFFFFF";
+			}
+		}else {
+			corTexto = "";
+		}
+		return corTexto;
+	}
+
+
+	public void setCorTexto(String corTexto) {
+		this.corTexto = corTexto;
+	}
+
 
 	@Override
 	public int hashCode() {

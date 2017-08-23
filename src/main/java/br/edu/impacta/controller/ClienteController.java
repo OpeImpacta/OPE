@@ -1,6 +1,7 @@
 package br.edu.impacta.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,7 +32,7 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 	private String valueNome;
 	private String valueCpf;
 	private String pessoa;
-	
+
 	private String maskTelefone;
 
 
@@ -121,7 +122,7 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 			this.updateForm();
 		}
 	}
-	
+
 	//altera a mascara do telefone de acordo com o tipo
 	public void updateMaskTelefone() {
 		if(telCliente != null) {
@@ -140,7 +141,7 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 			}
 		}
 	}
-	
+
 	public void limpaFormulario(){
 		this.maskCpf = null;
 		this.pessoa = null;
@@ -167,6 +168,23 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 		UtilityTela.executarJavascript("PF('dlgCadastro').hide()");
 	}
 
+	//****************************************************
+	//**************** AUTOCOMPLETE **********************
+	//****************************************************
+	public List<Cliente> completeClientes(String query){
+		List<Cliente> allClientes = clienteDAO.findAtivos();
+		List<Cliente> filteredClientes = new ArrayList<>();
+
+		if(allClientes != null) {
+			for(Cliente cliente : allClientes) {
+				if(cliente.getNome().toLowerCase().contains(query)) {
+					filteredClientes.add(cliente);
+				}
+			}
+		}
+
+		return filteredClientes;
+	}
 
 	public boolean isDisableButton() {
 		return disableButton;

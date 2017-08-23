@@ -14,6 +14,11 @@
 			{
 				text-align: right !important;
 			}
+			
+			.styleAutoCompleteCliente input
+	        {
+	        	width: 330px !important;
+        	}
 		</style>
 
 		<script type="text/javascript">
@@ -53,7 +58,7 @@
 										<p:outputLabel for="cmbProduto" value="Produto:">
 											<br />
 
-											<p:autoComplete id="cmbProduto"
+											<p:autoComplete id="cmbProduto" minQueryLength="3"
 												value="#{vendaControl.itemVenda.produto}"
 												completeMethod="#{vendaControl.completeProdutos}"
 												styleClass="styleAutoComplete" var="item"
@@ -88,7 +93,7 @@
 									<div class="ui-g-3">
 										<p:defaultCommand target="btnAdicionar" />
 										<p:commandButton value="Adicionar" id="btnAdicionar" update="frmVenda:toolValores frmVenda:dtVenda frmVenda:cmbProduto frmVenda:inPreco"
-											actionListener="#{vendaControl.addItem}" oncomplete="focusCampo('frmVenda:cmbProduto_input')"
+											actionListener="#{vendaControl.addItem(false)}" oncomplete="focusCampo('frmVenda:cmbProduto_input')"
 											styleClass="btn-primary" icon="fa fa-plus" style="margin-top: 20px; margin-left: -20px" />
 									</div>
 								</div>
@@ -120,13 +125,18 @@
 										
 									<div class="ui-g-2">
 										<p:outputLabel for="cmbCliente" value="Cliente:" style="margin-left: -120px" ><br />
-											<p:selectOneMenu id="cmbCliente" value="#{vendaControl.selected.cliente}" converter="omnifaces.SelectItemsConverter" filter="true"
-													filterMatchMode="contains" style="width: 330px">
-			
-												<f:selectItem itemLabel="" noSelectionOption="true" />
-												<f:selectItems var="item" value="#{clienteControl.listAtivo}" itemLabel="#{item.cpf} : #{item.nome}" itemDescription="#{item.cpf} : #{item.nome}" itemValue="#{item}" />
-			
-											</p:selectOneMenu>
+											<p:autoComplete id="cmbCliente" value="#{vendaControl.selected.cliente}"
+												completeMethod="#{clienteControl.completeClientes}" styleClass="styleAutoCompleteCliente" minQueryLength="3"
+												var="cliente" itemLabel="#{cliente.nome}" itemValue="#{cliente}" converter="clienteConverter" forceSelection="true">
+
+												<p:column>
+													<h:outputText value="#{cliente.nome}" />
+												</p:column>
+
+												<p:column>
+													<h:outputText value="#{cliente.cpf}" />
+												</p:column>
+											</p:autoComplete>
 										</p:outputLabel>
 									</div>
 										

@@ -87,9 +87,9 @@
 										<p:ajax event="change" execute="@this" oncomplete="PF('wvTable').filter()" update="frmList:dtVendas" />
 									</p:calendar>
 								</f:facet>
-								<p:outputLabel value="#{venda.data}">
-									<f:convertDateTime pattern="dd.MM.yyyy - HH:mm" />
-								</p:outputLabel>
+								
+								<h:outputText value="#{utilityTela.dateTimeFormat(venda.data)}" />
+								
 							</p:column>
 
 							<p:column headerText="Total" style="text-align: center">

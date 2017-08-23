@@ -64,6 +64,8 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 	private Boolean disableExcluirVenda;
 	private List<ItemVenda> itemVendaList;
 
+	private Boolean semEstoque;
+
 
 	// *******************************************
 	// * Alterar somente neste construtor
@@ -74,7 +76,12 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 
 	//adiciona item na lista
-	public void addItem() {
+	public void addItem(boolean venda) {
+
+		if(venda == true && validaQuantidade() == false) {
+			return;
+		}
+
 		if(validaCampos()) {
 			for(ItemVenda item : ((Venda)this.getSelected()).getItens()) {
 
@@ -109,8 +116,12 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 	//remove item da lista e ajusta o valor total
 	public void delItem() {
 		((Venda)this.getSelected()).getItens().remove(this.getItemVendaSelecionado());
-		this.setTotal(this.getTotal().subtract(this.getItemVendaSelecionado().getTotalItemVenda()));
-		this.setSubTotal(this.getSubTotal().subtract(this.getItemVendaSelecionado().getTotalItemVenda()));
+
+		if(verificaEstoque(getItemVendaSelecionado()) == true) {
+			this.setTotal(this.getTotal().subtract(this.getItemVendaSelecionado().getTotalItemVenda()));
+			this.setSubTotal(this.getSubTotal().subtract(this.getItemVendaSelecionado().getTotalItemVenda()));
+		}
+
 
 		if(((Venda)this.getSelected()).getItens().isEmpty()) {
 			desconto = total = subTotal = null;
@@ -129,13 +140,29 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 		((Venda)this.getSelected()).setAtivo(true);
 
 		((Venda)this.getSelected()).setTipo(1);
+		((Venda)this.getSelected()).setFinalizado(true);
 		((Venda)this.getSelected()).setFormaPgto(this.tipoPgto());
 
+		this.retiraProdutoSemEstoque();
 		this.gravaOrcamento();
 
 		gravaProdutos();
 		this.treatRecord();
 		limpaForm();
+	}
+
+
+
+	//se a venda for finalizacao de um orçamento verifica o estoque novamente
+	public void retiraProdutoSemEstoque() {
+		List<ItemVenda> itensAux = new ArrayList<>();
+		for(ItemVenda item : ((Venda)getSelected()).getItens()) {
+			if(verificaEstoque(item) == false) {
+				itensAux.add(item);
+			}
+		}
+
+		((Venda)getSelected()).getItens().removeAll(itensAux);
 	}
 
 	//altera o status do orcamento para finalizado
@@ -160,13 +187,23 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 	//limpa formulario para nova venda
 	public void limpaForm() {
-		desconto = total = subTotal = null;
+		desconto = total = subTotal = descontoTotal = null;
 		descontoFormatado = totalFormatado = subTotalFormatado = null;
 		itemVenda = itemVendaSelecionado = null;
 		orcamentoSelecionado = null;
 		idOrcamento = null;
 		disableExcluir = true;
+		semEstoque = false;
 		newInSelected();
+	}
+
+	//verifica se tem o produto em estoque
+	public boolean validaQuantidade() {
+		if(verificaEstoque(itemVenda) == false) {
+			UtilityTela.criarMensagemAviso("Aviso!", "Estoque do produto insuficiente, não é possivel adiciona-lo à venda");
+			return false;
+		}
+		return true;
 	}
 
 	//valida os campos antes de inserir item na venda
@@ -248,6 +285,16 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 		return vlItem.multiply(new BigDecimal(quantidade));
 	}
 
+
+	//verifica o estado do estoque do produto
+	public boolean verificaEstoque(ItemVenda item) {
+		if((item.getProduto().getQuantidade() <= 0 || item.getProduto().getQuantidade() < item.getQuantidade()) && item.getProduto().getControlaEstoque() == true) {
+			return false;
+		}
+		return true;
+	}
+
+
 	//***********************************************
 	//**************** ORCAMENTO ********************
 	//***********************************************
@@ -280,21 +327,37 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 		if(idOrcamento != null) {
 
 			orcamentoSelecionado = vendaDAO.findById(idOrcamento);
-			
-			if(orcamentoSelecionado.getFinalizado() == true) {
+
+			if(verificaOrcamento()) {
+				this.setaValores(orcamentoSelecionado);
+				this.setSelected(orcamentoSelecionado.clone());
+
+				for(ItemVenda i : orcamentoSelecionado.getItens()) {
+					i.setTotalItemVenda(i.getProduto().getPrecoVenda().multiply(new BigDecimal(i.getQuantidade())));
+				}
+
+				configSelected();
+			} else {
 				UtilityTela.criarMensagemAviso("Aviso:", "Orçamento não encontrado ou finalizado!");
-				return;
 			}
-			
-			this.setaValores(orcamentoSelecionado);
-			this.setSelected(orcamentoSelecionado.clone());
-
-			for(ItemVenda i : orcamentoSelecionado.getItens()) {
-				i.setTotalItemVenda(i.getProduto().getPrecoVenda().multiply(new BigDecimal(i.getQuantidade())));
-			}
-
-			configSelected();
 		}
+	}
+
+	//verifica se é um orçamento e se já não esta finalizado
+	public boolean verificaOrcamento() {
+		if(orcamentoSelecionado == null) {
+			return false;
+		}
+
+		if( orcamentoSelecionado.getTipo() == 1) {
+			return false;
+		}
+
+		if(orcamentoSelecionado.getFinalizado() == true) {
+			return  false;
+		}
+
+		return true;	
 	}
 
 	//seta valores da venda
@@ -311,6 +374,13 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 		((Venda)getSelected()).setItens(null);
 
 		for (ItemVenda item : itens) {
+
+			if(verificaEstoque(item) == false) {
+				semEstoque = true;
+				setTotal(getTotal().subtract(item.getTotalItemVenda()));
+				setSubTotal(getSubTotal().subtract(item.getTotalItemVenda()));
+			}
+
 			ItemVenda i = new ItemVenda();
 			i.setTotalItemVenda(item.getTotalItemVenda());
 			i.setProduto(item.getProduto());
@@ -342,6 +412,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 	//preenche tabela vendas conforme opção selecionada
 	public void preencheVendas() {
+		disableExcluirVenda = true;
 		vendas = new ArrayList<>();
 		if(opcao.equals("1") || opcao == null) {
 			vendas = vendaDAO.findVendasRealizadas();
@@ -435,9 +506,11 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 		List<Produto> allProdutos = produtoDAO.findAtivos();
 		List<Produto> filteredProdutos = new ArrayList<>();
 
-		for(Produto produto : allProdutos) {
-			if(produto.getNome().toLowerCase().contains(query)) {
-				filteredProdutos.add(produto);
+		if(allProdutos != null) {
+			for(Produto produto : allProdutos) {
+				if(produto.getNome().toLowerCase().contains(query)) {
+					filteredProdutos.add(produto);
+				}
 			}
 		}
 
@@ -707,5 +780,19 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 	public void setItemVendaList(List<ItemVenda> itemVendaList) {
 		this.itemVendaList = itemVendaList;
 	}
+
+
+	public Boolean getSemEstoque() {
+		if(semEstoque == null) {
+			return false;
+		}
+		return semEstoque;
+	}
+
+
+	public void setSemEstoque(Boolean semEstoque) {
+		this.semEstoque = semEstoque;
+	}
+
 
 }

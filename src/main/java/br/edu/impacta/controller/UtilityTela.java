@@ -1,6 +1,7 @@
 package br.edu.impacta.controller;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -78,14 +79,22 @@ public class UtilityTela implements Serializable{
 	// ***********************************************************************************************
 	public boolean filterByDate(Object value, Object filter, Locale locale) {
 
-        if( filter == null ) {
-            return true;
-        }
+		if( filter == null ) {
+			return true;
+		}
 
-        if( value == null ) {
-            return false;
-        }
+		if( value == null ) {
+			return false;
+		}
 
-        return DateUtils.truncatedEquals((Date) filter, (Date) value, Calendar.DATE);
-    }
+		return DateUtils.truncatedEquals((Date) filter, (Date) value, Calendar.DATE);
+	}
+
+	// ***********************************************************************************************
+	// * Converte data em String
+	// ***********************************************************************************************
+	public static String dateTimeFormat(Date data) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy - HH:mm");
+		return sdf.format(data);
+	}
 }

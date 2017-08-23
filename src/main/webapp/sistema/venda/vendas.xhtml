@@ -40,6 +40,11 @@
 	        	{
 	        		width: 350px !important;
         		}
+        		
+        		.styleAutoCompleteCliente input
+	        	{
+	        		width: 330px !important;
+        		}
         	</style>
 		
 			<p:remoteCommand name="focaProduto" onstart="focusCampo('frmVenda:cmbProduto_input')" autoRun="true" />
@@ -55,7 +60,7 @@
 								<p:column>
 									<p:outputLabel value="Nº Orçamento:"><br />
 										<p:inputNumber value="#{vendaControl.idOrcamento}" style="margin-right: 15px" >
-											<p:ajax listener="#{vendaControl.setaOrcamento()}" ajax="false" update="frmVenda:toolValores frmVenda:dtVenda frmVenda:panelDesconto" event="change" />
+											<p:ajax listener="#{vendaControl.setaOrcamento()}" ajax="false" update="frmVenda:toolValores frmVenda:panelMsg frmVenda:lbMensagemEstoque frmVenda:dtVenda frmVenda:panelDesconto" event="change" />
 										</p:inputNumber>
 									</p:outputLabel>
 									
@@ -75,7 +80,7 @@
 		   								<div class="ui-g-3">
 											<p:outputLabel for="cmbProduto" value="Produto:" ><br />
 												<p:autoComplete id="cmbProduto" value="#{vendaControl.itemVenda.produto}" completeMethod="#{vendaControl.completeProdutos}" 
-																styleClass="styleAutoComplete"
+																styleClass="styleAutoComplete" minQueryLength="3"
 				                                                var="item" itemLabel="#{item.nome}" itemValue="#{item}" converter="produtoConverter" forceSelection="true">
 				                                    
 				                                    <p:ajax event="itemSelect" update="frmVenda:inPreco" oncomplete="focusCampo('frmVenda:inQuantidade_input')" />
@@ -107,7 +112,7 @@
 											<p:defaultCommand target="btnAdicionar" />
 											<p:commandButton value="Adicionar" id="btnAdicionar" styleClass="btn-primary" icon="fa fa-plus" style="margin-top: 20px; margin-left: -20px"
 												update="frmVenda:toolValores frmVenda:dtVenda frmVenda:cmbProduto frmVenda:inPreco frmVenda:btnFinalizar" 
-												actionListener="#{vendaControl.addItem}" oncomplete="focusCampo('frmVenda:cmbProduto_input')" />
+												actionListener="#{vendaControl.addItem(true)}" oncomplete="focusCampo('frmVenda:cmbProduto_input')" />
 										</div>
 									</div>
 								</p:row>
@@ -139,13 +144,19 @@
 										
 									<div class="ui-g-2">
 										<p:outputLabel for="cmbCliente" value="Cliente:" style="margin-left: -120px" ><br />
-											<p:selectOneMenu id="cmbCliente" value="#{vendaControl.selected.cliente}" converter="omnifaces.SelectItemsConverter" filter="true"
-													filterMatchMode="contains" style="width: 330px">
-			
-												<f:selectItem itemLabel="" noSelectionOption="true" />
-												<f:selectItems var="item" value="#{clienteControl.listAtivo}" itemLabel="#{item.cpf} : #{item.nome}" itemDescription="#{item.cpf} : #{item.nome}" itemValue="#{item}" />
-			
-											</p:selectOneMenu>
+											<p:autoComplete id="cmbCliente" value="#{vendaControl.selected.cliente}"
+												completeMethod="#{clienteControl.completeClientes}" styleClass="styleAutoCompleteCliente" minQueryLength="3"
+												var="cliente" itemLabel="#{cliente.nome}" itemValue="#{cliente}" converter="clienteConverter" forceSelection="true">
+
+												<p:column>
+													<h:outputText value="#{cliente.nome}" />
+												</p:column>
+
+												<p:column>
+													<h:outputText value="#{cliente.cpf}" />
+												</p:column>
+											</p:autoComplete>
+
 										</p:outputLabel>
 									</div>
 										
@@ -178,28 +189,32 @@
 
 						</p:toolbar>
 
+						<p:outputPanel id="panelMsg">
+							<p:outputLabel id="lbMensagemEstoque" value="** Estoque do produto insuficiente. O produto não será considerado finalização da venda." style="color: #FF7F50" rendered="#{vendaControl.semEstoque}"  />
+						</p:outputPanel>
+						
 						<p:dataTable id="dtVenda" var="item" tableStyle="table-layout: auto" value="#{vendaControl.selected.itens}" emptyMessage="Nenhum Item Adicionado"
 								 selection="#{vendaControl.itemVendaSelecionado}" selectionMode="single" rowKey="#{item.produto.idProduto}" >
 							
 							<p:ajax event="rowSelect" listener="#{vendaControl.onRowSelect}" update="@form" />
 							
-							<p:column headerText="Código" style="text-align: center" >
+							<p:column headerText="Código" style="text-align: center; color: ##{item.corTexto}; background-color: ##{item.corFundo}" >
 								<h:outputText value="#{item.produto.idProduto}" />
 							</p:column>
 							
-							<p:column headerText="Produto" >
+							<p:column headerText="Produto" style="color: ##{item.corTexto}; background-color: ##{item.corFundo}" >
 								<h:outputText value="#{item.produto.nome}" />
 							</p:column>
 							
-							<p:column headerText="Quantidade" style="text-align: center" >
+							<p:column headerText="Quantidade" style="text-align: center; color: ##{item.corTexto}; background-color: ##{item.corFundo}" >
 								<h:outputText value="#{item.quantidade}" />
 							</p:column>
 							
-							<p:column headerText="Vl. Unitário" style="text-align: center" >
+							<p:column headerText="Vl. Unitário" style="text-align: center; color: ##{item.corTexto}; background-color: ##{item.corFundo}" >
 								<h:outputText value="#{item.produto.precoVendaFormatado}" />
 							</p:column>
 							
-							<p:column headerText="Vl. Total" style="text-align: center" >
+							<p:column headerText="Vl. Total" style="text-align: center; color: ##{item.corTexto}; background-color: ##{item.corFundo}" >
 								<h:outputText value="#{item.totalItemFormatado}" />
 							</p:column>
 							
@@ -306,9 +321,9 @@
 	                			</p:column>
 	                			
 	                		</p:dataTable>
-	                		
 	                	</p:panelGrid>
-                	</p:panel>
+	                </p:panel>
+                	<p:commandButton value="Fechar" onclick="PF('dlgOrcamentos').hide();" icon="fa fa-close" styleClass="btn-danger" style="margin-top: 10px" />
                 </h:form>
           
           </p:dialog>
