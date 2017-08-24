@@ -53,7 +53,7 @@
                                 <p:confirmDialog global="true" closable="true" closeOnEscape="true">
                                     <p:commandButton value="Sim" type="button" styleClass="btn-primary ui-confirmdialog-yes" icon="fa fa-check" />
                                     <p:commandButton value="Não" type="button" styleClass="btn-danger ui-confirmdialog-no" icon="fa fa-close" />
-                        	</p:confirmDialog>
+                        		</p:confirmDialog>
                         </p:commandButton>    
                                      
                         <p:spacer width="5"/>
@@ -63,6 +63,20 @@
                                          oncomplete="PF('dlgCadastro').show()" icon="fa fa-edit">
                         </p:commandButton>                 
                     </div>
+                    <p:splitButton value="Novo" action="#{produtoControl.doStartAddRecord()}" update="frmCadastro"
+                                   icon="fa fa-check"
+                                   styleClass="hidden-md hidden-lg btn-primary">
+                        <p:menuitem value="Editar" oncomplete="PF('dlgCadastro').show()"
+                        			disabled="#{produtoControl.disableButton}"
+                                    process="@this" update="@(.ui-dialog)" icon="fa fa-edit"/>
+                        <p:menuitem value="Excluir" process="@this" icon="fa fa-trash"
+                                    action="#{produtoControl.deleteRecord()}"
+                                    actionListener="#{produtoControl.unRowSelect()}"
+                                    type="submit" update="frmList:tabela @(.ui-button)"
+                                    disabled="#{produtoControl.disableButton}">
+                            <p:confirm header="Confirmação" message="Você tem certeza que deseja excluir este item?" icon="ui-icon-danger"/>
+                        </p:menuitem>
+                    </p:splitButton>
                    
                     <p:separator/>
 
@@ -92,7 +106,7 @@
 				<p:column id="image" headerText="Imagem" style="align-content: center; text-align: center;" width="8%">
 					<o:graphicImage id="imagemProduto" dataURI="true" value="#{imagemControl.getImage(registro.imagem.idImagem)}" style="margin: auto;width: 30px; height: 30px; align-content: center" rendered="#{not empty registro.imagem}"/>
 					<p:tooltip id="toolTipContent" for="imagemProduto" position="bottom">
-						<o:graphicImage dataURI="true" value="#{imagemControl.getImage(registro.imagem.idImagem)}"/>
+						<o:graphicImage dataURI="true" value="#{imagemControl.getImage(registro.imagem.idImagem)}" height="200" width="200" />
 					</p:tooltip>
                </p:column>
 
@@ -113,12 +127,20 @@
 				
 				<p:rowExpansion>
 	                <p:panelGrid  columns="2" style="width:100%"   >
-		                	<h:outputText value="Código : "/>
+		                <h:outputText value="Código : "/>
 		                <h:outputText value="#{registro.idProduto}"  />
 		                <h:outputText value="Nome : " />
 		                <h:outputText value="#{registro.nome}" />
 		                <h:outputText value="Categoria : " />
-		                <h:outputText value="#{registro.montadora.nome}" />
+		                <h:outputText value="#{registro.categoria.nome}" />
+		                <h:outputText value="Qtde. Estoque : " />
+		                <h:outputText value="#{registro.quantidade}" />
+		                <h:outputText value="Preço de Compra : " />
+		                <h:outputText value="R$ #{registro.precoVenda}" />
+		                <h:outputText value="Margem : " />
+		                <h:outputText value="R$ #{registro.precoCompra}" />
+		                <h:outputText value="Preço de Venda : " />
+		                <h:outputText value="#{registro.margem} %" />
 						<h:outputText value="Ativo : " />
 						<h:outputText value="#{utilityTela.getDescBoolean(registro.ativo)}" />
 	                </p:panelGrid>
@@ -136,7 +158,7 @@
 					header="Produto" focus="frmCadastro:tabViewGeral:nome" styleClass="box-primary"
 					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
 				<h:form id="frmCadastro">
-					#{produtoControl.verificaModeloList()}
+
 					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
 					<h:panelGrid columns="2" style="width:100%">
 							<p:column width="50%">
@@ -153,7 +175,7 @@
 	                    	</p:column>	
 	                </h:panelGrid>   
 	                <p:tabView id="tabViewGeral">
-        				<p:tab title="Info. Produto">	
+        				<p:tab title="Aba I">	
 			                <h:panelGrid style="width:100%" >
 			                	<p:row>
 									<p:outputLabel for="nome" value="Nome: " style="width:100%">
@@ -176,28 +198,39 @@
 		                    			 update="messages" label="Escolher" cancelLabel="Cancelar" uploadLabel="Upload" required="true" requiredMessage="Imagem é necessário"/>
 		                    			 </p:outputLabel>
 		                    <br/>
-		                    <h:panelGrid columns="2" style="width:100%">
+		                    <h:panelGrid columns="2" style="width:100%" id="gridModelos">
 		                    	<p:row>	
 		                    		<p:column>
 										<p:outputLabel for="selectModelos" value="Modelos compatíveis: " style="width: 50%">
-											<p:selectCheckboxMenu value="#{produtoControl.modeloSelectedList}" id="selectModelos" filter="true" filterMatchMode="contains" converter="omnifaces.SelectItemsConverter" style="width:90%; height: 30px" required="true" requiredMessage="Campo Modelo é necessário">
-					                           	<f:selectItem itemLabel="Selecione..." itemValue="" />
+											<p:selectCheckboxMenu value="#{produtoControl.modeloSelectedList}" id="selectModelos" filter="true" filterMatchMode="contains" converter="omnifaces.SelectItemsConverter" style="width:90%; height: 30px">
+					                           	<f:selectItem itemLabel="Selecione..." itemValue="" itemDisabled="true"/>
 					                           	<f:selectItems value="#{modeloControl.listAtivo}" var="item" itemLabel="#{item.idModelo} - #{item.nome}" itemValue="#{item}" />
 					                       </p:selectCheckboxMenu> 
 				                       </p:outputLabel>
 			                       </p:column>
 			                       <p:column> 
-			                      		<p:commandButton icon="fa fa-plus" value="Adicionar Modelo(s)" style="margin-top:17px; float: right" actionListener="#{produtoControl.addProdutoModelo()}" update="frmCadastro:tabViewGeral:dtModelo"/>
+			                      		<p:commandButton id="idAddModelos" icon="fa fa-plus" value="Adicionar Modelo(s)" style="margin-top:17px; float: right" actionListener="#{produtoControl.addProdutoModelo()}" update="frmCadastro:tabViewGeral:dtModelo" process="gridModelos"/>
 			                       </p:column>
 			                    </p:row>  
 		                    </h:panelGrid>	
 		                      <h:panelGrid width="100%">
 		                    		<p:dataTable id="dtModelo" value="#{produtoControl.selected.produtoModeloList}" var="registro" scrollable="true" 
-		                    					scrollHeight="200" tableStyle="font-size: 12px; text-align: center">
+		                    					scrollHeight="170" tableStyle="font-size: 12px; text-align: center">
 		                    					
 		                    			<f:facet name="header">
 		                    				Modelos selecionados
 		                    			</f:facet>
+		                    			
+		                    			<p:column width="10%" style="border-left: 0;font-size: 3px" exportable="false">
+		                    				<p:commandButton type="submit"
+                                             title="Excluir"
+                                             update=":frmCadastro"
+                                             actionListener="#{produtoControl.removeProdutoModelo(registro)}" 
+                                             icon="ui-icon-trash"
+                                             process="@this"
+                                             style="margin-left: 4px">
+				                            </p:commandButton>
+		                    			</p:column>
 		                    		
 		                    			<p:column headerText="Montadora">
 		                    				#{registro.modelo.montadora.nome}
@@ -208,42 +241,54 @@
 		                    		</p:dataTable>
 		                    </h:panelGrid>		
 						</p:tab>
-						<p:tab title="Estoque">
-							<p:panelGrid columns="3" layout="grid">
-								<p:outputLabel value="Exibir na Vitrine: "/>
-								
-								<p:selectOneButton id="manyBtn" value="#{produtoControl.selected.mostraVitrine}" style="float:right">
-										<f:converter converterId="javax.faces.Boolean" />
-				                        <f:selectItem itemLabel="Sim" itemValue="true"/>
-				                        <f:selectItem itemLabel="Não" itemValue="false"/>
-		                    		</p:selectOneButton>
+						<p:tab title="Aba II">
+							<p:panelGrid columns="4" layout="grid">
+									<p:outputLabel value="Exibir na Vitrine: "/>
+									<p:selectOneButton value="#{produtoControl.selected.mostraVitrine}" style="float:right">
+											<f:converter converterId="javax.faces.Boolean" />
+					                        <f:selectItem itemLabel="Sim" itemValue="true"/>
+					                        <f:selectItem itemLabel="Não" itemValue="false"/>
+			                    	</p:selectOneButton>	
+			                    	
+									<p:outputLabel value="Controlar Estoque: "/>
+									<p:selectOneButton value="#{produtoControl.selected.controlaEstoque}" style="float:right">
+											<f:converter converterId="javax.faces.Boolean" />
+					                        <f:selectItem itemLabel="Sim" itemValue="true"/>
+					                        <f:selectItem itemLabel="Não" itemValue="false"/>
+			                    	</p:selectOneButton>
 							</p:panelGrid>
 							<p:separator/>
 							<p:panelGrid columns="1" layout="grid">
 								<p:outputLabel for="descProduto" value="Descrição do Produto: ">
-									<p:inputTextarea id="descProduto" rows="5" cols="82"/>
+									<p:inputTextarea id="descProduto" value="#{produtoControl.selected.descricao}" rows="5" cols="82" required="true" requiredMessage="Campo Descrição é necessário"/>
 								</p:outputLabel>
 							</p:panelGrid>
 							<p:panelGrid columns="3" layout="grid">
 								<p:outputLabel for="precoCompra" value="Preço de Compra: ">
-									<p:inputNumber id="precoCompra" value="#{produtoControl.selected.precoCompra}" decimalPlaces="2" decimalSeparator="," thousandSeparator="."/>
+									<p:inputNumber id="precoCompra" value="#{produtoControl.selected.precoCompra}" symbol="R$" decimalPlaces="2" decimalSeparator="," thousandSeparator="." required="true" requiredMessage="Campo Preço de Compra é necessário">
+										<p:ajax event="blur" listener="#{produtoControl.calculaPrecoVenda()}" process="@this" update="frmCadastro:tabViewGeral:precoVenda" />
+									</p:inputNumber>
 								</p:outputLabel>
 								
 								<p:outputLabel for="margem" value="Margem: ">
-									<p:inputNumber id="margem" value="#{produtoControl.selected.margem}" decimalPlaces="2" decimalSeparator="," thousandSeparator="" symbol="%" symbolPosition="s"/>
+									<p:inputNumber id="margem" value="#{produtoControl.selected.margem}" decimalPlaces="2" decimalSeparator="," thousandSeparator="" symbol="%" symbolPosition="s" required="true" requiredMessage="Campo Margem é necessário">
+										<p:ajax event="blur" listener="#{produtoControl.calculaPrecoVenda()}" process="@this" update="frmCadastro:tabViewGeral:precoVenda" />
+									</p:inputNumber>
 								</p:outputLabel>
 								
 								<p:outputLabel for="precoVenda" value="Preço de Venda: ">
-									<p:inputNumber id="precoVenda" value="#{produtoControl.selected.precoVenda}" decimalPlaces="2" decimalSeparator="," thousandSeparator="."/>
+									<p:inputNumber id="precoVenda" value="#{produtoControl.selected.precoVenda}" symbol="R$" decimalPlaces="2" decimalSeparator="," thousandSeparator="." required="true" requiredMessage="Campo Preço Venda é necessário">
+										<p:ajax event="blur" listener="#{produtoControl.calculaMargem()}" process="@this" update="frmCadastro:tabViewGeral:margem" />
+									</p:inputNumber>
 								</p:outputLabel>
 							</p:panelGrid>
-							<p:panelGrid columns="2" layout="grid">
-								<p:outputLabel for="qtdeMinina" value="Qtde. minima para aviso: ">
-									<p:inputNumber id="qtdeMinina" value="#{produtoControl.selected.precoCompra}" decimalPlaces="2" decimalSeparator="," thousandSeparator="."/>
+							<p:panelGrid columns="3" layout="grid">
+								<p:outputLabel for="qtdeMinina" value="Qtde. mínima para aviso: ">
+									<p:inputNumber id="qtdeMinina" value="#{produtoControl.selected.qtdMinima}" decimalPlaces="0" decimalSeparator="" thousandSeparator="" required="true" requiredMessage="Campo Qtde. Mínima é necessário"/>
 								</p:outputLabel>
 								
-								<p:outputLabel for="qtdeProduto" value="Qtde. Total: ">
-									<p:inputNumber id="qtdeProduto" value="#{produtoControl.selected.precoCompra}" decimalPlaces="2" decimalSeparator="," thousandSeparator="."/>
+								<p:outputLabel for="qtdeProduto" value="Qtde. Estoque: ">
+									<p:inputNumber id="qtdeProduto" value="#{produtoControl.selected.quantidade}" decimalPlaces="0" decimalSeparator="" thousandSeparator="" required="true" requiredMessage="Campo Qtde. Total é necessário"/>
 								</p:outputLabel>
 							</p:panelGrid>
 						</p:tab>

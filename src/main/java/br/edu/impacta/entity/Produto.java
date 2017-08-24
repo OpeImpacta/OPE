@@ -62,6 +62,9 @@ public class Produto implements Serializable {
 
 	@Column(name="ativo")
 	private boolean ativo = true;
+	
+	@Column(name="descricao")
+	private String descricao;
 
 	@Column(name = "controla_estoque")
 	private Boolean controlaEstoque;
@@ -209,6 +212,14 @@ public class Produto implements Serializable {
 
 	public void setControlaEstoque(Boolean controlaEstoque) {
 		this.controlaEstoque = controlaEstoque;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	@Override

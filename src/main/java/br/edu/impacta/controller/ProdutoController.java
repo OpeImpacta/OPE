@@ -2,6 +2,7 @@ package br.edu.impacta.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -35,22 +36,13 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
 	private static ProdutoDAO produtoDAO = new ProdutoDAO();
 	
 	private boolean disableButton = true;
-	
-	private Modelo modeloSelected;
-	private List<Modelo> modeloList;
 	private List<Modelo> modeloSelectedList;
-	
-	private ProdutoModelo produtoModeloSelected;
-	
 	private List<Produto> produtosControlaEstoque;
-	
-	@Inject
-	private ModeloController modeloControl;
 	
 	@PostConstruct
 	@PostActivate
 	public void init() {
-		//modeloList = modeloControl.getListAtivo();
+
 	}	
 	
 	// *******************************************
@@ -85,6 +77,7 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
   		super.treatRecord();
   		UtilityTela.executarJavascript("PF('dlgCadastro').hide()");
   		newInSelected();
+  		modeloSelectedList = new ArrayList<>();
   	}
   	
   	public void addProdutoModelo(){
@@ -93,21 +86,39 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
 		}
   	}
   	
-  	public void removeProdutoModelo(){
-  		this.getSelected().getProdutoModeloList().remove(this.getProdutoModeloSelected());
-  		this.getModeloList().add(this.getProdutoModeloSelected().getModelo());
+  	public void removeProdutoModelo(ProdutoModelo produtoModelo){
+  		if(this.getSelected().getProdutoModeloList().contains(produtoModelo)) {
+  			this.getSelected().getProdutoModeloList().remove(produtoModelo);
+  		}
   	}
   	
-  	public void verificaModeloList(){
-  		if(modeloList != null && this.getSelected().getIdProduto() != null){
-			for (ProdutoModelo produtoModelo : getSelected().getProdutoModeloList()) {
-				if(modeloList.contains(produtoModelo.getModelo())){
-					modeloList.remove(produtoModelo.getModelo());
-				} 
-			}
-		} else {
-			modeloList = modeloControl.getListAtivo();
-		}
+  //calcula total da venda atraves da porcentagem estipulada
+  	public void calculaPrecoVenda(){
+  		if(getSelected().getMargem() != null && getSelected().getMargem() != BigDecimal.ZERO &&
+  			getSelected().getPrecoCompra() != null && getSelected().getPrecoCompra() != BigDecimal.ZERO){
+
+  			BigDecimal prCompra = getSelected().getPrecoCompra();
+  			BigDecimal margem = getSelected().getMargem();
+
+  			BigDecimal mult = prCompra.multiply(margem);
+  			getSelected().setPrecoVenda(mult.divide(new BigDecimal(100)).add(getSelected().getPrecoCompra()));
+  		}
+  	}
+
+  	//calcula valor da margem se campo valor da compra estiver preenchido
+  	public void calculaMargem(){
+  		if(getSelected().getPrecoCompra() != null && getSelected().getPrecoCompra() != BigDecimal.ZERO &&
+  			getSelected().getPrecoVenda() != null && getSelected().getPrecoVenda() != BigDecimal.ZERO &&
+  			getSelected().getPrecoVenda().compareTo(getSelected().getPrecoCompra()) == 1){
+
+  			BigDecimal prCompra = getSelected().getPrecoCompra();
+  			BigDecimal prVenda = getSelected().getPrecoVenda();
+
+  			BigDecimal div = prVenda.divide(prCompra);
+
+  			BigDecimal mult = div.multiply(new BigDecimal(100));
+  			getSelected().setMargem(mult.subtract(new BigDecimal(100)));
+  		}
   	}
     
     //Quando seleciona a linha habilita o bot�o cancelar e visualizar
@@ -126,30 +137,6 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
 
 	public void setDisableButton(boolean disableButton) {
 		this.disableButton = disableButton;
-	}
-	
-	public Modelo getModeloSelected() {
-		return modeloSelected;
-	}
-
-	public void setModeloSelected(Modelo modeloSelected) {
-		this.modeloSelected = modeloSelected;
-	}
-
-	public List<Modelo> getModeloList() {
-		return modeloList;
-	}
-
-	public void setModeloList(List<Modelo> modeloList) {
-		this.modeloList = modeloList;
-	}
-
-	public ProdutoModelo getProdutoModeloSelected() {
-		return produtoModeloSelected;
-	}
-
-	public void setProdutoModeloSelected(ProdutoModelo produtoModeloSelected) {
-		this.produtoModeloSelected = produtoModeloSelected;
 	}
 
 	public List<Modelo> getModeloSelectedList() {
