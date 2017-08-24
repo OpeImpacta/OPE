@@ -2,6 +2,7 @@ package br.edu.impacta.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +38,7 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
 	
 	private Modelo modeloSelected;
 	private List<Modelo> modeloList;
+	private List<Modelo> modeloSelectedList;
 	
 	private ProdutoModelo produtoModeloSelected;
 	
@@ -86,8 +88,9 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
   	}
   	
   	public void addProdutoModelo(){
-  		this.getModeloList().remove(this.modeloSelected);
-  		this.getSelected().getProdutoModeloList().add(new ProdutoModelo(this.getSelected(), this.modeloSelected));
+  		for (Modelo modelo : modeloSelectedList) {
+  			this.getSelected().getProdutoModeloList().add(new ProdutoModelo(this.getSelected(), modelo));
+		}
   	}
   	
   	public void removeProdutoModelo(){
@@ -107,12 +110,12 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
 		}
   	}
     
-    //Quando seleciona a linha habilita o botão cancelar e visualizar
+    //Quando seleciona a linha habilita o botï¿½o cancelar e visualizar
   	public void onRowSelect(){
   		disableButton = false;
   	}
   	
-  	//Quando seleciona a linha habilita o botão cancelar e visualizar
+  	//Quando seleciona a linha habilita o botï¿½o cancelar e visualizar
   	public void unRowSelect(){
   		disableButton = true;
   	}
@@ -149,6 +152,17 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
 		this.produtoModeloSelected = produtoModeloSelected;
 	}
 
+	public List<Modelo> getModeloSelectedList() {
+		if(modeloSelectedList == null) {
+			modeloSelectedList = new ArrayList<>();
+		}
+		return modeloSelectedList;
+	}
+
+	public void setModeloSelectedList(List<Modelo> modeloSelectedList) {
+		this.modeloSelectedList = modeloSelectedList;
+	}
+
 	public List<Produto> getProdutosControlaEstoque() {
 		if(produtosControlaEstoque == null) {
 			produtosControlaEstoque = produtoDAO.findControleEstoque();
@@ -159,5 +173,4 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
 	public void setProdutosControlaEstoque(List<Produto> produtosControlaEstoque) {
 		this.produtosControlaEstoque = produtosControlaEstoque;
 	}
-	
-}
+}	
