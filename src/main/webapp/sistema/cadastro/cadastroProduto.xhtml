@@ -133,7 +133,7 @@
 
 		</h:form>
 			<p:dialog width="700px" height="auto" widgetVar="dlgCadastro" resizable="false" 
-					header="Produto" focus="frmCadastro:nome" styleClass="box-primary"
+					header="Produto" focus="frmCadastro:tabViewGeral:nome" styleClass="box-primary"
 					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
 				<h:form id="frmCadastro">
 					#{produtoControl.verificaModeloList()}
@@ -151,59 +151,103 @@
 			                        <f:selectItem itemLabel="Inativo" itemValue="false"/>
 	                    		</p:selectOneButton>
 	                    	</p:column>	
-	                </h:panelGrid>    	
-	                <h:panelGrid style="width:100%" >
-	                	<p:row>
-							<p:outputLabel for="nome" value="Nome: " style="width:100%">
-								<p:inputText id="nome" value="#{produtoControl.selected.nome}" required="true" style="width: 100%" requiredMessage="Campo Nome é necessário"/>
-							</p:outputLabel>
-						</p:row>
-						<p:row>	
-							<p:outputLabel for="selectCategoria" value="Categoria: " style="width:100%">
-								<p:selectOneMenu id="selectCategoria" value="#{produtoControl.selected.categoria}" filter="true" filterMatchMode="contains" converter="omnifaces.SelectItemsConverter" style="width:100%; height: 30px" required="true" requiredMessage="Campo Categoria é necessário">
-		                           	<f:selectItem itemLabel="Selecione..." itemValue="" />
-		                           	<f:selectItems value="#{categoriaControl.listAtivo}" var="item" itemLabel="#{item.idCategoria} - #{item.nome}" itemValue="#{item}" />
-		                       </p:selectOneMenu> 
-	                       </p:outputLabel>
-	                    </p:row>   
-					</h:panelGrid>
-					<p:outputLabel value="Imagem: "/>
-					<p:fileUpload id="selectImagem" fileUploadListener="#{produtoControl.upload}" style="width:100%" auto="true"
-                                  sizeLimit="1000000" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
-                    			 update="messages" label="Escolher" required="true" requiredMessage="Imagem é necessário"/>
-                    <br/>	
-                      <h:panelGrid columns="3" width="100%">
-                    	<p:column width="310px">
-                    		<p:outputLabel for="dtModelo" value="Modelos "/>
-                    		<p:dataTable id="dtModelo" value="#{produtoControl.modeloList}" var="registro" style="width: 310px" rowKey="#{registro.idModelo}" selectionMode="single" selection="#{produtoControl.modeloSelected}" scrollable="true" scrollHeight="200" tableStyle="font-size: 12px; text-align: center">
-                    			<p:column>
-                    				#{registro.montadora.nome}
-                    			</p:column>
-                    			<p:column>
-                    				#{registro.nome}
-                    			</p:column>
-                    		</p:dataTable>
-                    	</p:column>
-                    	
-                    	<p:column width="80px">
-                    		<p:commandButton id="btnAddProdutoModelo" actionListener="#{produtoControl.addProdutoModelo()}" update="dtModelo dtProduto @this btnRemoveProdutoModelo" icon="ui-icon-arrowthick-1-e" style="margin: 3px" disabled="#{empty produtoControl.modeloList ? true : false}"/>
-                    		<br/>
-                    		<p:commandButton id="btnRemoveProdutoModelo" actionListener="#{produtoControl.removeProdutoModelo()}" update="dtModelo dtProduto @this btnAddProdutoModelo" icon="ui-icon-arrowthick-1-w" style="margin: 3px" disabled="#{empty produtoControl.selected.produtoModeloList ? true : false}"/>
-                    	</p:column>
-                    	
-                    	<p:column width="310px">
-                    		<p:outputLabel for="dtModelo" value="Modelos selecionados" style="float: center"/>
-                    		<p:dataTable id="dtProduto" value="#{produtoControl.selected.produtoModeloList}" var="registro" style="width: 310px" scrollable="true" scrollHeight="200" rowKey="#{registro}" selectionMode="single" selection="#{produtoControl.produtoModeloSelected}" tableStyle="font-size: 12px">
-                    			<p:column>
-                    				#{registro.modelo.montadora.nome}
-                    			</p:column>
-                    			<p:column>
-                    				#{registro.modelo.nome}
-                    			</p:column>
-                    		</p:dataTable>
-                    	</p:column>
-                    </h:panelGrid>		
-
+	                </h:panelGrid>   
+	                <p:tabView id="tabViewGeral">
+        				<p:tab title="Info. Produto">	
+			                <h:panelGrid style="width:100%" >
+			                	<p:row>
+									<p:outputLabel for="nome" value="Nome: " style="width:100%">
+										<p:inputText id="nome" value="#{produtoControl.selected.nome}" required="true" style="width: 100%" requiredMessage="Campo Nome é necessário"/>
+									</p:outputLabel>
+								</p:row>
+								<p:row>	
+									<p:outputLabel for="selectCategoria" value="Categoria: " style="width:100%">
+										<p:selectOneMenu id="selectCategoria" value="#{produtoControl.selected.categoria}" filter="true" filterMatchMode="contains" converter="omnifaces.SelectItemsConverter" style="width:100%; height: 30px" required="true" requiredMessage="Campo Categoria é necessário">
+				                           	<f:selectItem itemLabel="Selecione..." itemValue="" />
+				                           	<f:selectItems value="#{categoriaControl.listAtivo}" var="item" itemLabel="#{item.idCategoria} - #{item.nome}" itemValue="#{item}" />
+				                       </p:selectOneMenu> 
+			                       </p:outputLabel>
+			                    </p:row> 
+							</h:panelGrid>
+							<p:outputLabel value="Imagem: " style="width: 100%">
+							 <p:fileUpload id="selectImagem" fileUploadListener="#{produtoControl.upload}" style="width:100%"
+		                                  sizeLimit="1000000" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" mode="advanced"
+		                                  dragDropSupport="false" previewWidth="70"
+		                    			 update="messages" label="Escolher" cancelLabel="Cancelar" uploadLabel="Upload" required="true" requiredMessage="Imagem é necessário"/>
+		                    			 </p:outputLabel>
+		                    <br/>
+		                    <h:panelGrid columns="2" style="width:100%">
+		                    	<p:row>	
+		                    		<p:column>
+										<p:outputLabel for="selectModelos" value="Modelos compatíveis: " style="width: 50%">
+											<p:selectCheckboxMenu value="#{produtoControl.modeloSelectedList}" id="selectModelos" filter="true" filterMatchMode="contains" converter="omnifaces.SelectItemsConverter" style="width:90%; height: 30px" required="true" requiredMessage="Campo Modelo é necessário">
+					                           	<f:selectItem itemLabel="Selecione..." itemValue="" />
+					                           	<f:selectItems value="#{modeloControl.listAtivo}" var="item" itemLabel="#{item.idModelo} - #{item.nome}" itemValue="#{item}" />
+					                       </p:selectCheckboxMenu> 
+				                       </p:outputLabel>
+			                       </p:column>
+			                       <p:column> 
+			                      		<p:commandButton icon="fa fa-plus" value="Adicionar Modelo(s)" style="margin-top:17px; float: right" actionListener="#{produtoControl.addProdutoModelo()}" update="frmCadastro:tabViewGeral:dtModelo"/>
+			                       </p:column>
+			                    </p:row>  
+		                    </h:panelGrid>	
+		                      <h:panelGrid width="100%">
+		                    		<p:dataTable id="dtModelo" value="#{produtoControl.selected.produtoModeloList}" var="registro" scrollable="true" 
+		                    					scrollHeight="200" tableStyle="font-size: 12px; text-align: center">
+		                    					
+		                    			<f:facet name="header">
+		                    				Modelos selecionados
+		                    			</f:facet>
+		                    		
+		                    			<p:column headerText="Montadora">
+		                    				#{registro.modelo.montadora.nome}
+		                    			</p:column>
+		                    			<p:column headerText="Modelo">
+		                    				#{registro.modelo.nome}
+		                    			</p:column>
+		                    		</p:dataTable>
+		                    </h:panelGrid>		
+						</p:tab>
+						<p:tab title="Estoque">
+							<p:panelGrid columns="3" layout="grid">
+								<p:outputLabel value="Exibir na Vitrine: "/>
+								
+								<p:selectOneButton id="manyBtn" value="#{produtoControl.selected.mostraVitrine}" style="float:right">
+										<f:converter converterId="javax.faces.Boolean" />
+				                        <f:selectItem itemLabel="Sim" itemValue="true"/>
+				                        <f:selectItem itemLabel="Não" itemValue="false"/>
+		                    		</p:selectOneButton>
+							</p:panelGrid>
+							<p:separator/>
+							<p:panelGrid columns="1" layout="grid">
+								<p:outputLabel for="descProduto" value="Descrição do Produto: ">
+									<p:inputTextarea id="descProduto" rows="5" cols="82"/>
+								</p:outputLabel>
+							</p:panelGrid>
+							<p:panelGrid columns="3" layout="grid">
+								<p:outputLabel for="precoCompra" value="Preço de Compra: ">
+									<p:inputNumber id="precoCompra" value="#{produtoControl.selected.precoCompra}" decimalPlaces="2" decimalSeparator="," thousandSeparator="."/>
+								</p:outputLabel>
+								
+								<p:outputLabel for="margem" value="Margem: ">
+									<p:inputNumber id="margem" value="#{produtoControl.selected.margem}" decimalPlaces="2" decimalSeparator="," thousandSeparator="" symbol="%" symbolPosition="s"/>
+								</p:outputLabel>
+								
+								<p:outputLabel for="precoVenda" value="Preço de Venda: ">
+									<p:inputNumber id="precoVenda" value="#{produtoControl.selected.precoVenda}" decimalPlaces="2" decimalSeparator="," thousandSeparator="."/>
+								</p:outputLabel>
+							</p:panelGrid>
+							<p:panelGrid columns="2" layout="grid">
+								<p:outputLabel for="qtdeMinina" value="Qtde. minima para aviso: ">
+									<p:inputNumber id="qtdeMinina" value="#{produtoControl.selected.precoCompra}" decimalPlaces="2" decimalSeparator="," thousandSeparator="."/>
+								</p:outputLabel>
+								
+								<p:outputLabel for="qtdeProduto" value="Qtde. Total: ">
+									<p:inputNumber id="qtdeProduto" value="#{produtoControl.selected.precoCompra}" decimalPlaces="2" decimalSeparator="," thousandSeparator="."/>
+								</p:outputLabel>
+							</p:panelGrid>
+						</p:tab>
+					</p:tabView>
 				<p:separator/>
 				<p:commandButton value="Salvar"
 					style="margin-top: -10px; width: auto"
@@ -224,4 +268,3 @@
 			</p:dialog>
 	</ui:define>
 </ui:composition>
-

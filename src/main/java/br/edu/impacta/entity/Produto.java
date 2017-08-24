@@ -60,11 +60,11 @@ public class Produto implements Serializable {
 	@Column(name = "margem", nullable = true)
 	private BigDecimal margem;
 
-	@Column(name = "controla_estoque")
-	private Boolean controlaEstoque;
-
 	@Column(name="ativo")
 	private boolean ativo = true;
+
+	@Column(name = "controla_estoque")
+	private Boolean controlaEstoque;
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
@@ -154,14 +154,6 @@ public class Produto implements Serializable {
 		this.margem = margem;
 	}
 
-	public Boolean getControlaEstoque() {
-		return controlaEstoque;
-	}
-
-	public void setControlaEstoque(Boolean controlaEstoque) {
-		this.controlaEstoque = controlaEstoque;
-	}
-
 	public boolean isAtivo() {
 		return ativo;
 	}
@@ -209,6 +201,14 @@ public class Produto implements Serializable {
 
 	public void setPrecoVendaFormatado(String precoVendaFormatado) {
 		this.precoVendaFormatado = precoVendaFormatado;
+	}
+
+	public Boolean getControlaEstoque() {
+		return controlaEstoque;
+	}
+
+	public void setControlaEstoque(Boolean controlaEstoque) {
+		this.controlaEstoque = controlaEstoque;
 	}
 
 	@Override
