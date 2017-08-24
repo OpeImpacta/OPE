@@ -212,7 +212,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 			return false;
 		}
 
-		if(itemVenda.getQuantidade() == null || itemVenda.getQuantidade() == 0) {
+		if(itemVenda.getQuantidade() == null || itemVenda.getQuantidade() <= 0) {
 			return false;
 		}
 
