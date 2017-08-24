@@ -69,12 +69,16 @@
                 	<p:rowToggler />
                 </p:column>
 
-				<p:column headerText="Código" sortBy="#{registro.id}" filterBy="#{registro.id}" filterMatchMode="contains">
+				<p:column headerText="Código" style="text-align: center"  sortBy="#{registro.id}" filterBy="#{registro.id}" filterMatchMode="contains">
 					<h:outputText value="#{registro.id}" />
 				</p:column>
 
-				<p:column headerText="Descrição" filterBy="#{registro.nome}" sortBy="#{registro.nome}" filterMatchMode="contains">
+				<p:column headerText="Descrição" filterBy="#{registro.nome}" style="text-align: center" filterStyle="width: 200px" sortBy="#{registro.nome}" filterMatchMode="contains">
 					<h:outputText value="#{registro.nome}" />
+				</p:column>
+				
+				<p:column headerText="Email" filterBy="#{registro.email}" style="text-align: center" filterStyle="width: 200px" sortBy="#{registro.email}" filterMatchMode="contains">
+					<h:outputText value="#{registro.email}" />
 				</p:column>
 
 				<p:column headerText="Ativo" sortBy="#{registro.ativo}"  filterBy="#{registro.ativo}" resizable="false" toggleable="true" style="text-align:center; padding: 0;">
@@ -139,7 +143,7 @@
 					<p:column width="100%" colspan="2">
 						<p:outputLabel for="nome" value="Nome: " />
 						<br />
-						<p:inputText id="nome"
+						<p:inputText id="nome" maxlength="50"
 							value="#{usuarioControl.selected.nome}" required="true" style="width: 100%" requiredMessage="Campo Nome é necessário"/>
 					</p:column>	
 				</h:panelGrid>
@@ -148,7 +152,7 @@
 					<p:column width="100%" colspan="2">
 						<p:outputLabel for="email" value="Email: " />
 						<br />
-						<p:inputText id="email"
+						<p:inputText id="email" maxlength="50"
 							value="#{usuarioControl.selected.email}" required="true" style="width: 100%" requiredMessage="Campo Email é necessário" validatorMessage="Email inválido!">
 							<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 						</p:inputText>	
@@ -170,11 +174,11 @@
 					</p:column>	
 				</h:panelGrid>
 				
-				<h:panelGrid columns="2" style="width:100%">
+				<h:panelGrid rendered="#{usuarioControl.renderedSenha}" columns="2" style="width:100%">
 					<p:column width="50%">
 						<p:outputLabel for="senha" value="Senha: " />
 						<br />
-						<p:inputText id="senha"
+						<p:password id="senha" maxlength="50"
 							value="#{usuarioControl.selected.senha}" required="true" style="width: 40%" requiredMessage="Campo Senha é necessário"/>
 					</p:column>	
 				</h:panelGrid>

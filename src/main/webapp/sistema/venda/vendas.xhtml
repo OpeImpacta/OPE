@@ -144,6 +144,7 @@
 										
 									<div class="ui-g-2">
 										<p:outputLabel for="cmbCliente" value="Cliente:" style="margin-left: -120px" ><br />
+											
 											<p:autoComplete id="cmbCliente" value="#{vendaControl.selected.cliente}"
 												completeMethod="#{clienteControl.completeClientes}" styleClass="styleAutoCompleteCliente" minQueryLength="3"
 												var="cliente" itemLabel="#{cliente.nome}" itemValue="#{cliente}" converter="clienteConverter" forceSelection="true">

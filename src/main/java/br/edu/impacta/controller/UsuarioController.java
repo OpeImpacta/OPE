@@ -12,9 +12,13 @@ import br.edu.impacta.entity.Usuario;
 @Named(value = "usuarioControl")
 @ViewScoped
 public class UsuarioController extends BasicControlCad<Usuario> implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
+	
 	private static UsuarioDAO usuarioDAO = new UsuarioDAO();
 	private boolean disableButton = true;
+	
+	private Boolean renderedSenha;
 
 	// Quando seleciona a linha habilita o botão cancelar e visualizar
 	public void onRowSelect() {
@@ -42,6 +46,22 @@ public class UsuarioController extends BasicControlCad<Usuario> implements Seria
 	@Override
 	public void treatRecord() {
 		super.treatRecord();
+		renderedSenha = false;
 		UtilityTela.executarJavascript("PF('dlgCadastro').hide()");
 	}
+	
+	@Override
+	public void doStartAddRecord() throws Exception {
+		renderedSenha = true;
+		super.doStartAddRecord();
+	}
+
+	public Boolean getRenderedSenha() {
+		return renderedSenha;
+	}
+
+	public void setRenderedSenha(Boolean renderedSenha) {
+		this.renderedSenha = renderedSenha;
+	}
+	
 }

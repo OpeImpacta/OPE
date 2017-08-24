@@ -499,9 +499,9 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 
 
-	//****************************************************
-	//**************** AUTOCOMPLETE **********************
-	//****************************************************
+	//*****************************************************
+	//**************** AUTOCOMPLETE ***********************
+	//*****************************************************
 	public List<Produto> completeProdutos(String query){
 		List<Produto> allProdutos = produtoDAO.findAtivos();
 		List<Produto> filteredProdutos = new ArrayList<>();

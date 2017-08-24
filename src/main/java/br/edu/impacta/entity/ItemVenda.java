@@ -131,6 +131,7 @@ public class ItemVenda implements Serializable,  Cloneable {
 			corFundo = "";
 		}
 		return corFundo;
+		
 	}
 
 	public void setCorFundo(String corFundo) {

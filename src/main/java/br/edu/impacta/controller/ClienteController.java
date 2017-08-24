@@ -172,6 +172,7 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 	//**************** AUTOCOMPLETE **********************
 	//****************************************************
 	public List<Cliente> completeClientes(String query){
+		
 		List<Cliente> allClientes = clienteDAO.findAtivos();
 		List<Cliente> filteredClientes = new ArrayList<>();
 

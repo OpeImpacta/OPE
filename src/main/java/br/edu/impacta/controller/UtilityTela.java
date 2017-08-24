@@ -90,9 +90,9 @@ public class UtilityTela implements Serializable{
 		return DateUtils.truncatedEquals((Date) filter, (Date) value, Calendar.DATE);
 	}
 
-	// ***********************************************************************************************
+	// ***********************************************************
 	// * Converte data em String
-	// ***********************************************************************************************
+	// ***********************************************************
 	public static String dateTimeFormat(Date data) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy - HH:mm");
 		return sdf.format(data);

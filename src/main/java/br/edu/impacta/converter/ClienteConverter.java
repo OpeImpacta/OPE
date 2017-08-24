@@ -15,6 +15,7 @@ public class ClienteConverter implements Converter {
 	@Inject
 	private ClienteDAO clienteDAO;
 	
+	
 	@Override
 	public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
 		if(value != null) {
