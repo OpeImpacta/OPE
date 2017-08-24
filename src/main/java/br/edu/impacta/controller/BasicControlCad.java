@@ -55,7 +55,7 @@ public abstract class BasicControlCad<C> implements Serializable {
 			Messages.create("Sucesso!").detail("Item gravado com sucesso").add();
 		} catch (Exception ex) {
 			Logger.getLogger(BasicControlCad.class.getName()).log(Level.SEVERE, null, ex);
-			Messages.create("Erro!").error().detail("Um erro ocorreu e n„o foi possÌvel gravar o item").add();
+			Messages.create("Erro!").error().detail("Um erro ocorreu e n√£o foi poss√≠vel gravar o item").add();
 		}
 	}
 
@@ -67,7 +67,7 @@ public abstract class BasicControlCad<C> implements Serializable {
 			Messages.create("Sucesso!").detail("Item editado com sucesso").add();
 		} catch (Exception ex) {
 			Logger.getLogger(BasicControlCad.class.getName()).log(Level.SEVERE, null, ex);
-			Messages.create("Erro!").error().detail("Um erro ocorreu e n„o foi possÌvel editar o item").add();
+			Messages.create("Erro!").error().detail("Um erro ocorreu e n√£o foi poss√≠vel editar o item").add();
 		}
 	}
 
@@ -76,10 +76,10 @@ public abstract class BasicControlCad<C> implements Serializable {
 		try {
 			this.dao.delete(selected);
 			selected = null;
-			Messages.create("Sucesso!").detail("Item excluÌdo com sucesso").add();
+			Messages.create("Sucesso!").detail("Item exclu√≠do com sucesso").add();
 		} catch (Exception ex) {
 			Logger.getLogger(BasicControlCad.class.getName()).log(Level.SEVERE, null, ex);
-			Messages.create("Erro!").error().detail("Um erro ocorreu e n„o foi possÌvel excluir o item").add();
+			Messages.create("Erro!").error().detail("Um erro ocorreu e n√£o foi poss√≠vel excluir o item").add();
 		}
 	}
 
@@ -88,10 +88,10 @@ public abstract class BasicControlCad<C> implements Serializable {
 		try {
 			this.dao.delete(id);
 			selected = null;
-			Messages.create("Sucesso!").detail("Item excluÌdo com sucesso").add();
+			Messages.create("Sucesso!").detail("Item exclu√≠do com sucesso").add();
 		} catch (Exception ex) {
 			Logger.getLogger(BasicControlCad.class.getName()).log(Level.SEVERE, null, ex);
-			Messages.create("Erro!").error().detail("Um erro ocorreu e n„o foi possÌvel excluir o item").add();
+			Messages.create("Erro!").error().detail("Um erro ocorreu e n√£o foi poss√≠vel excluir o item").add();
 		}
 	}
 
@@ -107,7 +107,7 @@ public abstract class BasicControlCad<C> implements Serializable {
 	}
 
 	// **************************************************************************
-	// * Prepara para inclusao - quando n„o tem dialog
+	// * Prepara para inclusao - quando nÔøΩo tem dialog
 	// **************************************************************************
 	public void doStartAddRecordComum() throws Exception {
 		System.out.println("BasicControlCad:doStartAddRegistroComum");
