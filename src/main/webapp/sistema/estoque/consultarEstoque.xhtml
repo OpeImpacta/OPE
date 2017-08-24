@@ -48,35 +48,33 @@
 				            
 				            <p:ajax event="change" listener="#{movimentacaoControl.preencheProdutos}" update="@form" process="@form" />
 				        </p:selectOneButton>
-				        
+				    </div>
 						
-						<p:dataTable id="tbProdutos" var="produto" tableStyle="table-layout: auto;" style="margin-top: 10px" value="#{movimentacaoControl.produtos}" lazy="true"
-							paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                            currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" emptyMessage="Nenhum Registro Encontrado">
+					<p:dataTable id="tbProdutos" var="produto" tableStyle="table-layout: auto;" style="margin-top: 10px" value="#{movimentacaoControl.produtos}" lazy="true"
+						paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                        currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" emptyMessage="Nenhum Registro Encontrado">
+						
+						<f:facet name="header">
+							#{movimentacaoControl.headerDt}
+						</f:facet>
 							
-							<f:facet name="header">
-								#{movimentacaoControl.headerDt}
-							</f:facet>
+						<p:column headerText="Código" style="text-align: center" filterBy="#{produto.idProduto}" filterMatchMode="exact" >
+							<p:outputLabel value="#{produto.idProduto}" />
+						</p:column>
+						<p:column headerText="Nome" filterBy="#{produto.nome}" filterStyle="width: 270px" filterMatchMode="contains">
+							<p:outputLabel value="#{produto.nome}" />
+						</p:column>
+						<p:column headerText="Categoria" style="text-align: center" filterBy="#{produto.categoria.nome}" filterMatchMode="contains">
+							<p:outputLabel value="#{produto.categoria.nome}" />
+						</p:column>
+						<p:column headerText="Quantidade Mínima" style="text-align: center" filterBy="#{produto.qtdMinima}" filterMatchMode="exact" >
+							<p:outputLabel value="#{produto.qtdMinima}" />
+						</p:column>
+						<p:column headerText="Quantidade" style="text-align: center" filterBy="#{produto.quantidade}" filterMatchMode="exact" >
+							<p:outputLabel value="#{produto.quantidade}" />
+						</p:column>
 							
-							<p:column headerText="Código" style="text-align: center" filterBy="#{produto.idProduto}" filterMatchMode="exact" >
-								<p:outputLabel value="#{produto.idProduto}" />
-							</p:column>
-							<p:column headerText="Nome" filterBy="#{produto.nome}" filterStyle="width: 270px" filterMatchMode="contains">
-								<p:outputLabel value="#{produto.nome}" />
-							</p:column>
-							<p:column headerText="Categoria" style="text-align: center" filterBy="#{produto.categoria.nome}" filterMatchMode="contains">
-								<p:outputLabel value="#{produto.categoria.nome}" />
-							</p:column>
-							<p:column headerText="Quantidade Mínima" style="text-align: center" filterBy="#{produto.qtdMinima}" filterMatchMode="exact" >
-								<p:outputLabel value="#{produto.qtdMinima}" />
-							</p:column>
-							<p:column headerText="Quantidade" style="text-align: center" filterBy="#{produto.quantidade}" filterMatchMode="exact" >
-								<p:outputLabel value="#{produto.quantidade}" />
-							</p:column>
-							
-						</p:dataTable>
-					</div>
-					<p:separator />
+					</p:dataTable>
 				</div>
 			</div>
 		</h:form>

@@ -48,58 +48,67 @@
 						<p:commandButton id="btnVisualizar" actionListener="#{vendaControl.openDialogItens()}" update="frmItemVenda" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-search"  styleClass="btn-info" value="Visualizar Itens"/>
 						
 						<p:separator />
+					</div>
 					
-	                	<p:selectOneButton styleClass="bg-success" value="#{vendaControl.opcao}">
-	                	
-					    	<f:selectItem itemLabel="Realizadas" itemValue="1" />
-					        <f:selectItem itemLabel="Canceladas" itemValue="2" />
-					        <f:selectItem itemLabel="Todas" itemValue="3" />
-					            
-					        <p:ajax event="change" listener="#{vendaControl.preencheVendas}" update="@form" process="@form" />
-					    </p:selectOneButton>   
-					    
-						<p:dataTable id="dtVendas" var="venda" widgetVar="wvTable"
-							tableStyle="table-layout: auto;" style="margin-top: 10px"
-							value="#{vendaControl.vendas}" paginator="true" rows="10"
-							paginatorPosition="bottom" selection="#{vendaControl.vendaSelecionada}" selectionMode="single" rowKey="#{venda.idVenda}"
-							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]"
-							emptyMessage="Nenhum Registro Encontrado">
-
-							<f:facet name="header">
-								#{vendaControl.headerDt}
-							</f:facet>
-							
-							<p:ajax event="rowSelect" listener="#{vendaControl.onRowSelectVenda()}" update="frmList:btnExcluir frmList:btnVisualizar frmList:btnDevolver"/>
-
-							<p:column headerText="Código" style="text-align: center" filterBy="#{venda.idVenda}">
-								<h:outputText value="#{venda.idVenda}" />
-							</p:column>
-
-							<p:column headerText="Cliente" filterStyle="width: 230px" style="text-align: center" filterBy="#{venda.cliente.nome}">
-								<h:outputText value="#{venda.cliente.nome}" />
-							</p:column>
-
-							<p:column id="date" style="text-align: center" headerText="Date" filterFunction="#{utilityTela.filterByDate}" filterBy="#{venda.data}">
-								<f:facet name="filter">
-									<p:calendar id="cal1" pattern="dd.MM.yyyy">
-										<p:ajax event="dateSelect" oncomplete="PF('wvTable').filter()" update="frmList:dtVendas" />
-										<p:ajax event="change" execute="@this" oncomplete="PF('wvTable').filter()" update="frmList:dtVendas" />
-									</p:calendar>
-								</f:facet>
-								
-								<h:outputText value="#{utilityTela.dateTimeFormat(venda.data)}" />
-							</p:column>
-
-							<p:column headerText="Total" style="text-align: center">
-								<h:outputText value="#{venda.totalFormatado}" />
-							</p:column>
-						</p:dataTable>
+					<p:splitButton id="split" actionListener="#{vendaControl.cancelaVenda()}" update="frmList:dtVendas @(.ui-button)" process="@form" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-close" value="Cancelar Venda"
+                                   styleClass="hidden-md hidden-lg btn-danger" >
+                        
+                        <p:menuitem actionListener="#{vendaControl.openDialogDevolucao()}" update="frmExclusao" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-reply-all"  styleClass="btn-warning" value="Devolver Itens" />
+	                        			
+	                    <p:menuitem actionListener="#{vendaControl.openDialogItens()}" update="frmItemVenda" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-search"  styleClass="btn-info" value="Visualizar Itens" />
 	                        
-	                </div>
-	            </div>
-	       </div> 
-       </h:form>  
+                    </p:splitButton>
+					
+	                <p:selectOneButton styleClass="bg-success" value="#{vendaControl.opcao}">
+	                	
+					   	<f:selectItem itemLabel="Realizadas" itemValue="1" />
+				        <f:selectItem itemLabel="Canceladas" itemValue="2" />
+					    <f:selectItem itemLabel="Todas" itemValue="3" />
+					            
+					    <p:ajax event="change" listener="#{vendaControl.preencheVendas}" update="@form" process="@form" />
+					</p:selectOneButton>   
+					    
+					<p:dataTable id="dtVendas" var="venda" widgetVar="wvTable"
+						tableStyle="table-layout: auto;" style="margin-top: 10px"
+						value="#{vendaControl.vendas}" paginator="true" rows="10"
+						paginatorPosition="bottom" selection="#{vendaControl.vendaSelecionada}" selectionMode="single" rowKey="#{venda.idVenda}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]"
+						emptyMessage="Nenhum Registro Encontrado">
+
+						<f:facet name="header">
+							#{vendaControl.headerDt}
+						</f:facet>
+						
+						<p:ajax event="rowSelect" listener="#{vendaControl.onRowSelectVenda()}" update="frmList:btnExcluir frmList:btnVisualizar frmList:split frmList:btnDevolver"/>
+
+						<p:column headerText="Código" style="text-align: center" filterBy="#{venda.idVenda}">
+							<h:outputText value="#{venda.idVenda}" />
+						</p:column>
+
+						<p:column headerText="Cliente" filterStyle="width: 230px" style="text-align: center" filterBy="#{venda.cliente.nome}">
+							<h:outputText value="#{venda.cliente.nome}" />
+						</p:column>
+
+						<p:column id="date" style="text-align: center" headerText="Date" filterFunction="#{utilityTela.filterByDate}" filterBy="#{venda.data}">
+							<f:facet name="filter">
+								<p:calendar id="cal1" pattern="dd.MM.yyyy">
+									<p:ajax event="dateSelect" oncomplete="PF('wvTable').filter()" update="frmList:dtVendas" />
+									<p:ajax event="change" execute="@this" oncomplete="PF('wvTable').filter()" update="frmList:dtVendas" />
+								</p:calendar>
+							</f:facet>
+								
+							<h:outputText value="#{utilityTela.dateTimeFormat(venda.data)}" />
+						</p:column>
+
+						<p:column headerText="Total" style="text-align: center">
+							<h:outputText value="#{venda.totalFormatado}" />
+						</p:column>
+					</p:dataTable>
+	                        
+	               </div>
+	           </div>
+	    </h:form>  
        
        <p:dialog  modal="true" appendTo="@(body)" widgetVar="dlgItemVenda" responsive="true"
                 width="1000px" height="auto" resizable="false" closable="true" closeOnEscape="true" dynamic="true"  >

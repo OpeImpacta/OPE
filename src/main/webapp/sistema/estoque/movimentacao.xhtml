@@ -52,7 +52,18 @@
                                          
                         <p:spacer width="5"/>
                     </div>
-                   
+                    
+                    <p:splitButton value="Entrada" actionListener="#{movimentacaoControl.doStartRecordEntrada()}"  
+                                   icon="fa fa-check" update="frmEntrada"
+                                   styleClass="hidden-md hidden-lg btn-primary" >
+                                   
+                        <p:menuitem value="Saída" actionListener="#{movimentacaoControl.doStartRecordSaida()}" 
+                        			icon="fa fa-minus"/>
+                        			
+                        <p:menuitem value="Ajuste" actionListener="#{movimentacaoControl.doStartRecordAjuste()}" 
+                        			icon="fa fa-cogs" />
+                    </p:splitButton>
+                    
                     <p:separator/>
                     
 			<p:dataTable id="tabela" var="registro" value="#{movimentacaoControl.list}" rowKey="#{registro.idMovimentacao}"  tableStyle="table-layout: auto;"

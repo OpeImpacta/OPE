@@ -439,6 +439,10 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 	//inativa venda e estorna produtos
 	public void cancelaVenda() {
+		if(getOpcao().equals("2")){
+			return;
+		}
+		
 		vendaSelecionada.setAtivo(false);
 		vendaDAO.update(vendaSelecionada);
 		estornaProdutos(vendaSelecionada.getItens());
@@ -486,6 +490,10 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 	}
 
 	public void openDialogDevolucao() {
+		if(getOpcao().equals("2")){
+			return;
+		}
+		
 		calculaTotalItens();
 		setaValores(vendaSelecionada);
 		UtilityTela.executarJavascript("PF('dlgExclusao').show();");
