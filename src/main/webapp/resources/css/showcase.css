@@ -35,7 +35,8 @@ a#logout {
     color: #3c8dbc!important;
 }
 
-.ui-selectonemenu-panel{
+.ui-selectonemenu-panel,
+.ui-selectcheckboxmenu-panel{
  	z-index: 99999 !important;
 }
 
