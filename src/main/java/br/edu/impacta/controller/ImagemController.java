@@ -29,10 +29,14 @@ public class ImagemController extends BasicControlCad<Imagem> implements Seriali
 	}
 
 	public byte[] getImage(int imagem) {
-		byte[] img = imagemDAO.findById(imagem).getFoto();
-		if (img != null) {
-			return img;
+		if(imagem != 0) {
+			byte[] img = imagemDAO.findById(imagem).getFoto();
+			if (img != null) {
+				return img;
+			}
+			return null;
 		}
-		return null;
+		byte[] myvar = "".getBytes();
+		return myvar;
 	}
 }

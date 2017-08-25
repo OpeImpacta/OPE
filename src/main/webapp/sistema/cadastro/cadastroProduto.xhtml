@@ -104,9 +104,9 @@
 				</p:column>
 
 				<p:column id="image" headerText="Imagem" style="align-content: center; text-align: center;" width="8%">
-					<o:graphicImage id="imagemProduto" dataURI="true" value="#{imagemControl.getImage(registro.imagem.idImagem)}" style="margin: auto;width: 30px; height: 30px; align-content: center" rendered="#{not empty registro.imagem}"/>
+					<o:graphicImage id="imagemProduto" dataURI="true" value="#{imagemControl.getImage(registro.imagem.idImagem)}" style="margin: auto;width: 30px; height: 30px; align-content: center" rendered="#{not empty registro.imagem || registro.imagem != null}"/>
 					<p:tooltip id="toolTipContent" for="imagemProduto" position="bottom">
-						<o:graphicImage dataURI="true" value="#{imagemControl.getImage(registro.imagem.idImagem)}" height="200" width="200" />
+						<o:graphicImage dataURI="true" value="#{imagemControl.getImage(registro.imagem.idImagem)}" height="200" width="200" rendered="#{not empty registro.imagem || registro.imagem != null}"/>
 					</p:tooltip>
                </p:column>
 
@@ -136,11 +136,11 @@
 		                <h:outputText value="Qtde. Estoque : " />
 		                <h:outputText value="#{registro.quantidade}" />
 		                <h:outputText value="Preço de Compra : " />
-		                <h:outputText value="R$ #{registro.precoVenda}" />
-		                <h:outputText value="Margem : " />
 		                <h:outputText value="R$ #{registro.precoCompra}" />
+		                <h:outputText value="Margem : " />
+		                <h:outputText value="R$ #{registro.margem}" />
 		                <h:outputText value="Preço de Venda : " />
-		                <h:outputText value="#{registro.margem} %" />
+		                <h:outputText value="#{registro.precoVenda} %" />
 						<h:outputText value="Ativo : " />
 						<h:outputText value="#{utilityTela.getDescBoolean(registro.ativo)}" />
 	                </p:panelGrid>
@@ -156,7 +156,7 @@
 		</h:form>
 			<p:dialog width="700px" height="auto" widgetVar="dlgCadastro" resizable="false" 
 					header="Produto" focus="frmCadastro:tabViewGeral:nome" styleClass="box-primary"
-					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
+					modal="true" appendTo="@(body)" closable="true" closeOnEscape="true" responsive="true" dynamic="true" maximizable="true">
 				<h:form id="frmCadastro">
 
 					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
@@ -175,7 +175,7 @@
 	                    	</p:column>	
 	                </h:panelGrid>   
 	                <p:tabView id="tabViewGeral">
-        				<p:tab title="Aba I">	
+        				<p:tab title="Dados do Produto">	
 			                <h:panelGrid style="width:100%" >
 			                	<p:row>
 									<p:outputLabel for="nome" value="Nome: " style="width:100%">
@@ -195,7 +195,7 @@
 							 <p:fileUpload id="selectImagem" fileUploadListener="#{produtoControl.upload}" style="width:100%"
 		                                  sizeLimit="1000000" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" mode="advanced"
 		                                  dragDropSupport="false" previewWidth="70"
-		                    			 update="messages" label="Escolher" cancelLabel="Cancelar" uploadLabel="Upload" required="true" requiredMessage="Imagem é necessário"/>
+		                    			 update="messages" label="Escolher" cancelLabel="Cancelar" uploadLabel="Upload"/>
 		                    			 </p:outputLabel>
 		                    <br/>
 		                    <h:panelGrid columns="2" style="width:100%" id="gridModelos">
@@ -215,20 +215,20 @@
 		                    </h:panelGrid>	
 		                      <h:panelGrid width="100%">
 		                    		<p:dataTable id="dtModelo" value="#{produtoControl.selected.produtoModeloList}" var="registro" scrollable="true" 
-		                    					scrollHeight="170" tableStyle="font-size: 12px; text-align: center">
+		                    					scrollHeight="120" tableStyle="font-size: 10px; text-align: center" emptyMessage="Nenhum Registro Encontrado">
 		                    					
 		                    			<f:facet name="header">
 		                    				Modelos selecionados
 		                    			</f:facet>
 		                    			
-		                    			<p:column width="10%" style="border-left: 0;font-size: 3px" exportable="false">
+		                    			<p:column width="10%" style="border-left: 0" exportable="false">
 		                    				<p:commandButton type="submit"
                                              title="Excluir"
                                              update=":frmCadastro"
                                              actionListener="#{produtoControl.removeProdutoModelo(registro)}" 
                                              icon="ui-icon-trash"
                                              process="@this"
-                                             style="margin-left: 4px">
+                                             style="margin-left: 4px; font-size: 4px">
 				                            </p:commandButton>
 		                    			</p:column>
 		                    		
@@ -241,17 +241,17 @@
 		                    		</p:dataTable>
 		                    </h:panelGrid>		
 						</p:tab>
-						<p:tab title="Aba II">
+						<p:tab title="Mais Informações">
 							<p:panelGrid columns="4" layout="grid">
 									<p:outputLabel value="Exibir na Vitrine: "/>
-									<p:selectOneButton value="#{produtoControl.selected.mostraVitrine}" style="float:right">
+									<p:selectOneButton value="#{produtoControl.selected.mostraVitrine}" style="float:right" required="true" requiredMessage="Campo Exibir na Vitrine é necessário">
 											<f:converter converterId="javax.faces.Boolean" />
 					                        <f:selectItem itemLabel="Sim" itemValue="true"/>
 					                        <f:selectItem itemLabel="Não" itemValue="false"/>
 			                    	</p:selectOneButton>	
 			                    	
 									<p:outputLabel value="Controlar Estoque: "/>
-									<p:selectOneButton value="#{produtoControl.selected.controlaEstoque}" style="float:right">
+									<p:selectOneButton value="#{produtoControl.selected.controlaEstoque}" style="float:right" required="true" requiredMessage="Campo Controlar Estoque é necessário">
 											<f:converter converterId="javax.faces.Boolean" />
 					                        <f:selectItem itemLabel="Sim" itemValue="true"/>
 					                        <f:selectItem itemLabel="Não" itemValue="false"/>
@@ -260,7 +260,7 @@
 							<p:separator/>
 							<p:panelGrid columns="1" layout="grid">
 								<p:outputLabel for="descProduto" value="Descrição do Produto: ">
-									<p:inputTextarea id="descProduto" value="#{produtoControl.selected.descricao}" rows="5" cols="82" required="true" requiredMessage="Campo Descrição é necessário"/>
+									<p:inputTextarea id="descProduto" value="#{produtoControl.selected.descricao}" rows="5" cols="82"/>
 								</p:outputLabel>
 							</p:panelGrid>
 							<p:panelGrid columns="3" layout="grid">
@@ -283,7 +283,7 @@
 								</p:outputLabel>
 							</p:panelGrid>
 							<p:panelGrid columns="3" layout="grid">
-								<p:outputLabel for="qtdeMinina" value="Qtde. mínima para aviso: ">
+								<p:outputLabel id="teste" for="qtdeMinina" value="Qtde. Mínima para alerta: ">
 									<p:inputNumber id="qtdeMinina" value="#{produtoControl.selected.qtdMinima}" decimalPlaces="0" decimalSeparator="" thousandSeparator="" required="true" requiredMessage="Campo Qtde. Mínima é necessário"/>
 								</p:outputLabel>
 								

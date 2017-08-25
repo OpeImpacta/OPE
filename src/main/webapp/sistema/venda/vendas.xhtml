@@ -81,7 +81,7 @@
 		   								<div class="ui-g-3">
 											<p:outputLabel for="cmbProduto" value="Produto:" ><br />
 												<p:autoComplete id="cmbProduto" value="#{vendaControl.itemVenda.produto}" completeMethod="#{vendaControl.completeProdutos}" 
-																styleClass="styleAutoComplete" minQueryLength="3"
+																styleClass="styleAutoComplete"
 				                                                var="item" itemLabel="#{item.nome}" itemValue="#{item}" converter="produtoConverter" forceSelection="true">
 				                                    
 				                                    <p:ajax event="itemSelect" update="frmVenda:inPreco" oncomplete="focusCampo('frmVenda:inQuantidade')" />
@@ -228,13 +228,15 @@
 	      </h:form>  
         
       
-          <p:dialog  modal="true" appendTo="@(body)" widgetVar="dlgFinalizacao" responsive="true" header="Finalização" width="415px" height="auto" resizable="false" closable="true" closeOnEscape="true" dynamic="true"  >
+          <p:dialog  modal="true" appendTo="@(body)" widgetVar="dlgFinalizacao" responsive="true" header="Finalização" width="415px" height="auto" resizable="false" closable="true" closeOnEscape="true" dynamic="true" >
                 
-                <p:ajax event="close" listener="#{vendaControl.onCloseDialog()}" update="frmFinalizacao frmVenda" />
+                <p:ajax event="close" listener="#{vendaControl.onCloseDialog()}" update="frmVenda frmFinalizacao" />
                 
                 <h:form id="frmFinalizacao" >
+                
+                	<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
                 	
-                	<p:remoteCommand autoRun="true" onstart="focusCampo('frmFinalizacao:inVlRecebido_input')" />
+                	<!--  <p:remoteCommand autoRun="true" onstart="focusCampo('frmFinalizacao:inVlRecebido_input')" />-->
                 	
                 	<style type="text/css">
 	        			.styleInNumber input{
@@ -251,8 +253,8 @@
 		        		</p:outputLabel>
 		        		
 		        		<p:outputLabel for="inVlRecebido" value="Valor Recebido:"><br />
-							<p:inputNumber styleClass="styleInNumber" id="inVlRecebido" symbol="R$ " decimalSeparator="," thousandSeparator="."  value="#{vendaControl.vlRecebido}"  >
-								<p:ajax update="frmFinalizacao:outTroco" event="change" process="@form" listener="#{vendaControl.calculaTroco()}" async="true" />
+							<p:inputNumber styleClass="styleInNumber" id="inVlRecebido" symbol="R$ " decimalSeparator="," thousandSeparator="."  value="#{vendaControl.vlRecebido}"  required="true" requiredMessage="Campo Valor Recebido é necessário">
+								<p:ajax update="frmFinalizacao:outTroco frmFinalizacao" event="change" listener="#{vendaControl.calculaTroco()}" async="true" />
 							</p:inputNumber>
 						</p:outputLabel>
 						
@@ -271,9 +273,8 @@
 		                
 		                <p:row>
 		                	<p:defaultCommand target="btnSalvar" />
-		                	<p:commandButton value="Salvar" styleClass="btn-success" icon="fa fa-check" async="true" id="btnSalvar"
-		                		type="submit" onclick="PF('dlgFinalizacao').hide();" ajax="false"
-		                		actionListener="#{vendaControl.recordVenda()}" update="frmVenda" process="@form" />
+		                	<p:commandButton value="Salvar" styleClass="btn-success" icon="fa fa-check" id="btnSalvar" process="@form" async="true"
+		                		type="submit" actionListener="#{vendaControl.recordVenda()}" update="frmFinalizacao frmVenda" onsuccess="PF('dlgFinalizacao').hide()"/>
 		                	
 		                	<p:commandButton value="Cancelar" id="btnCancelar" update="frmFinalizacao frmVenda"
 									onclick="PF('dlgFinalizacao').hide()" styleClass="btn-danger" icon="fa fa-close"/>	

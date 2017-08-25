@@ -60,13 +60,13 @@ public class Produto implements Serializable {
 	@Column(name = "margem", nullable = true)
 	private BigDecimal margem;
 
-	@Column(name="ativo")
+	@Column(name="ativo", nullable = false)
 	private boolean ativo = true;
 	
-	@Column(name="descricao")
+	@Column(name="descricao", nullable = false)
 	private String descricao;
 
-	@Column(name = "controla_estoque")
+	@Column(name = "controla_estoque", nullable = true)
 	private Boolean controlaEstoque;
 
 	@OneToOne(fetch = FetchType.EAGER)
@@ -74,7 +74,7 @@ public class Produto implements Serializable {
 	private Categoria categoria;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	@JoinColumn(name = "id_imagem", referencedColumnName = "id_imagem")
+	@JoinColumn(name = "id_imagem", referencedColumnName = "id_imagem", nullable = true)
 	private Imagem imagem;
 
 	@OneToMany(mappedBy="produto", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, orphanRemoval = true )
