@@ -66,7 +66,7 @@
 												converter="produtoConverter" forceSelection="true">
 
 												<p:ajax event="itemSelect" update="frmVenda:inPreco"
-													oncomplete="focusCampo('frmVenda:inQuantidade_input')" />
+													oncomplete="focusCampo('frmVenda:inQuantidade')" />
 												<p:column style="width:10%">
 													<h:outputText value="#{item.idProduto}" />
 												</p:column>
@@ -86,7 +86,8 @@
 
 									<div class="ui-g-3">
 										<p:outputLabel for="inQuantidade" value="Quantidade:" style="margin-left: 40px"><br />
-											<p:inputNumber id="inQuantidade" value="#{vendaControl.itemVenda.quantidade}" />
+											<p:inputText id="inQuantidade" value="#{vendaControl.itemVenda.quantidade}" />
+											<p:keyFilter for="inQuantidade" mask="num" />  
 										</p:outputLabel>
 									</div>
 

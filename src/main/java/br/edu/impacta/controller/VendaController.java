@@ -255,7 +255,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 	//calcula o valor do troco conforme valor recebido
 	public void calculaTroco() {
-		if(getVlRecebido() != null && getVlRecebido() != BigDecimal.ZERO) {
+		if(getVlRecebido() != null && getVlRecebido().compareTo(BigDecimal.ZERO) == 1 ) {
 			this.setTroco(this.getVlRecebido().subtract(this.getTotal()));
 		}
 	}

@@ -14,6 +14,12 @@
 	                text-align: center !important;
 	       }
 	       </style>
+	       
+	       <script type="text/javascript">
+				function focusCampo(campo) {
+					document.getElementById(campo).focus();
+				}
+		  </script>
     </ui:define>
 
     <ui:define name="title">
@@ -84,7 +90,7 @@
 				</p:column>
 				
 				<p:column id="date" style="text-align: center" 
-			             headerText="Date"
+			             headerText="Data"
 			             sortBy="#{registro.dataMovimentacao}"
 			             filterFunction="#{utilityTela.filterByDate}"
 			             filterBy="#{registro.dataMovimentacao}">
@@ -149,7 +155,7 @@
 			                			converter="omnifaces.SelectItemsConverter" filter="true" filterMatchMode="contains" >
 							            <f:selectItem itemLabel="Selecione" noSelectionOption="true" itemValue=""/>
 				                        <f:selectItems var="item" value="#{produtoControl.produtosControlaEstoque}" itemLabel="#{item.idProduto} - #{item.nome}" itemValue="#{item}" />
-				                    	<p:ajax event="change" update="frmEntrada:inCompra frmEntrada:inVenda frmEntrada:inMargem" />
+				                    	<p:ajax event="change" oncomplete="focusCampo('frmEntrada:spQtd')" update="frmEntrada:inCompra frmEntrada:inVenda frmEntrada:inMargem" />
 				                    </p:selectOneMenu>
 				                </p:outputLabel>
 				         </p:column>
@@ -187,9 +193,9 @@
 					<h:panelGrid columns="4" width="100%">
 						 <p:column width="100%">
 			             	 <h:outputLabel for="spQtd" value="Quantidade "><br/>
-			             	 	<p:inputNumber id="spQtd" style="margin-right: 10px"
-			             	 	 decimalSeparator="," thousandSeparator="."  value="#{movimentacaoControl.movimentacao.quantidade}" />  
-                  			</h:outputLabel>
+			             	 	<p:inputText id="spQtd" value="#{movimentacaoControl.movimentacao.quantidade}" />
+								<p:keyFilter for="spQtd" mask="num" /> 
+							</h:outputLabel>
 				         </p:column>
 				         <p:column>
 					         <p:outputLabel value="Observação:"><br/>
@@ -255,15 +261,16 @@
 			                			converter="omnifaces.SelectItemsConverter" filter="true" filterMatchMode="contains" >
 							            <f:selectItem itemLabel="Selecione" noSelectionOption="true" itemValue=""/>
 				                        <f:selectItems var="item" value="#{produtoControl.produtosControlaEstoque}" itemLabel="#{item.idProduto} - #{item.nome}" itemValue="#{item}" />
+				                        <p:ajax event="change" oncomplete="focusCampo('frmSaida:spQtd')" />
 				                    </p:selectOneMenu>
 				                </p:outputLabel>
 				         </p:column>
 				        <p:column>
 			             	 <h:outputLabel for="spQtd" value="Quantidade "><br/>
-			             	 	<p:inputNumber id="spQtd" style="margin-right: 10px"
-			             	 	 decimalSeparator="," thousandSeparator="."  value="#{movimentacaoControl.movimentacao.quantidade}" />  
-                  			</h:outputLabel>
-				         </p:column>
+			             	 	<p:inputText style="margin-right: 10px" id="spQtd" value="#{movimentacaoControl.movimentacao.quantidade}"  />
+			             	 	<p:keyFilter for="spQtd" mask="num" /> 
+							</h:outputLabel>
+                  		</p:column>
 				         <p:column>
 					         <p:outputLabel value="Observação:"><br/>
 								<p:inputText value="#{movimentacaoControl.movimentacao.observacao}" style="width: 200%" maxlength="150" />
@@ -328,7 +335,7 @@
 			                			converter="omnifaces.SelectItemsConverter" filter="true" filterMatchMode="contains" >
 							            <f:selectItem itemLabel="Selecione" noSelectionOption="true" itemValue=""/>
 				                        <f:selectItems var="item" value="#{produtoControl.produtosControlaEstoque}" itemLabel="#{item.idProduto} - #{item.nome}" itemValue="#{item}" />
-				                    	<p:ajax event="change" update="frmAjuste:inCompra frmAjuste:inVenda frmAjuste:inMargem frmAjuste:qtdAtual" />
+				                    	<p:ajax event="change" oncomplete="focusCampo('frmAjuste:spQtd')" update="frmAjuste:inCompra frmAjuste:inVenda frmAjuste:inMargem frmAjuste:qtdAtual" />
 				                    </p:selectOneMenu>
 				                </p:outputLabel>
 				         </p:column>
@@ -366,16 +373,16 @@
 				    <h:panelGrid columns="4">
 						 <p:column>
 			             	 <h:outputLabel for="qtdAtual" value="Quantidade Atual:"><br/>
-			             	 	<p:inputNumber id="qtdAtual" style="margin-right: 10px" readonly="true"
-			             	 	 decimalSeparator="," thousandSeparator="."  value="#{movimentacaoControl.movimentacao.produto.quantidade}" />  
+			             	 	<p:inputText id="qtdAtual" style="margin-right: 10px" readonly="true"
+			             	 	  value="#{movimentacaoControl.movimentacao.produto.quantidade}" />  
                   			</h:outputLabel>
 				         </p:column>
 				         
 				         <p:column>
 			             	 <h:outputLabel for="spQtd" value="Nova Quantidade:"><br/>
-			             	 	<p:inputNumber id="spQtd" style="margin-right: 10px" 
-			             	 	 decimalSeparator="," thousandSeparator="."  value="#{movimentacaoControl.movimentacao.quantidade}" />  
-                  			</h:outputLabel>
+			             	 	<p:inputText style="margin-right: 10px" id="spQtd" value="#{movimentacaoControl.movimentacao.quantidade}"  />
+			             	 	<p:keyFilter for="spQtd" mask="num" />
+			             	</h:outputLabel>
 				         </p:column>
 				         
 				         <p:column>

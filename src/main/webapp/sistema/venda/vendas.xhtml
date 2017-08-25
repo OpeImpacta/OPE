@@ -59,10 +59,11 @@
 							<p:panelGrid columns="1" id="panelOrcamento">
 								<p:column>
 									<p:outputLabel value="Nº Orçamento:"><br />
-										<p:inputNumber value="#{vendaControl.idOrcamento}" style="margin-right: 15px" >
+										<p:inputText id="inOrcamento" value="#{vendaControl.idOrcamento}" style="margin-right: 15px" >
 											<p:ajax listener="#{vendaControl.setaOrcamento()}" ajax="false" update="frmVenda:toolValores frmVenda:panelMsg frmVenda:lbMensagemEstoque frmVenda:dtVenda frmVenda:panelDesconto" event="change" />
-										</p:inputNumber>
+										</p:inputText>
 									</p:outputLabel>
+									<p:keyFilter for="inOrcamento" mask="num" />
 									
 									<p:commandButton update="frmOrcamentos" 
 										icon="fa fa-search" id="btnBuscarOrcamento" actionListener="#{vendaControl.buscaOrcamentosPendentes()}" styleClass="btn-success" style="margin-top: -5px; margin-right: 15px" />
@@ -83,7 +84,7 @@
 																styleClass="styleAutoComplete" minQueryLength="3"
 				                                                var="item" itemLabel="#{item.nome}" itemValue="#{item}" converter="produtoConverter" forceSelection="true">
 				                                    
-				                                    <p:ajax event="itemSelect" update="frmVenda:inPreco" oncomplete="focusCampo('frmVenda:inQuantidade_input')" />
+				                                    <p:ajax event="itemSelect" update="frmVenda:inPreco" oncomplete="focusCampo('frmVenda:inQuantidade')" />
 				                                    
 				                                    <p:column style="width:10%">
 				                                        <h:outputText value="#{item.idProduto}" />
@@ -104,7 +105,8 @@
 										
 										<div class="ui-g-3">	
 											<p:outputLabel for="inQuantidade" value="Quantidade:" style="margin-left: 40px" ><br />
-												<p:inputNumber id="inQuantidade" value="#{vendaControl.itemVenda.quantidade}" />
+												<p:inputText id="inQuantidade" value="#{vendaControl.itemVenda.quantidade}" />
+												<p:keyFilter for="inQuantidade" mask="num" />  
 											</p:outputLabel>
 										</div>
 										
@@ -262,7 +264,7 @@
 		                    <p:selectOneButton id="manyBtnPgto" value="#{vendaControl.pagamento}" >
 		                        <f:selectItem itemLabel="Dinheiro" itemValue="1"/>
 		                        <f:selectItem itemLabel="Débito" itemValue="2"/>
-		                        <f:selectItem itemLabel="Credito" itemValue="3"/>
+		                        <f:selectItem itemLabel="Crédito" itemValue="3"/>
 		                        <f:selectItem itemLabel="Cheque" itemValue="4"/>
 		                    </p:selectOneButton>
 		                </p:outputLabel>   
