@@ -87,7 +87,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 		if(validaCampos()) {
 			for(ItemVenda item : ((Venda)this.getSelected()).getItens()) {
 
-				//se o produto jï¿½ estiver na lista seta a nova quantidade e o novo valor
+				//se o produto já estiver na lista seta a nova quantidade e o novo valor
 				if(item.getProduto().getIdProduto() == itemVenda.getProduto().getIdProduto() && item.getQuantidade() != itemVenda.getQuantidade()) {
 					item.setQuantidade(itemVenda.getQuantidade());
 
@@ -111,7 +111,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 				this.setSubTotal(this.getSubTotal().add(itemVenda.getTotalItemVenda()));
 			}
 
-			itemVenda= null;
+			itemVenda = null;
 		}
 	}
 
@@ -134,33 +134,28 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 	}
 
 
-	//verifica se ï¿½ uma venda ou um orï¿½amento e grava no banco
+	//verifica se é uma venda ou um orçamento e grava no banco
 	public void recordVenda() {
-		if(getVlRecebido() != null && getVlRecebido().compareTo(total) == -1) {
-			UtilityTela.criarMensagemErro("Erro" ,"O valor Recebido estÃ¡ menor do valor Total");
-		} else {
-			((Venda)this.getSelected()).setDesconto(getDescontoTotal());
-			((Venda)this.getSelected()).setTotal(getTotal());
-			((Venda)this.getSelected()).setData(new Date());
-			((Venda)this.getSelected()).setAtivo(true);
-	
-			((Venda)this.getSelected()).setTipo(1);
-			((Venda)this.getSelected()).setFinalizado(true);
-			((Venda)this.getSelected()).setFormaPgto(this.tipoPgto());
-	
-			this.retiraProdutoSemEstoque();
-			this.gravaOrcamento();
-	
-			gravaProdutos();
-			this.treatRecord();
-			limpaForm();
-			UtilityTela.executarJavascript("PF('dlgFinalizacao').hide()");
-		}
+
+		((Venda)this.getSelected()).setDesconto(getDescontoTotal());
+		((Venda)this.getSelected()).setTotal(getTotal());
+		((Venda)this.getSelected()).setData(new Date());
+		((Venda)this.getSelected()).setAtivo(true);
+
+		((Venda)this.getSelected()).setTipo(1);
+		((Venda)this.getSelected()).setFinalizado(true);
+		((Venda)this.getSelected()).setFormaPgto(this.tipoPgto());
+
+		this.retiraProdutoSemEstoque();
+		this.gravaOrcamento();
+
+		gravaProdutos();
+		this.treatRecord();
+		limpaForm();
+
 	}
 
-
-
-	//se a venda for finalizacao de um orï¿½amento verifica o estoque novamente
+	//se a venda for finalizacao de um orcamento verifica o estoque novamente
 	public void retiraProdutoSemEstoque() {
 		List<ItemVenda> itensAux = new ArrayList<>();
 		for(ItemVenda item : ((Venda)getSelected()).getItens()) {
@@ -206,10 +201,13 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 	//verifica se tem o produto em estoque
 	public boolean validaQuantidade() {
-		if(verificaEstoque(itemVenda) == false) {
-			UtilityTela.criarMensagemAviso("Aviso!", "Estoque do produto insuficiente, nÃ£o Ã© possivel adiciona-lo Ã  venda");
-			return false;
+		if(itemVenda.getProduto() != null){
+			if(verificaEstoque(itemVenda) == false) {
+				UtilityTela.criarMensagemAviso("Aviso!", "Estoque do produto insuficiente, não é possivel adiciona-lo à venda");
+				return false;
+			}		
 		}
+
 		return true;
 	}
 
@@ -262,22 +260,17 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 	//calcula o valor do troco conforme valor recebido
 	public void calculaTroco() {
-		if(getVlRecebido() != null && getVlRecebido().compareTo(total) == -1) {
-			UtilityTela.criarMensagemErroSemDetail("O valor Recebido estÃ¡ menor do valor Total");
-			setVlRecebido(BigDecimal.ZERO);
-			setTroco(BigDecimal.ZERO);
-			return;
-		}
-		if(getVlRecebido() != null && getVlRecebido().compareTo(BigDecimal.ZERO) == 1 ) {
+		if(getVlRecebido() != null && getVlRecebido().compareTo(BigDecimal.ZERO) == 1 && getVlRecebido().compareTo(getTotal()) == 1 ) {
 			this.setTroco(this.getVlRecebido().subtract(this.getTotal()));
 		}
 	}
-
+	
 	//calcula total desconto em reais
 	public void calculaDescontoReal() {
 		if(this.getDesconto() != null && this.getDesconto() != BigDecimal.ZERO && this.getTotal().compareTo(this.getDesconto()) == 1) {
 			this.setTotal(this.getTotal().subtract(this.getDesconto()));
 			this.setDescontoTotal(this.getDescontoTotal().add(this.getDesconto()));
+			this.setDesconto(null);
 		}
 	}
 
@@ -289,6 +282,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 			this.setTotal(this.getTotal().subtract(div));
 			this.setDescontoTotal(this.getDescontoTotal().add(div));
+			this.setDesconto(null);
 		}
 	}
 
@@ -335,10 +329,11 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 		UtilityTela.executarJavascript("PF('dlgOrcamentos').show();");
 	}
 
-	//mostra os dados do orï¿½amento selecionado na tela
+	//mostra os dados do orcamento selecionado na tela
 	public void setaOrcamento() {
+		semEstoque = false;
+		
 		if(idOrcamento != null) {
-
 			orcamentoSelecionado = vendaDAO.findById(idOrcamento);
 
 			if(verificaOrcamento()) {
@@ -351,12 +346,12 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 				configSelected();
 			} else {
-				UtilityTela.criarMensagemAviso("Aviso:", "OrÃ§amento nÃ£o encontrado ou finalizado!");
+				UtilityTela.criarMensagemAviso("Aviso:", "Orçamento não encontrado ou finalizado!");
 			}
 		}
 	}
 
-	//verifica se ï¿½ um orï¿½amento e se jï¿½ nï¿½o esta finalizado
+	//verifica se é um orcamento e se esta finalizado
 	public boolean verificaOrcamento() {
 		if(orcamentoSelecionado == null) {
 			return false;
@@ -455,7 +450,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 		if(getOpcao().equals("2")){
 			return;
 		}
-		
+
 		vendaSelecionada.setAtivo(false);
 		vendaDAO.update(vendaSelecionada);
 		estornaProdutos(vendaSelecionada.getItens());
@@ -506,7 +501,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 		if(getOpcao().equals("2")){
 			return;
 		}
-		
+
 		calculaTotalItens();
 		setaValores(vendaSelecionada);
 		UtilityTela.executarJavascript("PF('dlgExclusao').show();");
@@ -541,27 +536,27 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 						filteredProdutos.add(produto);
 					}
 				}
-				
+
 			}
 		}
 
 		return filteredProdutos;
 	}
-	
+
 	// *************************************************************************
-    // * Verifica se contem somente numeros em uma String
-    // *************************************************************************
-    public boolean containsOnlyNumbers(String str) {
-        if (str == null || str.length() == 0) {
-            return false;
-        }
-        for (int i = 0; i < str.length(); i++) {
-            if (!Character.isDigit(str.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
+	// * Verifica se contem somente numeros em uma String
+	// *************************************************************************
+	public boolean containsOnlyNumbers(String str) {
+		if (str == null || str.length() == 0) {
+			return false;
+		}
+		for (int i = 0; i < str.length(); i++) {
+			if (!Character.isDigit(str.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 
 	//********************** GETS & SETS ***************************************

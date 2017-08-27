@@ -161,6 +161,7 @@
 											</p:autoComplete>
 
 										</p:outputLabel>
+										<p:keyFilter for="cmbCliente" mask="alpha" />
 									</div>
 										
 									<div class="ui-g-2">
@@ -192,8 +193,8 @@
 
 						</p:toolbar>
 
-						<p:outputPanel id="panelMsg">
-							<p:outputLabel id="lbMensagemEstoque" value="** Estoque do produto insuficiente. O produto não será considerado finalização da venda." style="color: #FF7F50" rendered="#{vendaControl.semEstoque}"  />
+						<p:outputPanel rendered="#{vendaControl.semEstoque}" id="panelMsg">
+							<p:outputLabel id="lbMensagemEstoque" value="** Estoque do produto insuficiente. O produto não será considerado na finalização da venda." style="color: #FF7F50"  />
 						</p:outputPanel>
 						
 						<p:dataTable id="dtVenda" var="item" tableStyle="table-layout: auto" value="#{vendaControl.selected.itens}" emptyMessage="Nenhum Item Adicionado"
@@ -236,7 +237,7 @@
                 
                 	<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
                 	
-                	<!--  <p:remoteCommand autoRun="true" onstart="focusCampo('frmFinalizacao:inVlRecebido_input')" />-->
+                	<p:remoteCommand autoRun="true" onstart="focusCampo('frmFinalizacao:inVlRecebido_input')" />
                 	
                 	<style type="text/css">
 	        			.styleInNumber input{
@@ -253,8 +254,8 @@
 		        		</p:outputLabel>
 		        		
 		        		<p:outputLabel for="inVlRecebido" value="Valor Recebido:"><br />
-							<p:inputNumber styleClass="styleInNumber" id="inVlRecebido" symbol="R$ " decimalSeparator="," thousandSeparator="."  value="#{vendaControl.vlRecebido}"  required="true" requiredMessage="Campo Valor Recebido é necessário">
-								<p:ajax update="frmFinalizacao:outTroco frmFinalizacao" event="change" listener="#{vendaControl.calculaTroco()}" async="true" />
+							<p:inputNumber styleClass="styleInNumber" id="inVlRecebido" symbol="R$ " decimalSeparator="," thousandSeparator="."  value="#{vendaControl.vlRecebido}" >
+								<p:ajax update="frmFinalizacao:outTroco" event="change" listener="#{vendaControl.calculaTroco()}" async="true" />
 							</p:inputNumber>
 						</p:outputLabel>
 						
@@ -273,8 +274,10 @@
 		                
 		                <p:row>
 		                	<p:defaultCommand target="btnSalvar" />
-		                	<p:commandButton value="Salvar" styleClass="btn-success" icon="fa fa-check" id="btnSalvar" process="@form" async="true"
-		                		type="submit" actionListener="#{vendaControl.recordVenda()}" update="frmFinalizacao frmVenda" onsuccess="PF('dlgFinalizacao').hide()"/>
+		                	<p:commandButton value="Salvar" styleClass="btn-success" icon="fa fa-check" async="true" id="btnSalvar"
+		                		type="submit" onclick="PF('dlgFinalizacao').hide();" ajax="false"
+		                		actionListener="#{vendaControl.recordVenda()}" update="frmVenda" process="@form" />
+		                	
 		                	
 		                	<p:commandButton value="Cancelar" id="btnCancelar" update="frmFinalizacao frmVenda"
 									onclick="PF('dlgFinalizacao').hide()" styleClass="btn-danger" icon="fa fa-close"/>	
