@@ -35,11 +35,6 @@ a#logout {
     color: #3c8dbc!important;
 }
 
-.ui-selectonemenu-panel,
-.ui-selectcheckboxmenu-panel{
- 	z-index: 99999 !important;
-}
-
 .ui-theme {background: url("#{resource['demo/images/themes.png']}") no-repeat top left;display: block;}
 .ui-theme.ui-theme-afterdark{ background-position: 0 0; width: 30px; height: 25px; }
 .ui-theme.ui-theme-afternoon{ background-position: 0 -75px; width: 30px; height: 25px; }
