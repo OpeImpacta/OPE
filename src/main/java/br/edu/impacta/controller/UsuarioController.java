@@ -2,6 +2,7 @@ package br.edu.impacta.controller;
 
 import java.io.Serializable;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.omnifaces.cdi.ViewScoped;
@@ -16,9 +17,16 @@ public class UsuarioController extends BasicControlCad<Usuario> implements Seria
 	private static final long serialVersionUID = 1L;
 	
 	private static UsuarioDAO usuarioDAO = new UsuarioDAO();
+	
+	@Inject
+	private LoginController loginControl;
+	
 	private boolean disableButton = true;
 	
 	private Boolean renderedSenha;
+	
+	private String senhaAtual;
+	private String senhaNova;
 
 	// Quando seleciona a linha habilita o botão cancelar e visualizar
 	public void onRowSelect() {
@@ -55,6 +63,24 @@ public class UsuarioController extends BasicControlCad<Usuario> implements Seria
 		renderedSenha = true;
 		super.doStartAddRecord();
 	}
+	
+	public void alterarSenha() {
+		Usuario usuario = loginControl.getUsuarioLogado();
+		if(senhaAtual.equalsIgnoreCase(usuario.getSenha())) {
+			if(senhaNova.equalsIgnoreCase(usuario.getSenha())) {
+				UtilityTela.criarMensagemErroSemDetail("A nova senha não pode ser igual a senha atual!");
+				return;
+			}
+		} else {
+			UtilityTela.criarMensagemErroSemDetail("A senha atual está incorreta!");
+			return;
+		}	
+		usuario.setSenha(senhaNova);
+		setSelected(usuario);
+		super.treatRecord();
+		senhaAtual = "";
+		senhaNova = "";
+	}
 
 	public Boolean getRenderedSenha() {
 		return renderedSenha;
@@ -63,5 +89,20 @@ public class UsuarioController extends BasicControlCad<Usuario> implements Seria
 	public void setRenderedSenha(Boolean renderedSenha) {
 		this.renderedSenha = renderedSenha;
 	}
-	
+
+	public String getSenhaAtual() {
+		return senhaAtual;
+	}
+
+	public void setSenhaAtual(String senhaAtual) {
+		this.senhaAtual = senhaAtual;
+	}
+
+	public String getSenhaNova() {
+		return senhaNova;
+	}
+
+	public void setSenhaNova(String senhaNova) {
+		this.senhaNova = senhaNova;
+	}
 }
