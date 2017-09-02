@@ -22,7 +22,7 @@
 
 	<ui:define name="body">
 		<adm:breadcrumb title="Alteração de Senha"/>
-		<h:form id="frmList">
+		<h:form id="frmSenha">
 			<p:growl id="msgOk" showSummary="false" severity="info"/>
             <p:growl id="msgErro" showSummary="false" strick="true" severity="warn,error,fatal"/>
 	        
@@ -35,17 +35,17 @@
 						    	<p:panelGrid layout="grid" columns="1" >
 						    		
 						    		<p:outputLabel for="txtSenhaAtual" value="Senha atual:"><br/>
-						    			<p:password style="width: 320px" value="" 
+						    			<p:password style="width: 320px" value="#{usuarioControl.senhaAtual}" 
 						    				id="txtSenhaAtual" />
 						    		</p:outputLabel>
 						    		
 						    		<br/>
 						    		<p:outputLabel for="txtNovaSenha" value="Nova senha:"><br/>
-						    			<p:password style="width: 320px" value="" id="txtNovaSenha" />
+						    			<p:password style="width: 320px" value="#{usuarioControl.senhaNova}" id="txtNovaSenha" />
 						    		</p:outputLabel>
 						    		
 						    		<br/>
-						    		<p:commandButton value="Salvar" styleClass="btn-block btn-success" />
+						    		<p:commandButton value="Salvar" styleClass="btn-block btn-success" type="submit" actionListener="#{usuarioControl.alterarSenha()}" update="@form"/>
 										
 									<p:commandButton value="Esqueci a senha"
 										styleClass="btn-block btn-danger" />
