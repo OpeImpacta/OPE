@@ -14,6 +14,8 @@
 	$orcamentos = new Orcamento();
 	$orcamento = $orcamentos->listar($url, $pagina, $id);
 
+	$count = 0;
+
 	// echo "<pre>"; print_r($orcamento); echo "</pre>";
 ?>
 
@@ -35,7 +37,7 @@
 							</a>
 						</h4>
 					</div>
-					<div id="collapse<?=$key;?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading<?=$key;?>">
+					<div id="collapse<?=$key;?>" class="panel-collapse collapse <?=($count == 0 ? "in" : "");?>" role="tabpanel" aria-labelledby="heading<?=$key;?>">
 						<div class="panel-body">
 							<table class="table table-hover">
 								<thead>
@@ -48,7 +50,7 @@
 										<th>Subtotal</th>
 									</tr>
 								</thead>
-								<?php if (!empty($value)): ?>
+								<?php if (!empty($value)): $valorTotal = array(); ?>
 									<tbody>
 										<?php foreach ($value as $key2 => $value2): ?>
 											<?php $subtotal = ($value2["quantidade"] * $value2["valor"]); ?>
@@ -60,17 +62,17 @@
 												<td>R$ <?=number_format($value2["valor"], 2, ',', '.');?></td>
 												<td>R$ <?=number_format($subtotal, 2, ',', '.');?></td>
 											</tr>
-											<?php $valorTotal[$value2["id_produto"]] = $subtotal; ?>
+											<?php $valorTotal[] = $subtotal; ?>
 										<?php endforeach; ?>
 										<th colspan="5" style="text-align: right; font-size: 15px;">Total:</th>
 										<td style="vertical-align: inherit;">R$ <?=number_format(array_sum($valorTotal), 2, ',', '.');?></td>
 									</tbody>
-								<?php endif; ?>
+								<?php $valorTotal = array(); endif; ?>
 							</table>
 						</div>
 					</div>
 				</div>
-			<?php endforeach; ?>
+			<?php $count++; endforeach; ?>
 			</div>
 		<?php endif; ?>
 	</div> <!-- /.col-md-10 -->
