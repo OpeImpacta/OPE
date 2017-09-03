@@ -13,18 +13,24 @@ class Produto {
 		$dados = array();
 		$dados["dados"] = $this->model->listar($id);
 
-		/** Paginação */
-		if (!empty($url)) {
-			$inicio = 1;
-			$limite = 12;
-			$totalPorPagina = 12;
-
-			if ($pagina > 1) {
-				$limite = $pagina * $limite;
-				$inicio = $limite - ($totalPorPagina - 1);
+		if (!empty($dados["dados"])) {
+			foreach ($dados["dados"] as $key => $value) {
+				$dados["dados"][$key]["compativel"] = $this->model->listarPorMontadora($value["id_produto"]);
 			}
 
-			$dados["paginacao"] = $this->utils->paginacao($url, $inicio, count($dados["dados"]), $limite);
+			/** Paginação */
+			if (!empty($url)) {
+				$inicio = 1;
+				$limite = 12;
+				$totalPorPagina = 12;
+
+				if ($pagina > 1) {
+					$limite = $pagina * $limite;
+					$inicio = $limite - ($totalPorPagina - 1);
+				}
+
+				$dados["paginacao"] = $this->utils->paginacao($url, $inicio, count($dados["dados"]), $limite);
+			}
 		}
 
 		return $dados;
@@ -34,18 +40,24 @@ class Produto {
 		$dados = array();
 		$dados["dados"] = $this->model->listarPorCategoria($categoria);
 
-		/** Paginação */
-		if (!empty($url)) {
-			$inicio = 1;
-			$limite = 12;
-			$totalPorPagina = 12;
-
-			if ($pagina > 1) {
-				$limite = $pagina * $limite;
-				$inicio = $limite - ($totalPorPagina - 1);
+		if (!empty($dados["dados"])) {
+			foreach ($dados["dados"] as $key => $value) {
+				$dados["dados"][$key]["compativel"] = $this->model->listarPorMontadora($value["id_produto"]);
 			}
 
-			$dados["paginacao"] = $this->utils->paginacao($url, $inicio, count($dados["dados"]), $limite);
+			/** Paginação */
+			if (!empty($url)) {
+				$inicio = 1;
+				$limite = 12;
+				$totalPorPagina = 12;
+
+				if ($pagina > 1) {
+					$limite = $pagina * $limite;
+					$inicio = $limite - ($totalPorPagina - 1);
+				}
+
+				$dados["paginacao"] = $this->utils->paginacao($url, $inicio, count($dados["dados"]), $limite);
+			}
 		}
 
 		return $dados;

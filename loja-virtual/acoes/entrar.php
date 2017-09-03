@@ -20,7 +20,7 @@ if ((isset($_POST["login"]) && !empty($_POST["login"])) &&
 		$_SESSION["cpf"] 	= $dados[0]["cpf"];
 		$_SESSION["telefone"] = $dados[0]["telefone"];
 
-		header('Location: '.BASE_URL.'admin/view/usuarios/index.php?id='.$dados[0]["id_cliente"]);
+		header('Location: '.BASE_URL.'admin/view/orcamentos/index.php');
 	} else {
 		$_SESSION['msg_tipo'] = 'Erro';
 		$_SESSION['msg'] = 'Login ou senha inválido!';

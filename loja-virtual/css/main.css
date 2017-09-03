@@ -72,3 +72,18 @@ footer a:hover {
 	margin-bottom: 20px;
 	text-transform: uppercase;
 }
+.thumbnail {
+	height: 100% !important;
+	min-height: inherit !important;
+}
+.box-produto {
+	height: 410px;
+	margin-bottom: 15px;
+}
+.box-compatibilidade {
+	margin-left: 0;
+	padding-left: 0;
+	height: 85px;
+	overflow-y: auto;
+	margin-bottom: 10px;
+}

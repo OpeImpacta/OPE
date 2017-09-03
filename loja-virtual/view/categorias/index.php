@@ -20,14 +20,15 @@
 
 	<?php include "../../incs/menu_lateral.php"; ?>
 
-	<div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
-		<?php if (!empty($produtos["dados"])): ?>
+	<?php if (!empty($produtos["dados"])): ?>
+		<div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
 			<?php foreach ($produtos["dados"] as $key => $value): ?>
-				<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+				<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 box-produto">
 					<div class="thumbnail">
 						<a href="<?=BASE_URL;?>view/produtos/index.php?id=<?=$value["id_produto"];?>">
 							<!-- <img src="<?=$value["imagem"]?>" alt=""> -->
-							<img src="http://placehold.it/320x180" alt="">
+							<!-- <img src="http://placehold.it/320x180" alt=""> -->
+							<img src="<?=BASE_URL;?>imagens/produtos/320x180.png" alt="">
 						</a>
 						<div class="caption">
 							<h4>
@@ -35,13 +36,19 @@
 									<?=ucwords(strtolower($value["nome"]));?>
 								</a>
 							</h4>
-							<p>
-								<ul class="list-unstyled">
-									<li><strong>Montadora:</strong> <?=ucwords(strtolower($value["montadora"]));?></li>
-									<li><strong>Modelo:</strong> <?=ucwords(strtolower($value["modelo"]));?></li>
-									<li><strong>Categoria:</strong> <?=ucwords(strtolower($value["categoria"]));?></li>
-								</ul>
-							</p>
+							<?php if (!empty($value["compativel"])): ?>
+								<p>
+									<ul class="list-unstyled">
+										<li><strong>Compatibilidade:</strong></li>
+										<?php foreach ($value["compativel"] as $kCompativel => $vCompativel): ?>
+											<li>
+												<?=ucwords(strtolower($vCompativel["montadora"]));?> - 
+												<?=ucwords(strtolower($vCompativel["modelo"]));?>
+											</li>
+										<?php endforeach ?>
+									</ul>
+								</p>
+							<?php endif ?>
 							<h4>
 								R$ <?=number_format(($value["preco_compra"] + ($value["preco_compra"] * ($value["margem"] / 100))), 2, ",", ",");?>
 							</h4>
@@ -58,11 +65,15 @@
 					</div>
 				</div>
 			<?php endforeach; ?>
-		<?php endif; ?>
-	</div> <!-- /.col-md-10 -->
-	<div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
-		<?php echo $produtos["paginacao"]; ?>
-	</div>
+		</div> <!-- /.col-md-10 -->
+		<div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
+			<?php echo $produtos["paginacao"]; ?>
+		</div>
+	<?php else: ?>
+		<div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
+			Sem produtos para a Categoria selecionada.
+		</div>
+	<?php endif; ?>
 </div> <!-- /.row -->
 
 <?php include "../../incs/rodape.php"; ?>

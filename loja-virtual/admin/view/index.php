@@ -2,7 +2,7 @@
 	require_once "../../config.php";
 
 	if (isset($_SESSION["auth"]) && $_SESSION["auth"]) {
-		header('Location: '.BASE_URL.'admin/view/usuarios/index.php?id='.$_SESSION["id"]);
+		header('Location: '.BASE_URL.'admin/view/orcamentos/index.php');
 	}
 
 	include_once "../../incs/cabecalho.php";

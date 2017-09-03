@@ -15,7 +15,7 @@
 	$produtos = new Produto();
 	$produto = $produtos->listar($url, $pagina, $id);
 
-	// echo "<pre>"; print_r($produtos); echo "</pre>";
+	// echo "<pre>"; print_r($produto); echo "</pre>";
 ?>
 
 <div class="row">
@@ -39,19 +39,22 @@
 					<!-- Wrapper for slides -->
 					<div class="carousel-inner" role="listbox">
 						<div class="item active">
-							<img src="http://placehold.it/620x350" alt="">
+							<!-- <img src="http://placehold.it/620x350" alt=""> -->
+							<img src="<?=BASE_URL;?>imagens/produtos/620x350.png" alt="">
 							<div class="carousel-caption">
 								<h3>Imagem 1</h3>
 							</div>
 						</div>
 						<div class="item">
-							<img src="http://placehold.it/620x350" alt="">
+							<!-- <img src="http://placehold.it/620x350" alt=""> -->
+							<img src="<?=BASE_URL;?>imagens/produtos/620x350.png" alt="">
 							<div class="carousel-caption">
 								<h3>Imagem 2</h3>
 							</div>
 						</div>
 						<div class="item">
-							<img src="http://placehold.it/620x350" alt="">
+							<!-- <img src="http://placehold.it/620x350" alt=""> -->
+							<img src="<?=BASE_URL;?>imagens/produtos/620x350.png" alt="">
 							<div class="carousel-caption">
 								<h3>Imagem 3</h3>
 							</div>
@@ -76,16 +79,23 @@
 						<h3>
 							R$ <?=number_format(($produto["dados"][0]["preco_compra"] + ($produto["dados"][0]["preco_compra"] * ($produto["dados"][0]["margem"] / 100))), 2, ",", ",");?>
 						</h3>
-						<p>
-							<ul class="list-unstyled">
-								<li><strong>Montadora:</strong> <?=ucwords(strtolower($produto["dados"][0]["montadora"]));?></li>
-								<li><strong>Modelo:</strong> <?=ucwords(strtolower($produto["dados"][0]["modelo"]));?></li>
-								<li><strong>Categoria:</strong> <?=ucwords(strtolower($produto["dados"][0]["categoria"]));?></li>
-							</ul>
+						<?php if (!empty($produto["dados"][0]["compativel"])): ?>
 							<p>
-								Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 
-								3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
+								<ul class="list-unstyled">
+									<li><strong>Compatibilidade:</strong></li>
+									<?php foreach ($produto["dados"][0]["compativel"] as $kCompativel => $vCompativel): ?>
+										<li>
+											<?=ucwords(strtolower($vCompativel["montadora"]));?> - 
+											<?=ucwords(strtolower($vCompativel["modelo"]));?>
+										</li>
+									<?php endforeach ?>
+								</ul>
 							</p>
+						<?php endif ?>
+						<p>
+							<label for="">Obs: </label> <br/>
+							Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 
+							3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
 						</p>
 						<hr/>
 						<div class="ratings">
@@ -132,7 +142,7 @@
 								</a>
 							</h4>
 						</div>
-						<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+						<div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
 							<div class="panel-body">
 								Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 
 								3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. 
