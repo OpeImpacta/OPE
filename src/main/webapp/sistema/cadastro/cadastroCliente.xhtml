@@ -8,8 +8,6 @@
                 xmlns:adm="http://github.com/adminfaces"
                 template="/WEB-INF/templates/template.xhtml"
                 >
-                
-             
    
 	<ui:define name="title">
         Cliente
@@ -45,9 +43,9 @@
                                      
                         <p:spacer width="5"/>
                         
-                        <p:commandButton value="Editar" update="@(.ui-dialog)" process="frmCadastro" styleClass="btn-info"
-                        				 disabled="#{clienteControl.disableButton}" onclick="#{clienteControl.setaPessoa()}"
-                        				 oncomplete="PF('dlgCadastro').show()" icon="fa fa-edit">
+                        <p:commandButton value="Editar" update="@(.ui-dialog)" process="frmCadastro" styleClass="btn-info" ajax="false"
+                        				 disabled="#{clienteControl.disableButton}" actionListener="#{clienteControl.openDialog()}"
+                        				 icon="fa fa-edit">
                         </p:commandButton>                 
                     </div>
                     <p:splitButton value="Novo" action="#{clienteControl.doStartAddRecord()}" update="frmCadastro"
@@ -69,7 +67,7 @@
 
 			<p:dataTable id="tabela" var="registro"  value="#{clienteControl.list}" rowKey="#{registro.idCliente}" selectionMode="single" selection="#{clienteControl.selected}"
 							paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" sortBy="#{registro.nome}" emptyMessage="Nenhum Registro Encontrado"
+                                 currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" sortBy="#{registro.nome}" emptyMessage="Nenhum Registro Encontrado" tableStyle="table-layout:auto"
                                  widgetVar="wvTable">
 							
                 <p:ajax event="rowSelect" listener="#{clienteControl.onRowSelect()}" update="@(.ui-button)"/>
@@ -82,11 +80,11 @@
 					<h:outputText value="#{registro.idCliente}" />
 				</p:column>
 
-				<p:column headerText="Nome/Razão Social" filterBy="#{registro.nome}" filterStyle="width: 200px" sortBy="#{registro.nome}" filterMatchMode="contains">
+				<p:column headerText="Nome/Razão Social" filterBy="#{registro.nome}" style="text-align: center" sortBy="#{registro.nome}" filterMatchMode="contains">
 					<h:outputText value="#{registro.nome}" />
 				</p:column>
 				
-				<p:column headerText="CPF/CNPJ" filterBy="#{registro.cpf}" sortBy="#{registro.cpf}" filterStyle="width: 130px" filterMatchMode="contains" style="text-align:center">
+				<p:column headerText="CPF/CNPJ" filterBy="#{registro.cpf}" sortBy="#{registro.cpf}" filterMatchMode="contains" style="text-align:center">
 					<h:outputText value="#{registro.cpf}" />
 				</p:column>
 				
@@ -106,7 +104,7 @@
 				</p:column>
 				
 				<p:rowExpansion>
-	                <p:panelGrid  columns="2" style="width:100%"   >
+	                <p:panelGrid  columns="2" >
 		                	<h:outputText value="Código : "/>
 		                <h:outputText value="#{registro.idCliente}"  />
 		                <h:outputText value="Nome/Razão Social : " />
@@ -128,131 +126,117 @@
             </div>
 
 		</h:form>
-			<p:dialog width="900px" height="auto" widgetVar="dlgCadastro" resizable="false" responsive="true" 
-					header="Cliente" focus="frmCadastro:nome" styleClass="box-primary" 
-					modal="true" appendTo="@(body)" closable="true" closeOnEscape="true">
-					<p:ajax event="close" listener="#{clienteControl.limpaFormulario}" update="frmCadastro" />
+		
+		<p:dialog width="auto" height="auto" widgetVar="dlgCadastro" resizable="false" responsive="true" 
+			header="Cliente" styleClass="box-primary" focus="frmCadastro:panelNomeEmail"
+			modal="true" appendTo="@(body)" closable="true" closeOnEscape="true">
 					
-					<h:form id="frmCadastro">
-					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
-					<h:panelGrid columns="3" style="width:100%">
-							<p:column width="50%">
-								<p:outputLabel value="Código: "><br />
-									<p:inputText value="#{clienteControl.selected.idCliente}" disabled="true"/>
-								</p:outputLabel>
-							</p:column>
-							<p:outputLabel for="tipoPessoa" value="Pessoa:"><br/>
-		                    	<p:selectOneButton id="tipoPessoa" value="#{clienteControl.pessoa}" >
-			                        <f:selectItem itemLabel="Física" itemValue="1"/>
-			                        <f:selectItem itemLabel="Jurídica" itemValue="2"/>
-			                        
-			                        <p:ajax event="change" update="frmCadastro:lblNome frmCadastro:lblCpf frmCadastro:cpf" listener="#{clienteControl.updateForm}" />
-			                    </p:selectOneButton>
-		                    </p:outputLabel>
-							<p:column width="50%" style="text-align: left">
-								<p:selectOneButton id="manyBtn" style="margin-top: 15px" value="#{clienteControl.selected.ativo}">
-									<f:converter converterId="javax.faces.Boolean" />
-			                        <f:selectItem itemLabel="Ativo" itemValue="true"/>
-			                        <f:selectItem itemLabel="Inativo" itemValue="false"/>
-	                    		</p:selectOneButton>
-	                    	</p:column>	
-	                </h:panelGrid>    	
-	                <h:panelGrid width="100%" columns="3" >
-						<p:column width="100%" colspan="2">
-							<p:outputLabel for="nome" id="lblNome" value="#{clienteControl.valueNome}: " ><br />
-								<p:inputText id="nome" value="#{clienteControl.selected.nome}" style="width: 180%"  required="true" requiredMessage="Campo Nome é Necessário" maxlength="50"/>
-							</p:outputLabel>
-						</p:column>	
-						<p:column width="100%" colspan="2" >
-							<p:outputLabel for="cpf" value="#{clienteControl.valueCpf}: " id="lblCpf" style="margin-left: 150px" ><br/>
-							 	<p:inputMask id="cpf" value="#{clienteControl.selected.cpf}" style="width: 90%" mask="#{clienteControl.maskCpf}" required="true" requiredMessage="Campo CPF é Necessário" />
-							</p:outputLabel>
-						</p:column>	
-						<p:column colspan="2">
-							<p:outputLabel for="email" value="Email " style="margin-right: 110px"><br />
-								<p:inputText id="email" value="#{clienteControl.selected.email}" validatorMessage="Email Inválido!" style="width: 170%" maxlength="50" >
-									<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-								</p:inputText>
-							</p:outputLabel>
-						</p:column>
-					</h:panelGrid>
-					<h:panelGrid width="100%" columns="1" >
-						
-					</h:panelGrid>
+			<p:ajax event="close" listener="#{clienteControl.limpaFormulario}" update="frmCadastro" />
 					
-					<p:panel id="panelContato" style="margin-top: 10px" header="Contato">
-		                <h:panelGrid columns="4" >
-		                
-			                <p:column width="100%">
-			                	<p:outputLabel value="Tipo:" for="tpFone" ><br/>
-			                		<p:selectOneMenu value="#{clienteControl.telCliente.tipo}" id="tpFone" style="width:125px">
-							            <f:selectItem itemLabel="Selecione" noSelectionOption="true" itemValue=""/>
-				                        <f:selectItem itemLabel="Residencial" itemValue="Residencial"/>
-				                        <f:selectItem itemLabel="Celular" itemValue="Celular"/>
-				                        <f:selectItem itemLabel="Comercial" itemValue="Comercial"/>
+			<h:form id="frmCadastro">
+				<p:panelGrid id="panelInfo" columns="3" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+					<p:outputLabel value="Código: "><br />
+						<p:inputText value="#{clienteControl.selected.idCliente}" disabled="true"/>
+					</p:outputLabel>
+							
+					<p:outputLabel for="tipoPessoa" value="Pessoa:"><br/>
+			        	<p:selectOneButton id="tipoPessoa" value="#{clienteControl.pessoa}" >
+				        	<f:selectItem itemLabel="Física" itemValue="1"/>
+				            <f:selectItem itemLabel="Jurídica" itemValue="2"/>
 				                        
-				                        <p:ajax event="change" update="frmCadastro:numero" listener="#{clienteControl.updateMaskTelefone}" />
-							        </p:selectOneMenu>
-				                </p:outputLabel>
-				                 
-				            </p:column>
-				            <p:column width="100%"> 	   
-			                	<p:outputLabel for="numero" value="Número:" style="margin-left: -550px" ><br/>
-				                	<p:inputMask id="numero" mask="#{clienteControl.maskTelefone}" value="#{clienteControl.telCliente.numero}" />
-				                </p:outputLabel>
-			                </p:column>
-			                <p:column width="100%"> 	   
-			                	<p:outputLabel for="compl" value="Complemento" style="margin-left: -340px" ><br/>
-				                	<p:inputText id="compl" value="#{clienteControl.telCliente.complemento}" maxlength="20" />
-				                </p:outputLabel>
-			                </p:column>
-			                <p:column width="100%"> 
-				                <p:commandButton icon="fa fa-plus" style="margin-left: -150px; margin-top: 15px"
-				                				 actionListener="#{clienteControl.addTelefone()}"
-		                                         value="Adicionar" styleClass="btn-primary"
-		                                         id="btnAddFone"
-		                                         update="frmCadastro:panelContato" process="frmCadastro:panelContato" />
-				            </p:column>
-				             
-			                <h:panelGrid columns="1" style="width:500px" >
-			                	<p:dataTable var="registro" emptyMessage="Nenhum Telefone Adicionado" paginator="true" rows="2" 
-			                	paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                		value="#{clienteControl.selected.telefones}" reflow="true" 
-			                			style="margin-top:5px; width:700px" tableStyle="table-layout: auto;">
-						            <f:facet name="header">
-							            	Telefones
-							        </f:facet>
-						            <p:column headerText="Tipo">
-					                       <h:outputText value="#{registro.tipo}"/>
-					                </p:column>
-								    <p:column headerText="Número">
-					                     <h:outputText value="#{registro.numero}"/>
-					                </p:column>
-					                <p:column headerText="Complemento">
-					                     <h:outputText value="#{registro.complemento}"/>
-					                </p:column>
-					                <p:column>
-					                     <p:commandButton id="btnDelFone" title="Excluir" 
-					                     	styleClass="btn-default" 
-					                     	style="font-size: 11px"
-					                     	update="@form"
-					                     	process="frmCadastro:panelContato"
-					                     	actionListener="#{clienteControl.delTelefone(registro)}" 
-					                     	icon="fa fa-trash" />
-					                     <p:commandButton id="btnAltFone" title="Alterar" 
-					                     	styleClass="btn-default btn-block" 
-					                     	style="font-size: 11px; 
-					                     	margin-left: 5px"
-					                     	process="frmCadastro:panelContato"
-					                     	actionListener="#{clienteControl.upTelefone(registro)}"
-					                     	update="@form" 
-					                     	icon="fa fa-pencil" />
-					                </p:column>
-								</p:dataTable>
-			                </h:panelGrid>
-		                </h:panelGrid>
-           			 </p:panel>
-					 <p:separator/>
+				            <p:ajax event="change" update="@form" listener="#{clienteControl.updateForm}" />
+				        </p:selectOneButton>
+					</p:outputLabel>
+			                    
+			        <p:selectOneButton id="manyBtn" style="margin-top: 24px; width: 130px" value="#{clienteControl.selected.ativo}">
+						<f:converter converterId="javax.faces.Boolean" />
+				        <f:selectItem itemLabel="Ativo" itemValue="true"/>
+				        <f:selectItem itemLabel="Inativo" itemValue="false"/>
+					</p:selectOneButton>
+				</p:panelGrid>
+					
+		        <p:panelGrid id="panelNomeEmail" columns="3" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+		        	<p:outputLabel for="nome" id="lblNome" value="#{clienteControl.valueNome}: " ><br />
+						<p:inputText id="nome" value="#{clienteControl.selected.nome}" style="width: 230px"  required="true" requiredMessage="Campo Nome é Necessário" maxlength="50"/>
+						<p:message id="msgNome" for="nome"/>
+					</p:outputLabel>
+							
+					<p:outputLabel for="email" value="Email "><br />
+						<p:inputText id="email" value="#{clienteControl.selected.email}" validatorMessage="Email Inválido!" style="width: 230px" maxlength="50" >
+							<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<p:message id="msgEmail" for="email"/>
+						</p:inputText>
+					</p:outputLabel>
+					
+					<p:outputLabel for="cpf" value="#{clienteControl.valueCpf}: " id="lblCpf" ><br/>
+						<p:inputMask id="cpf" value="#{clienteControl.selected.cpf}" style="width: 180px" mask="#{clienteControl.maskCpf}" required="true" requiredMessage="Campo CPF é Necessário" />
+						<p:message id="msgCPF" for="cpf"/>
+					</p:outputLabel>
+				</p:panelGrid>
+		
+				<p:separator/>
+		
+				<p:panelGrid columns="4" cellpadding="5" id="panelContato" layout="grid" styleClass="no-border ui-fluid">
+						
+					<p:outputLabel value="Tipo:" for="tpFone" ><br/>
+			        	<p:selectOneMenu value="#{clienteControl.telCliente.tipo}" id="tpFone" required="#{not empty clienteControl.telCliente.numero}" requiredMessage="Campo tipo é necessário" style="width:125px">
+							<f:selectItem itemLabel="Selecione" noSelectionOption="true" itemValue=""/>
+				            <f:selectItem itemLabel="Residencial" itemValue="Residencial"/>
+				            <f:selectItem itemLabel="Celular" itemValue="Celular"/>
+				            <f:selectItem itemLabel="Comercial" itemValue="Comercial"/>
+				                        
+				            <p:ajax event="change" update="frmCadastro:numero" listener="#{clienteControl.updateMaskTelefone}" />
+						</p:selectOneMenu>
+						<p:message id="msgTipo" for="tpFone"/>
+				    </p:outputLabel>
+				       
+				   	<p:outputLabel for="numero" value="Número:" ><br/>
+				    	<p:inputMask id="numero" required="#{not empty clienteControl.telCliente.tipo}" style="width: 150px" requiredMessage="Campo número é necessário" mask="#{clienteControl.maskTelefone}" value="#{clienteControl.telCliente.numero}" >
+				    		<p:ajax event="blur" update="frmCadastro:tpFone" />
+				    	</p:inputMask>
+				    	<p:message id="msgNumero" for="numero"/>
+				    </p:outputLabel>
+				       
+				    <p:outputLabel for="compl" value="Complemento" ><br/>
+				     	<p:inputText id="compl" value="#{clienteControl.telCliente.complemento}" style="width: 150px" maxlength="20" />
+					</p:outputLabel>
+
+					<p:commandButton icon="fa fa-plus" style="margin-top: 23px; width: 120px"
+						actionListener="#{clienteControl.addTelefone()}" value="Adicionar" styleClass="btn-primary" id="btnAddFone"
+						update="frmCadastro:panelContato frmCadastro:panelDtTable" process="frmCadastro:panelContato frmCadastro:panelDtTable" />
+						
+				</p:panelGrid>
+				
+				<p:panelGrid columns="1" cellpadding="5" id="panelDtTable" layout="grid" styleClass="no-border ui-fluid">
+				
+					<p:dataTable var="registro" emptyMessage="Nenhum Telefone Adicionado" paginator="true" rows="1" paginatorPosition="bottom" currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						value="#{clienteControl.selected.telefones}" reflow="true" tableStyle="table-layout: auto;">
+						
+						<f:facet name="header">
+							Telefones
+						</f:facet>
+						<p:column headerText="Tipo">
+							<h:outputText value="#{registro.tipo}" />
+						</p:column>
+						<p:column headerText="Número">
+							<h:outputText value="#{registro.numero}" />
+						</p:column>
+						<p:column headerText="Complemento">
+							<h:outputText value="#{registro.complemento}" />
+						</p:column>
+						<p:column>
+							<p:commandButton id="btnDelFone"
+								styleClass="btn-default" style="font-size: 11px; width: 20px" update="@form"
+								process="frmCadastro:panelContato frmCadastro:panelDtTable" actionListener="#{clienteControl.delTelefone(registro)}" icon="fa fa-trash" />
+							
+							<p:commandButton id="btnAltFone"  styleClass="btn-default btn-block" style="font-size: 11px; width: 20px"
+								process="frmCadastro:panelContato frmCadastro:panelDtTable" actionListener="#{clienteControl.upTelefone(registro)}" update="@form" icon="fa fa-pencil" />
+						</p:column>
+					</p:dataTable>
+				</p:panelGrid>
+				
+				<p:separator/>
 				<p:commandButton value="Salvar"
 					id="btnEfetiva"
 					style="margin-top: -10px; width: auto"
@@ -266,9 +250,10 @@
 					id="brnCancelar"
 					style="margin-top: -10px; width: auto"
 					actionListener="#{clienteControl.limpaFormulario}"
-					update="frmList:tabela frmCadastro @(.ui-button)"
+					update="frmList:tabela frmCadastro:panelDtTable @(.ui-button)"
 					onclick="PF('dlgCadastro').hide()"
 					styleClass="btn-block btn-danger" icon="fa fa-close"/>
+					
 			</h:form>
 			</p:dialog>
 	</ui:define>

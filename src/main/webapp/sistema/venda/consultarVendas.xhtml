@@ -14,6 +14,12 @@
 	       		{
 	                text-align: center !important;
 	       		}
+	       		
+	       		.ui-calendar input{
+	       			width: 100px;
+	       			text-align: center !important;
+	       		}
+	       		
 	       </style>
      </ui:define>
 
@@ -22,6 +28,9 @@
     </ui:define>
 
 	<ui:define name="body">
+		<!--Altera o idioma do calendario-->
+		<h:outputScript library="js" name="locale-primefaces.js"/>
+		
 		<adm:breadcrumb title="Gerenciamento Vendas"/>
 		<h:form id="frmList">
 			<p:growl id="msgOk" showSummary="false" severity="info"/>
@@ -42,7 +51,6 @@
 						<p:spacer width="5"/>	
 						
 						<p:commandButton id="btnDevolver" actionListener="#{vendaControl.openDialogDevolucao()}" update="frmExclusao" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-reply-all"  styleClass="btn-warning" value="Devolver Itens"/>
-						<p:tooltip id="toolTipFade" for="btnDevolver" value="There are 4 options for position" position="top"/>
 						<p:spacer width="5"/>	
 						
 						<p:commandButton id="btnVisualizar" actionListener="#{vendaControl.openDialogItens()}" update="frmItemVenda" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-search"  styleClass="btn-info" value="Visualizar Itens"/>
@@ -59,7 +67,7 @@
 	                        
                     </p:splitButton>
 					
-	                <p:selectOneButton styleClass="bg-success" value="#{vendaControl.opcao}">
+	                <p:selectOneButton value="#{vendaControl.opcao}">
 	                	
 					   	<f:selectItem itemLabel="Realizadas" itemValue="1" />
 				        <f:selectItem itemLabel="Canceladas" itemValue="2" />
@@ -86,7 +94,7 @@
 							<h:outputText value="#{venda.idVenda}" />
 						</p:column>
 
-						<p:column headerText="Cliente" filterStyle="width: 230px" style="text-align: center" filterBy="#{venda.cliente.nome}">
+						<p:column headerText="Cliente" style="text-align: center" filterBy="#{venda.cliente.nome}">
 							<h:outputText value="#{venda.cliente.nome}" />
 						</p:column>
 

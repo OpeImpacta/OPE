@@ -12,7 +12,21 @@
 	       <style type="text/css">
 	            .ui-datatable .ui-datatable-header {
 	                text-align: center !important;
-	       }
+	       		}
+	       		
+	       		.ui-calendar input{
+	       			width: 100px;
+	       			text-align: center !important;
+	       		}
+	       		
+	       		.ui-selectonemenu{
+	       			min-width: 10px;
+	       		}
+	       		
+	       		.styleInNumber input{
+					width: 120px !important;
+				}
+	       		
 	       </style>
 	       
 	       <script type="text/javascript">
@@ -35,9 +49,9 @@
 			<p:growl id="msgOk" showSummary="false" autoUpdate="true" severity="info"/>
             <p:growl id="msgErro" showSummary="false" strick="true" severity="warn,error,fatal"/>
 	        
-		<div class="box box-primary">
-        	<div class="box-header with-border">
-				<div id="main-buttons" class="hidden-sm hidden-xs">
+			<div class="box box-primary">
+	        	<div class="box-header with-border">
+					<div id="main-buttons" class="hidden-sm hidden-xs">
                         <p:commandButton icon="fa fa-plus"
                                          value="Entrada" styleClass="btn-primary" 
                                          actionListener="#{movimentacaoControl.doStartRecordEntrada()}" 
@@ -57,162 +71,156 @@
                                          />
                                          
                         <p:spacer width="5"/>
-                    </div>
+                </div>
                     
-                    <p:splitButton value="Entrada" actionListener="#{movimentacaoControl.doStartRecordEntrada()}"  
-                                   icon="fa fa-check" update="frmEntrada"
-                                   styleClass="hidden-md hidden-lg btn-primary" >
+                <p:splitButton value="Entrada" actionListener="#{movimentacaoControl.doStartRecordEntrada()}"  
+                	icon="fa fa-check" update="frmEntrada" styleClass="hidden-md hidden-lg btn-primary" >
                                    
-                        <p:menuitem value="Saída" actionListener="#{movimentacaoControl.doStartRecordSaida()}" 
-                        			icon="fa fa-minus"/>
+                	<p:menuitem value="Saída" actionListener="#{movimentacaoControl.doStartRecordSaida()}" icon="fa fa-minus"/>
                         			
-                        <p:menuitem value="Ajuste" actionListener="#{movimentacaoControl.doStartRecordAjuste()}" 
-                        			icon="fa fa-cogs" />
-                    </p:splitButton>
+                	<p:menuitem value="Ajuste" actionListener="#{movimentacaoControl.doStartRecordAjuste()}" icon="fa fa-cogs" />
+                </p:splitButton>
                     
-                    <p:separator/>
+                <p:separator/>
                     
-			<p:dataTable id="tabela" var="registro" value="#{movimentacaoControl.list}" rowKey="#{registro.idMovimentacao}"  tableStyle="table-layout: auto;"
+				<p:dataTable id="tabela" var="registro" value="#{movimentacaoControl.list}" rowKey="#{registro.idMovimentacao}"  tableStyle="table-layout: auto;"
 							paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                  currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" emptyMessage="Nenhum Registro Encontrado"
                                  widgetVar="wvTable">
 							
-				<f:facet name="header">
-					Últimas Movimentações
-				</f:facet>			
+					<f:facet name="header">
+						Últimas Movimentações
+					</f:facet>			
 				
-                <p:column styleClass="align-center" width="5%">
-                	<p:rowToggler />
-                </p:column>
+	                <p:column styleClass="align-center">
+	                	<p:rowToggler />
+	                </p:column>
 
-				<p:column headerText="Código" style="text-align: center" sortBy="#{registro.idMovimentacao}" filterBy="#{registro.idMovimentacao}" filterMatchMode="exact">
-					<h:outputText value="#{registro.idMovimentacao}" />
-				</p:column>
+					<p:column headerText="Código" style="text-align: center" sortBy="#{registro.idMovimentacao}" filterBy="#{registro.idMovimentacao}" filterMatchMode="exact">
+						<h:outputText value="#{registro.idMovimentacao}" />
+					</p:column>
+					
+					<p:column id="date" style="text-align: center" 
+				             headerText="Data"
+				             sortBy="#{registro.dataMovimentacao}"
+				             filterFunction="#{utilityTela.filterByDate}"
+				             filterBy="#{registro.dataMovimentacao}">
+				         <f:facet name="filter">
+				            <p:calendar  id="cal1" pattern="dd.MM.yyyy">
+				               <p:ajax event="dateSelect" oncomplete="PF('wvTable').filter()" update="frmList:tabela" />
+				               <p:ajax event="change" execute="@this" oncomplete="PF('wvTable').filter()" update="frmList:tabela"/>
+				            </p:calendar>
+				         </f:facet>
+				      <p:outputLabel value="#{registro.dataMovimentacao}">
+				         <f:convertDateTime pattern="dd.MM.yyyy" />
+				      </p:outputLabel>
+				   </p:column>
+					<p:column headerText="Produto" sortBy="#{registro.produto.nome}" style="text-align: center" filterBy="#{registro.produto.nome}" filterMatchMode="contains">
+						<h:outputText value="#{registro.produto.nome}" />
+					</p:column>
+					
+					<p:column headerText="Qtd. Movimentada" style="text-align: center" sortBy="#{registro.quantidade}" filterBy="#{registro.quantidade}" filterMatchMode="exact">
+						<h:outputText value="#{registro.quantidade}" />
+					</p:column>
 				
-				<p:column id="date" style="text-align: center" 
-			             headerText="Data"
-			             sortBy="#{registro.dataMovimentacao}"
-			             filterFunction="#{utilityTela.filterByDate}"
-			             filterBy="#{registro.dataMovimentacao}">
-			         <f:facet name="filter">
-			            <p:calendar id="cal1" pattern="dd.MM.yyyy">
-			               <p:ajax event="dateSelect" oncomplete="PF('wvTable').filter()" update="frmList:tabela" />
-			               <p:ajax event="change" execute="@this" oncomplete="PF('wvTable').filter()" update="frmList:tabela"/>
-			            </p:calendar>
-			         </f:facet>
-			      <p:outputLabel value="#{registro.dataMovimentacao}">
-			         <f:convertDateTime pattern="dd.MM.yyyy" />
-			      </p:outputLabel>
-			   </p:column>
-				<p:column headerText="Produto" sortBy="#{registro.produto.nome}" filterStyle="width: 270px" filterBy="#{registro.produto.nome}" filterMatchMode="contains">
-					<h:outputText value="#{registro.produto.nome}" />
-				</p:column>
+					<p:column headerText="Tipo de Movimentação" style="text-align: center" sortBy="#{movimentacaoControl.verificaTpMov(registro)}" filterBy="#{movimentacaoControl.verificaTpMov(registro)}" filterMatchMode="exact">
+						<f:facet name="filter">
+		                	<p:selectOneMenu id="oneMenuMovimento" onchange="PF('wvTable').filter()" >
+			                    <f:selectItem itemLabel="Todas" itemValue="#{null}" noSelectionOption="true" />
+			                    <f:selectItem itemLabel="Entrada" itemValue="Entrada"  />
+			                    <f:selectItem itemLabel="Saída" itemValue="Saída"  />
+			                    <f:selectItem itemLabel="Ajuste" itemValue="Ajuste"  />
+		                	</p:selectOneMenu>
+	            		</f:facet>
+	            		<h:outputText value="#{movimentacaoControl.verificaTpMov(registro)}" />
+					</p:column>
 				
-				<p:column headerText="Qtd. Movimentada" style="text-align: center" sortBy="#{registro.quantidade}" filterBy="#{registro.quantidade}" filterMatchMode="exact">
-					<h:outputText value="#{registro.quantidade}" />
-				</p:column>
-				
-				<p:column headerText="Tipo de Movimentação" style="text-align: center" sortBy="#{movimentacaoControl.verificaTpMov(registro)}" filterBy="#{movimentacaoControl.verificaTpMov(registro)}" filterMatchMode="exact">
-					<f:facet name="filter">
-	                	<p:selectOneMenu onchange="PF('wvTable').filter()" >
-		                    <f:selectItem itemLabel="Todas" itemValue="#{null}" noSelectionOption="true" />
-		                    <f:selectItem itemLabel="Entrada" itemValue="Entrada"  />
-		                    <f:selectItem itemLabel="Saída" itemValue="Saída"  />
-		                    <f:selectItem itemLabel="Ajuste" itemValue="Ajuste"  />
-	                	</p:selectOneMenu>
-            		</f:facet>
-            		<h:outputText value="#{movimentacaoControl.verificaTpMov(registro)}" />
-				</p:column>
-				
-				<p:rowExpansion>
-	                <p:panelGrid  columns="1" style="width:100%"   >
-		                	<p:outputLabel value="Observação:" ><br/>
-		                		<h:outputText value="#{registro.observacao}" />
-		                	</p:outputLabel>
-	                </p:panelGrid>
-                </p:rowExpansion>
+					<p:rowExpansion>
+		                <p:panelGrid  columns="1" >
+			                	<p:outputLabel value="Observação:" ><br/>
+			                		<h:outputText value="#{registro.observacao}" />
+			                	</p:outputLabel>
+		                </p:panelGrid>
+	                </p:rowExpansion>
 
-				<f:facet name="footer">
-					Total: #{movimentacaoControl.list.size()}
-				</f:facet>
-			</p:dataTable>
-			     </div>
+					<f:facet name="footer">
+						Total: #{movimentacaoControl.list.size()}
+					</f:facet>
+					</p:dataTable>
+			   </div>
             </div>
 
 		</h:form>
 			<!-- ENTRADA -->
-			<p:dialog width="920px" height="auto" widgetVar="dlgEntrada" resizable="false"
-					header="Entrada de Produtos" focus="frmEntrada:cbProduto"  styleClass="box-primary"
-					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
-					<p:ajax event="close" listener="#{movimentacaoControl.limparForm}" />
+			<p:dialog width="auto" height="auto" widgetVar="dlgEntrada" resizable="false"
+					header="Entrada de Produtos" styleClass="box-primary"
+					modal="true" appendTo="@(body)" closable="true" closeOnEscape="true" responsive="true">
+					
+				<p:ajax event="close" listener="#{movimentacaoControl.limparForm}" />
+				
 				<h:form id="frmEntrada">
-					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
-					<h:panelGrid columns="5">
-						<p:column>
-			                	<p:outputLabel value="Produto" for="cbProduto" ><br/>
-			                		<p:selectOneMenu value="#{movimentacaoControl.movimentacao.produto}" id="cbProduto" 
-			                		style="width:250px; margin-right: 10px"
-			                			converter="omnifaces.SelectItemsConverter" filter="true" filterMatchMode="contains" >
-							            <f:selectItem itemLabel="Selecione" noSelectionOption="true" itemValue=""/>
-				                        <f:selectItems var="item" value="#{produtoControl.produtosControlaEstoque}" itemLabel="#{item.idProduto} - #{item.nome}" itemValue="#{item}" />
-				                    	<p:ajax event="change" oncomplete="focusCampo('frmEntrada:spQtd')" update="frmEntrada:inCompra frmEntrada:inVenda frmEntrada:inMargem" />
-				                    </p:selectOneMenu>
-				                </p:outputLabel>
-				         </p:column>
-				         <p:column>
-							<h:outputLabel for="inCompra" value="Preço de Compra: "><br/>
-								<p:inputNumber id="inCompra" style="margin-right: 10px" symbol="R$" decimalSeparator="," thousandSeparator="."
-									value="#{movimentacaoControl.movimentacao.produto.precoCompra}" readonly="#{movimentacaoControl.disableInputs}" >
-									<p:ajax event="blur" listener="#{movimentacaoControl.calculaPrecoVenda()}" process="frmEntrada" update="frmEntrada:inVenda" />
-								</p:inputNumber>
-	                    	</h:outputLabel>
-	                    </p:column>
-	                    <p:column>
-							<h:outputLabel for="inMargem" value="Margem: "><br/>
-								<p:inputNumber id="inMargem" symbol="%" style="margin-right: 10px" decimalSeparator="," thousandSeparator="." symbolPosition="right"
+					<p:panelGrid id="panelProduto" columns="5" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+						<p:outputLabel value="Produto" for="cbProduto" ><br/>
+			            	<p:selectOneMenu style="width: 250px; margin-top: -4px" value="#{movimentacaoControl.movimentacao.produto}" id="cbProduto"  
+			                	converter="omnifaces.SelectItemsConverter" filter="true" filterMatchMode="contains" >
+							    	<f:selectItem itemLabel="Selecione" noSelectionOption="true" itemValue=""/>
+				                    <f:selectItems var="item" value="#{produtoControl.produtosControlaEstoque}" itemLabel="#{item.idProduto} - #{item.nome}" itemValue="#{item}" />
+				                    <p:ajax event="change" oncomplete="focusCampo('frmEntrada:spQtd')" update="frmEntrada:inCompra frmEntrada:inVenda frmEntrada:inMargem" />
+				            </p:selectOneMenu>
+				         </p:outputLabel>
+				         
+				         <h:outputLabel for="inCompra" value="Preço de Compra: "><br/>
+							<p:inputNumber id="inCompra" symbol="R$" decimalSeparator="," thousandSeparator="." styleClass="styleInNumber"
+								value="#{movimentacaoControl.movimentacao.produto.precoCompra}" readonly="#{movimentacaoControl.disableInputs}" >
+								<p:ajax event="blur" listener="#{movimentacaoControl.calculaPrecoVenda()}" process="@this" update="frmEntrada:inVenda" />
+							</p:inputNumber>
+	                    </h:outputLabel>
+	                    
+						<h:outputLabel for="inMargem" value="Margem: "><br/>
+							<p:inputNumber id="inMargem" symbol="%" decimalSeparator="," thousandSeparator="." symbolPosition="right" styleClass="styleInNumber"
 								value="#{movimentacaoControl.movimentacao.produto.margem}"  readonly="#{movimentacaoControl.disableInputs}" >
-									<p:ajax event="blur" listener="#{movimentacaoControl.calculaPrecoVenda()}" process="frmEntrada" update="frmEntrada:inVenda" />
-								</p:inputNumber>  
-	                    	</h:outputLabel>
-	                    </p:column>
-	                    <p:column>
-							<h:outputLabel for="inVenda" value="Preço de Venda: "><br/>
-								<p:inputNumber id="inVenda" style="margin-right: 10px" symbol="R$" decimalSeparator="," thousandSeparator="." 
+								<p:ajax event="blur" listener="#{movimentacaoControl.calculaPrecoVenda()}" process="@this" update="frmEntrada:inVenda" />
+							</p:inputNumber>  
+	                    </h:outputLabel>
+	                    
+	                    <h:outputLabel for="inVenda" value="Preço de Venda: "><br/>
+							<p:inputNumber id="inVenda" symbol="R$" decimalSeparator="," thousandSeparator="." styleClass="styleInNumber"
+								required="#{!movimentacaoControl.disableInputs}" requiredMessage="Campo preço venda é necessário"
 								value="#{movimentacaoControl.movimentacao.produto.precoVenda}"  readonly="#{movimentacaoControl.disableInputs}"  >
-									<p:ajax event="blur" listener="#{movimentacaoControl.calculaMargem()}" process="frmEntrada" update="frmEntrada:inMargem" />
-								</p:inputNumber>  
-	                    	</h:outputLabel>
-	                    </p:column>
-	                    <p:column>
-	                    	<p:commandButton icon="fa fa-unlock-alt" style="margin-top: 15px" styleClass="btn-info btn-sm"
-	                    		update="frmEntrada:inCompra frmEntrada:inVenda frmEntrada:inMargem"
-	                    		actionListener="#{movimentacaoControl.liberaInputsProdutos()}"
-	                    	 />
-	                    </p:column>
-				    </h:panelGrid>
-					<h:panelGrid columns="4" width="100%">
-						 <p:column width="100%">
-			             	 <h:outputLabel for="spQtd" value="Quantidade "><br/>
-			             	 	<p:inputText id="spQtd" value="#{movimentacaoControl.movimentacao.quantidade}" />
-								<p:keyFilter for="spQtd" mask="num" /> 
-							</h:outputLabel>
-				         </p:column>
-				         <p:column>
-					         <p:outputLabel value="Observação:"><br/>
-								<p:inputText value="#{movimentacaoControl.movimentacao.observacao}" style="width: 100%; margin-right: 200px" maxlength="150" />
-							 </p:outputLabel>
-				         </p:column>
-				         <p:column>
-					         <p:commandButton icon="fa fa-plus" style="margin-top: 15px"
-					                				 value="Adicionar" styleClass="btn-primary" update="@form" 
-			                                         id="btnAddProd" actionListener="#{movimentacaoControl.addItem}"
-			                                          />
-				         </p:column>
-				    </h:panelGrid>
-					<h:panelGrid columns="1" width="100%">
-						<p:dataTable tableStyle="table-layout: auto;"  var="mov" style="margin-top: 10px" id="dtMov"
-						rows="2" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
-						emptyMessage="Nenhum produto adicionado" value="#{movimentacaoControl.movList	}" currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]">
+								<p:ajax event="blur" listener="#{movimentacaoControl.calculaMargem()}" process="@this" update="frmEntrada:inMargem" />
+							</p:inputNumber>
+							<p:message id="msgPrecoVenda" for="inVenda"/>   
+	                    </h:outputLabel>
+	                    
+	                    <p:commandButton icon="fa fa-unlock-alt" style="margin-top: 20px; width: 25px" styleClass="btn-info btn-sm"
+	                    		update="frmEntrada:inCompra frmEntrada:inVenda frmEntrada:inMargem" process="@this"
+	                    		actionListener="#{movimentacaoControl.liberaInputsProdutos()}" />
+	                </p:panelGrid>
+				    
+					<p:panelGrid id="panelQuantidade" columns="3" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+						<h:outputLabel for="spQtd" value="Quantidade:"><br/>
+			            	<p:inputText id="spQtd" style="width: 110px" value="#{movimentacaoControl.movimentacao.quantidade}" 
+			            		required="#{ movimentacaoControl.movimentacao.produto != null}" requiredMessage="Campo quantidade é necessário" />
+							<p:keyFilter for="spQtd" mask="num" />
+							<p:message id="msgQuantidade" for="spQtd"/> 
+						</h:outputLabel>
+				    	
+				    	<p:outputLabel value="Observação:"><br/>
+							<p:inputText value="#{movimentacaoControl.movimentacao.observacao}" style="width: 240px" maxlength="150" />
+						</p:outputLabel>
+				        
+				        <p:commandButton icon="fa fa-plus" style="margin-top: 24px; width: 110px"
+					     	value="Adicionar" styleClass="btn-primary" update="@form" 
+			                id="btnAddProd" actionListener="#{movimentacaoControl.addItem}" />
+			                
+				    </p:panelGrid>
+					
+					<p:panelGrid id="panelDtTable" columns="1" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+						
+						<p:dataTable tableStyle="table-layout: auto;"  var="mov" style="margin-top: 10px" id="dtMov" paginatorPosition="bottom"
+							rows="2" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+							emptyMessage="Nenhum produto adicionado" value="#{movimentacaoControl.movList}" currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]">
+							
 							<p:column headerText="Produto">
         						<h:outputText value="#{mov.produto.nome}" />
     						</p:column>
@@ -223,70 +231,63 @@
     							<h:outputText value="#{mov.observacao}" />
     						</p:column>
     						<p:column style="text-align: center">
-    							<p:commandButton icon="fa fa-trash" actionListener="#{movimentacaoControl.delMovimentacao(mov)}" update="frmEntrada:dtMov" style="font-size: 10px" />
+    							<p:commandButton icon="fa fa-trash" actionListener="#{movimentacaoControl.delMovimentacao(mov)}" update="frmEntrada:dtMov" style="font-size: 10px; width: 25px" />
     						</p:column>
 						</p:dataTable>
-					</h:panelGrid>
-				<p:separator/>
-				<p:commandButton value="Salvar"
-					style="margin-top: -10px; width: auto"
-					update="frmList:tabela frmEntrada" process="frmList:tabela" ajax="false"
-					action="#{movimentacaoControl.recordMovimentacao()}"
-					onsuccess="PF('dlgEntrada').hide(); #{movimentacaoControl.limparForm()}"
-					type="submit"
-					styleClass="btn-block btn-success" icon="fa fa-floppy-o"/>
+					</p:panelGrid>
 					
-				<p:commandButton value="Cancelar"
-					id="brnCancelar"
-					style="margin-top: -10px; width: auto"
-					update="frmList:tabela frmEntrada @(.ui-button)"
-					onclick="PF('dlgCadastro').hide()"
-					actionListener="#{movimentacaoControl.limparForm}"
-					styleClass="btn-block btn-danger" icon="fa fa-close"/>	
-			</h:form>
+					<p:separator/>
+					<p:commandButton value="Salvar"
+						style="margin-top: -10px; width: auto"
+						update="frmList:tabela frmEntrada" process="frmList:tabela" ajax="false"
+						action="#{movimentacaoControl.recordMovimentacao()}"
+						onsuccess="PF('dlgEntrada').hide(); #{movimentacaoControl.limparForm()}"
+						type="submit"
+						styleClass="btn-block btn-success" icon="fa fa-floppy-o"/>
+						
+					<p:commandButton value="Cancelar"
+						id="brnCancelar"
+						style="margin-top: -10px; width: auto"
+						update="frmList:tabela frmEntrada @(.ui-button)"
+						onclick="PF('dlgCadastro').hide()"
+						actionListener="#{movimentacaoControl.limparForm}"
+						styleClass="btn-block btn-danger" icon="fa fa-close"/>	
+				</h:form>
 			</p:dialog>
 			
 			<!-- SAIDA -->
-			<p:dialog width="920px" height="auto" widgetVar="dlgSaida" resizable="false"
+			<p:dialog width="auto" height="auto" widgetVar="dlgSaida" resizable="false"
 					header="Saída de Produtos" focus="frmSaida:cbProduto"  styleClass="box-primary"
 					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
 					<p:ajax event="close" listener="#{movimentacaoControl.limparForm}" />
 				<h:form id="frmSaida">
-					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
-					<h:panelGrid columns="3">
-						<p:column>
-			                	<p:outputLabel value="Produto" for="cbProduto" ><br/>
-			                		<p:selectOneMenu value="#{movimentacaoControl.movimentacao.produto}" id="cbProduto" 
-			                		style="width:250px; margin-right: 10px"
-			                			converter="omnifaces.SelectItemsConverter" filter="true" filterMatchMode="contains" >
-							            <f:selectItem itemLabel="Selecione" noSelectionOption="true" itemValue=""/>
-				                        <f:selectItems var="item" value="#{produtoControl.produtosControlaEstoque}" itemLabel="#{item.idProduto} - #{item.nome}" itemValue="#{item}" />
-				                        <p:ajax event="change" oncomplete="focusCampo('frmSaida:spQtd')" />
-				                    </p:selectOneMenu>
-				                </p:outputLabel>
-				         </p:column>
-				        <p:column>
-			             	 <h:outputLabel for="spQtd" value="Quantidade "><br/>
-			             	 	<p:inputText style="margin-right: 10px" id="spQtd" value="#{movimentacaoControl.movimentacao.quantidade}"  />
-			             	 	<p:keyFilter for="spQtd" mask="num" /> 
-							</h:outputLabel>
-                  		</p:column>
-				         <p:column>
-					         <p:outputLabel value="Observação:"><br/>
-								<p:inputText value="#{movimentacaoControl.movimentacao.observacao}" style="width: 200%" maxlength="150" />
-							 </p:outputLabel>
-				         </p:column>
-				         <p:column>
-					         <p:commandButton icon="fa fa-plus"
-					                				 value="Adicionar" styleClass="btn-primary" update="@form" 
-			                                         id="btnAddProd" actionListener="#{movimentacaoControl.addItem}"
-			                                          />
-				         </p:column>
-				    </h:panelGrid>
-					<h:panelGrid columns="1" width="100%">
-						<p:dataTable tableStyle="table-layout: auto;"  var="mov" style="margin-top: 10px" id="dtMov"
+					<p:panelGrid id="panelProduto" columns="2" cellpadding="5" layout="grid" columnClasses="ui-grid-col-8" styleClass="no-border ui-fluid">
+						<p:outputLabel value="Produto" for="cbProduto" ><br/>
+			            	<p:selectOneMenu value="#{movimentacaoControl.movimentacao.produto}" id="cbProduto" style="width: 250px; margin-top: -4px"
+			                	converter="omnifaces.SelectItemsConverter" filter="true" filterMatchMode="contains" >
+								<f:selectItem itemLabel="Selecione" noSelectionOption="true" itemValue=""/>
+				                <f:selectItems var="item" value="#{produtoControl.produtosControlaEstoque}" itemLabel="#{item.idProduto} - #{item.nome}" itemValue="#{item}" />
+				                <p:ajax event="change" oncomplete="focusCampo('frmSaida:spQtd')" />
+				            </p:selectOneMenu>
+				        </p:outputLabel>
+				        <h:outputLabel for="spQtd" value="Quantidade "><br/>
+			            	<p:inputText id="spQtd" value="#{movimentacaoControl.movimentacao.quantidade}" style="width: 110px"
+			            		required="#{movimentacaoControl.movimentacao.produto != null}" requiredMessage="Campo quantidade é necessário" /> 
+			             	<p:keyFilter for="spQtd" mask="num" /> 
+			             	<p:message id="msgQuantidade" for="spQtd"/> 
+						</h:outputLabel>
+                  		<p:outputLabel value="Observação:"><br/>
+							<p:inputText value="#{movimentacaoControl.movimentacao.observacao}" style="width: 300px" maxlength="150" />
+						</p:outputLabel>
+				        <p:commandButton icon="fa fa-plus" style="margin-top: 24px; width: 110px"
+					    	value="Adicionar" styleClass="btn-primary" update="@form" 
+			                id="btnAddProd" actionListener="#{movimentacaoControl.addItem}" />
+				         
+				    </p:panelGrid>
+					<p:panelGrid id="panelDtTable" columns="1" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+						<p:dataTable tableStyle="table-layout: auto;"  var="mov" style="margin-top: 10px" id="dtMov" currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]"
 						rows="2" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
-						emptyMessage="Nenhum produto adicionado" value="#{movimentacaoControl.movList}">
+						emptyMessage="Nenhum produto adicionado" value="#{movimentacaoControl.movList}" paginatorPosition="bottom" >
 							<p:column headerText="Produto">
         						<h:outputText value="#{mov.produto.nome}" />
     						</p:column>
@@ -297,10 +298,10 @@
     							<h:outputText value="#{mov.observacao}" />
     						</p:column>
     						<p:column style="text-align: center">
-    							<p:commandButton icon="fa fa-trash" actionListener="#{movimentacaoControl.delMovimentacao(mov)}" update="frmSaida:dtMov" style="font-size: 11px" />
+    							<p:commandButton icon="fa fa-trash" actionListener="#{movimentacaoControl.delMovimentacao(mov)}" update="frmSaida:dtMov" style="font-size: 11px; width: 25px" />
     						</p:column>
 						</p:dataTable>
-					</h:panelGrid>
+					</p:panelGrid>
 				<p:separator/>
 				<p:commandButton value="Salvar"
 					style="margin-top: -10px; width: auto"
@@ -317,90 +318,77 @@
 					onclick="PF('dlgCadastro').hide()"
 					actionListener="#{movimentacaoControl.limparForm}"
 					styleClass="btn-block btn-danger" icon="fa fa-close"/>	
-			</h:form>
+				</h:form>
 			</p:dialog>
 			
 			<!-- AJUSTE -->
-			<p:dialog width="940px" height="auto" widgetVar="dlgAjuste" resizable="false"
-					header="Ajuste de Produtos" focus="frmAjuste:cbProduto"  styleClass="box-primary"
+			<p:dialog width="auto" height="auto" widgetVar="dlgAjuste" resizable="false" header="Ajuste de Produtos" styleClass="box-primary"
 					modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
-					<p:ajax event="close" listener="#{movimentacaoControl.limparForm}" />
+				
+				<p:ajax event="close" listener="#{movimentacaoControl.limparForm}" />
+				
 				<h:form id="frmAjuste">
-					<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"/>
-					<h:panelGrid columns="5">
-						<p:column>
-			                	<p:outputLabel value="Produto" for="cbProduto" ><br/>
-			                		<p:selectOneMenu value="#{movimentacaoControl.movimentacao.produto}" id="cbProduto" 
-			                		style="width:250px; margin-right: 10px"
-			                			converter="omnifaces.SelectItemsConverter" filter="true" filterMatchMode="contains" >
-							            <f:selectItem itemLabel="Selecione" noSelectionOption="true" itemValue=""/>
-				                        <f:selectItems var="item" value="#{produtoControl.produtosControlaEstoque}" itemLabel="#{item.idProduto} - #{item.nome}" itemValue="#{item}" />
-				                    	<p:ajax event="change" oncomplete="focusCampo('frmAjuste:spQtd')" update="frmAjuste:inCompra frmAjuste:inVenda frmAjuste:inMargem frmAjuste:qtdAtual" />
-				                    </p:selectOneMenu>
-				                </p:outputLabel>
-				         </p:column>
-				         <p:column>
-							<h:outputLabel for="inCompra" value="Preço de Compra: "><br/>
-								<p:inputNumber id="inCompra" style="margin-right: 10px" symbol="R$" decimalSeparator="," thousandSeparator="."
-									value="#{movimentacaoControl.movimentacao.produto.precoCompra}" readonly="#{movimentacaoControl.disableInputs}" >
-									<p:ajax event="blur" listener="#{movimentacaoControl.calculaPrecoVenda()}" process="frmAjuste" update="frmAjuste:inVenda" />
-								 </p:inputNumber>
-	                    	</h:outputLabel>
-	                    </p:column>
-	                    <p:column>
-							<h:outputLabel for="inMargem" value="Margem: "><br/>
-								<p:inputNumber id="inMargem" symbol="%" style="margin-right: 10px" decimalSeparator="," thousandSeparator="." symbolPosition="right"
+					<p:panelGrid id="panelProduto" columns="5" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+				    	<p:outputLabel value="Produto" for="cbProduto" ><br/>
+			            	<p:selectOneMenu value="#{movimentacaoControl.movimentacao.produto}" id="cbProduto" style="width:250px; margin-top: -5px"
+			                	converter="omnifaces.SelectItemsConverter" filter="true" filterMatchMode="contains" >
+								<f:selectItem itemLabel="Selecione" noSelectionOption="true" itemValue=""/>
+				                <f:selectItems var="item" value="#{produtoControl.produtosControlaEstoque}" itemLabel="#{item.idProduto} - #{item.nome}" itemValue="#{item}" />
+				                <p:ajax event="change" oncomplete="focusCampo('frmAjuste:spQtd')" update="frmAjuste:inCompra frmAjuste:inVenda frmAjuste:inMargem frmAjuste:qtdAtual" />
+				            </p:selectOneMenu>
+				         </p:outputLabel>
+				         <h:outputLabel for="inCompra" value="Preço de Compra: "><br/>
+						 	<p:inputNumber id="inCompra" styleClass="styleInNumber" symbol="R$" decimalSeparator="," thousandSeparator="."
+								value="#{movimentacaoControl.movimentacao.produto.precoCompra}" readonly="#{movimentacaoControl.disableInputs}" >
+								<p:ajax event="blur" listener="#{movimentacaoControl.calculaPrecoVenda()}" process="@this" update="frmAjuste:inVenda" />
+							</p:inputNumber>
+	                    </h:outputLabel>
+	                    
+						<h:outputLabel for="inMargem" value="Margem: "><br/>
+							<p:inputNumber id="inMargem" styleClass="styleInNumber" symbol="%" decimalSeparator="," thousandSeparator="." symbolPosition="right"
 								value="#{movimentacaoControl.movimentacao.produto.margem}"  readonly="#{movimentacaoControl.disableInputs}" >
-									<p:ajax event="blur" listener="#{movimentacaoControl.calculaPrecoVenda()}" process="frmAjuste" update="frmAjuste:inVenda" />
-								</p:inputNumber>  
-	                    	</h:outputLabel>
-	                    </p:column>
-	                    <p:column>
-							<h:outputLabel for="inVenda" value="Preço de Venda: "><br/>
-								<p:inputNumber id="inVenda" style="margin-right: 10px" symbol="R$" decimalSeparator="," thousandSeparator="." 
-								value="#{movimentacaoControl.movimentacao.produto.precoVenda}"  readonly="#{movimentacaoControl.disableInputs}"  >
-									<p:ajax event="blur" listener="#{movimentacaoControl.calculaMargem()}" process="frmAjuste" update="frmAjuste:inMargem" />
-								</p:inputNumber>  
-	                    	</h:outputLabel>
-	                    </p:column>
-	                    <p:column>
-	                    	<p:commandButton icon="fa fa-unlock-alt" style="margin-top: 15px" styleClass="btn-info btn-sm"
-	                    		update="frmAjuste:inCompra frmAjuste:inVenda frmAjuste:inMargem"
-	                    		actionListener="#{movimentacaoControl.liberaInputsProdutos()}"
-	                    	 />
-	                    </p:column>
-				    </h:panelGrid>
-				    <h:panelGrid columns="4">
-						 <p:column>
-			             	 <h:outputLabel for="qtdAtual" value="Quantidade Atual:"><br/>
-			             	 	<p:inputText id="qtdAtual" style="margin-right: 10px" readonly="true"
-			             	 	  value="#{movimentacaoControl.movimentacao.produto.quantidade}" />  
-                  			</h:outputLabel>
-				         </p:column>
+								<p:ajax event="blur" listener="#{movimentacaoControl.calculaPrecoVenda()}" process="@this" update="frmAjuste:inVenda" />
+							</p:inputNumber>  
+	                    </h:outputLabel>
+	                    <h:outputLabel for="inVenda" value="Preço de Venda: "><br/>
+							<p:inputNumber id="inVenda" styleClass="styleInNumber" symbol="R$" decimalSeparator="," thousandSeparator="." 
+								value="#{movimentacaoControl.movimentacao.produto.precoVenda}"  readonly="#{movimentacaoControl.disableInputs}" 
+								required="#{!movimentacaoControl.disableInputs}" requiredMessage="Campo preço venda é necessário" >
+								<p:ajax event="blur" listener="#{movimentacaoControl.calculaMargem()}" process="@this" update="frmAjuste:inMargem" />
+							</p:inputNumber>  
+							<p:message id="msgInVenda" for="inVenda"/>
+	                    </h:outputLabel>
+	                    <p:commandButton icon="fa fa-unlock-alt" style="margin-top: 20px; width: 25px" styleClass="btn-info btn-sm"
+	                    	update="frmAjuste:inCompra frmAjuste:inVenda frmAjuste:inMargem" process="@this"
+	                    	actionListener="#{movimentacaoControl.liberaInputsProdutos()}"  />
+	                </p:panelGrid>   
+	                
+				    <p:panelGrid id="panelQuantidade"  columnClasses="ui-grid-col-14" columns="4" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+						<h:outputLabel for="qtdAtual" value="Quantidade Atual:"><br/>
+			            	<p:inputText id="qtdAtual" style="width: 110px" readonly="true" value="#{movimentacaoControl.movimentacao.produto.quantidade}" />  
+                  		</h:outputLabel>
+				        
+				        <h:outputLabel for="spQtd" value="Nova Quantidade:"><br/>
+			             	<p:inputText style="width: 110px" id="spQtd" value="#{movimentacaoControl.movimentacao.quantidade}" 
+			             		required="#{movimentacaoControl.movimentacao.produto != null}" requiredMessage="Campo quantidade é necessário" />
+			            	
+			            	<p:keyFilter for="spQtd" mask="num" /> 
+			             	<p:message id="msgQuantidade" for="spQtd"/>
+			            </h:outputLabel>
+				        
+				        <p:outputLabel value="Observação:" style="margin-top: -5px" ><br/>
+							<p:inputText value="#{movimentacaoControl.movimentacao.observacao}" style="width: 180px" maxlength="150" />
+						</p:outputLabel>
+				        <p:commandButton icon="fa fa-plus" style="margin-top: 19px; width: 110px"
+					    	value="Adicionar" styleClass="btn-primary" update="@form" 
+			                id="btnAddProd" actionListener="#{movimentacaoControl.addItem}" />
 				         
-				         <p:column>
-			             	 <h:outputLabel for="spQtd" value="Nova Quantidade:"><br/>
-			             	 	<p:inputText style="margin-right: 10px" id="spQtd" value="#{movimentacaoControl.movimentacao.quantidade}"  />
-			             	 	<p:keyFilter for="spQtd" mask="num" />
-			             	</h:outputLabel>
-				         </p:column>
-				         
-				         <p:column>
-					         <p:outputLabel value="Observação:"><br/>
-								<p:inputText value="#{movimentacaoControl.movimentacao.observacao}" style="width: 100%; margin-right: 150px" maxlength="150" />
-							 </p:outputLabel>
-				         </p:column>
-				         <p:column>
-					         <p:commandButton icon="fa fa-plus" style="margin-top: 15px; margin-left: 10px"
-					                				 value="Adicionar" styleClass="btn-primary" update="@form" 
-			                                         id="btnAddProd" actionListener="#{movimentacaoControl.addItem}"
-			                                          />
-				         </p:column>
-				    </h:panelGrid>
-					<h:panelGrid columns="1" width="100%">
-						<p:dataTable tableStyle="table-layout: auto;"  var="mov" style="margin-top: 10px" id="dtMov"
-						rows="2" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
-						emptyMessage="Nenhum produto adicionado" value="#{movimentacaoControl.movList}">
+				    </p:panelGrid>
+					<p:panelGrid id="panelDtTable" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+						<p:dataTable tableStyle="table-layout: auto;"  var="mov" style="margin-top: 10px" id="dtMov" currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]"
+							rows="2" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+							emptyMessage="Nenhum produto adicionado" value="#{movimentacaoControl.movList}" paginatorPosition="bottom" >
+							
 							<p:column headerText="Produto">
         						<h:outputText value="#{mov.produto.nome}" />
     						</p:column>
@@ -411,11 +399,11 @@
     							<h:outputText value="#{mov.observacao}" />
     						</p:column>
     						<p:column style="text-align: center">
-    							<p:commandButton icon="fa fa-trash" actionListener="#{movimentacaoControl.delMovimentacao(mov)}" update="frmAjuste:dtMov" style="font-size: 11px" />
+    							<p:commandButton icon="fa fa-trash" actionListener="#{movimentacaoControl.delMovimentacao(mov)}" update="frmAjuste:dtMov" style="font-size: 11px; width: 25px" />
     						</p:column>
     						
 						</p:dataTable>
-					</h:panelGrid>
+					</p:panelGrid>
 				<p:separator/>
 				<p:commandButton value="Salvar"
 					style="margin-top: -10px; width: auto"

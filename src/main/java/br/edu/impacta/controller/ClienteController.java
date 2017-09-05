@@ -45,22 +45,26 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 
 	//Verifica se telefone já existe e altera, senão adiciona na lista
 	public void addTelefone(){
-		if(!verificaTelefone()){
-			return;
-		}
-		List<TelCliente> telefones = ((Cliente)this.getSelected()).getTelefones();
-		for (TelCliente telefone : telefones) {
-			if(Objects.equals(telCliente, telefone)){
-				telefone.setNumero(telCliente.getNumero());
-				telefone.setComplemento(telCliente.getComplemento());
-				telefone.setTipo(telCliente.getTipo());
+		if(verificaTelefone()){
+			List<TelCliente> telefones = ((Cliente)this.getSelected()).getTelefones();
+			for (TelCliente telefone : telefones) {
+				if(Objects.equals(telCliente, telefone)){
+					telefone.setNumero(telCliente.getNumero());
+					telefone.setComplemento(telCliente.getComplemento());
+					telefone.setTipo(telCliente.getTipo());
 
-				this.telCliente = new TelCliente();
-				return;
+					this.telCliente = new TelCliente();
+					return;
+				}
 			}
+			((Cliente)this.getSelected()).addTelefone(telCliente);
+			telCliente = new TelCliente();
 		}
-		((Cliente)this.getSelected()).addTelefone(telCliente);
-		telCliente = new TelCliente();
+	}
+	
+	public void openDialog(){
+		setaPessoa();
+		UtilityTela.executarJavascript("PF('dlgCadastro').show();");
 	}
 
 	//Mostra o telefone do cliente para poder alterar
@@ -77,12 +81,10 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 	//Verifica se todos os campos do telefone estão preenchidos
 	public boolean verificaTelefone(){
 		if(telCliente.getNumero().equals("")){
-			UtilityTela.criarMensagemErroSemDetail("Campo Número do Telefone é Necessário");
 			return false;
 		}
 
 		if(telCliente.getTipo().equals("")){
-			UtilityTela.criarMensagemErroSemDetail("Campo Tipo é Necessário");
 			return false;
 		}
 		return true;
@@ -172,7 +174,7 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 	//**************** AUTOCOMPLETE **********************
 	//****************************************************
 	public List<Cliente> completeClientes(String query){
-		
+
 		List<Cliente> allClientes = clienteDAO.findAtivos();
 		List<Cliente> filteredClientes = new ArrayList<>();
 

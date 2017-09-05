@@ -90,12 +90,10 @@ public class FornecedorController extends BasicControlCad<Fornecedor> implements
 	//Verifica se todos os campos do telefone estão preenchidos
 	public boolean verificaTelefone(){
 		if(telFornecedor.getNumero().equals("")){
-			UtilityTela.criarMensagemErroSemDetail("Campo Número do Telefone é Necessário");
 			return false;
 		}
 
 		if(telFornecedor.getTipo().equals("")){
-			UtilityTela.criarMensagemErroSemDetail("Campo Tipo é Necessário");
 			return false;
 		}
 		return true;
