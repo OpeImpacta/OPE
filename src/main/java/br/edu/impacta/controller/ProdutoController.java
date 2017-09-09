@@ -65,6 +65,7 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
 		super(Produto.class,  produtoDAO);
 	}
 	
+	//Upload das imagens
 	public void enviaImagem(FileUploadEvent event) {
         try {
             imagem = new DefaultStreamedContent(event.getFile().getInputstream());
@@ -76,6 +77,7 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
         }
     }
 	
+	//Cria o arquivo de imagem
 	public void criaArquivo(byte[] bytes, String arquivo) {
         FileOutputStream fos;
         try {
@@ -89,6 +91,7 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
         }
     }
  
+	//Carrega as fotos do banco e salva na pasta temp
     public void carregaFotosProduto() {
         fotos = imagemDAO.findImagemByProduto(this.getSelected());
 		for (Imagem f : fotos) {
@@ -100,11 +103,13 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
 		}
     }
     
+  //Exclui as fotos
     public void excluirFotos() {
     	fotos = new ArrayList<>();
     	((Produto)getSelected()).setImagemList(new ArrayList<>());
     }
     
+  //Verificação para renderizar o upload de imagens
     public boolean verificaFotos() {
     	if(((Produto)getSelected()).getImagemList().size() < 4) {
     		return true;
@@ -127,6 +132,7 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
   		limpaSelecteds();
   	}
   	
+  //Limpa lista objeto e listas após efetivação do cadastro
   	public void limpaSelecteds() {
   		newInSelected();
   		modeloSelectedList = new ArrayList<>();
