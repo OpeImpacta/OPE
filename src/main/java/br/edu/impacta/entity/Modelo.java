@@ -4,10 +4,12 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
@@ -40,6 +42,9 @@ public class Modelo implements Serializable {
 	@OneToOne
     @JoinColumn(name = "id_montadora", referencedColumnName = "id_montadora")
     private Montadora montadora;   
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	private Produto produto;
 
 	public Modelo(Integer idModelo, String nome) {
 		this.idModelo = idModelo;
@@ -79,6 +84,14 @@ public class Modelo implements Serializable {
 
 	public void setMontadora(Montadora montadora) {
 		this.montadora = montadora;
+	}
+
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
 	}
 
 	@Override

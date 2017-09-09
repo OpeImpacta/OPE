@@ -38,5 +38,5 @@ public class ImagemController extends BasicControlCad<Imagem> implements Seriali
 		}
 		byte[] myvar = "".getBytes();
 		return myvar;
-	}
+	}				    
 }

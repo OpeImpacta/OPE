@@ -73,12 +73,11 @@ public class Produto implements Serializable {
 	@JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
 	private Categoria categoria;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	@JoinColumn(name = "id_imagem", referencedColumnName = "id_imagem", nullable = true)
-	private Imagem imagem;
-
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "produto", fetch = FetchType.EAGER, orphanRemoval = true)
+	private List<Imagem> imagemList = new ArrayList<>();
+	
 	@OneToMany(mappedBy="produto", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, orphanRemoval = true )
-	private List<ProdutoModelo> produtoModeloList;
+	private List<ProdutoModelo> produtoModeloList = new ArrayList<>();
 
 	@Transient
 	private String precoVendaFormatado;
@@ -173,26 +172,12 @@ public class Produto implements Serializable {
 		this.categoria = categoria;
 	}
 
-	public Imagem getImagem() {
-		if (imagem == null) {
-			this.imagem = new Imagem();
-		}
-		return imagem;
+	public List<Imagem> getImagemList() {
+		return imagemList;
 	}
 
-	public void setImagem(Imagem imagem) {
-		this.imagem = imagem;
-	}	
-
-	public List<ProdutoModelo> getProdutoModeloList() {
-		if(produtoModeloList == null){
-			produtoModeloList = new ArrayList<>();
-		}
-		return produtoModeloList;
-	}
-
-	public void setProdutoModeloList(List<ProdutoModelo> produtoModeloList) {
-		this.produtoModeloList = produtoModeloList;
+	public void setImagemList(List<Imagem> imagemList) {
+		this.imagemList = imagemList;
 	}
 
 	public String getPrecoVendaFormatado() {
@@ -220,6 +205,14 @@ public class Produto implements Serializable {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public List<ProdutoModelo> getProdutoModeloList() {
+		return produtoModeloList;
+	}
+
+	public void setProdutoModeloList(List<ProdutoModelo> produtoModeloList) {
+		this.produtoModeloList = produtoModeloList;
 	}
 
 	@Override

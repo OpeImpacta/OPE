@@ -5,12 +5,16 @@ import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -35,7 +39,15 @@ public class Imagem implements Serializable {
     @Column(name = "foto")
     private byte[] foto;
 	
+	@ManyToOne(fetch = FetchType.EAGER)
+	private Produto produto;
+	
 	public Imagem() {}
+	
+	public Imagem(byte[] foto, Produto produto) {
+		this.foto = foto;
+		this.produto = produto;
+	}
 
 	public Imagem(Integer idImagem, byte[] foto) {
 		super();
@@ -60,6 +72,14 @@ public class Imagem implements Serializable {
 
 	public void setFoto(byte[] foto) {
 		this.foto = foto;
+	}
+
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
 	}
 
 	@Override
