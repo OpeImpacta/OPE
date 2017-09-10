@@ -16,29 +16,32 @@ class OrcamentoModel {
 		}
 
 		return $this->bd->query(
-			"SELECT p.*, o.*, po.*,
-				m.nome AS modelo,
-				(SELECT c.nome FROM categoria c WHERE c.id_categoria = p.id_categoria) AS categoria,
-				(SELECT i.foto FROM imagem i WHERE i.id_imagem = p.id_imagem) AS imagem,
-				(SELECT mt.nome FROM montadora mt WHERE mt.id_montadora = m.id_montadora) AS montadora
-			FROM orcamento o,
-				produto_orcamento po,
+			"SELECT p.*, v.*, 
+				DATE_FORMAT(v.data, \"%d/%m/%Y %T\") AS datavenda,
+				iv.quantidade,
+				(SELECT c.nome FROM categoria c WHERE c.id_categoria = p.id_categoria) AS categoria
+			FROM 
 				produto p,
-				produto_modelo pm,
-				modelo m
-			WHERE po.id_orcamento 	= o.id
-				AND po.id_produto 	= p.id_produto
-				AND m.id_modelo 	= pm.id_modelo
-				AND p.id_produto 	= pm.id_produto
-			"
+				item_venda iv,
+				venda v
+			WHERE p.id_produto = iv.id_produto
+				AND v.id_venda = iv.venda_id_venda" . $condicao
 		);
 	}
 
 	public function salvar($dados, $id = ""){
 		if (!empty($id)) {
-			return $this->bd->alterar("orcamento", $dados, array("id" => $id));
+			return $this->bd->alterar("venda", $dados, array("id_venda" => $id));
 		}
 
-		return $this->bd->salvar("orcamento", $dados);
+		return $this->bd->salvar("venda", $dados);
+	}
+
+	public function salvarItensVenda($dados, $id = ""){
+		if (!empty($id)) {
+			return $this->bd->alterar("item_venda", $dados, array("id_item_venda" => $id));
+		}
+
+		return $this->bd->salvar("item_venda", $dados);
 	}
 }

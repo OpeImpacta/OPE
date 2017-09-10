@@ -1,6 +1,6 @@
 <?php
 /**
-* 
+*
 */
 class Usuario {
 	private $model;
@@ -79,7 +79,7 @@ class Usuario {
 		);
 
 		if (!empty($dados["codigo"])) {
-			return $this->model->alterar($salvar, $dados["codigo"]);
+			return $this->model->salvar($salvar, $dados["codigo"]);
 		}
 
 		$idCliente = $this->model->salvar($salvar);

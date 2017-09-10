@@ -37,14 +37,6 @@ class ProdutoModel {
 		);
 	}
 
-	public function salvarOrcamento($dados, $id = ""){
-		if (!empty($id)) {
-			return $this->bd->alterar("produto_orcamento", $dados, array("id_produto" => $id));
-		}
-
-		return $this->bd->salvar("produto_orcamento", $dados);
-	}
-
 	public function listarPorMontadora($idProduto){
 		return $this->bd->query(
 			"SELECT mt.nome AS montadora, 

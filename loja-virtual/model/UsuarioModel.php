@@ -31,7 +31,7 @@ class UsuarioModel {
 	public function salvar($dados, $id = ""){
 		if (!empty($id)) {
 			return $this->bd->alterar(
-				"cliente", $dados, array("id" => $id)
+				"cliente", $dados, array("id_cliente" => $id)
 			);
 		}
 

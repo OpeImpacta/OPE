@@ -15,40 +15,48 @@ class Orcamento {
 		$dados = array();
 		$retorno = $this->model->listar($id);
 
-		if (!empty($retorno)) {
-			foreach ($retorno as $key => $value) {
-				$dados[$value["nr_pedido"]][] = $value;
-			}
-		}
+		// echo "<pre>"; print_r($retorno); echo "</pre>"; exit;
 
-		return $dados;
+		// if (!empty($retorno)) {
+		// 	foreach ($retorno as $key => $value) {
+		// 		$dados[$value["nr_pedido"]][] = $value;
+		// 	}
+		// }
+
+		return $retorno;
 	}
 
 	public function salvar(){
 		if ((isset($_SESSION["nomeProduto"]) && !empty($_SESSION["nomeProduto"])) && 
 			(isset($_SESSION["totalProduto"]) && !empty($_SESSION["totalProduto"]))
 		) {
-			$salvar = array(
-				"nr_pedido" => time(),
-				"id_cliente" => $_SESSION["id"]
+			$salvarOrcamento = array(
+				"id_cliente" => $_SESSION["id"],
+				"tipo" => 2,
+				"aprovado" => "0",
+				"finalizado" => "0",
+				"ativo" => "1",
+				"data" => date("Y-m-d H:i:s")
 			);
 
-			$idOrcamento = $this->model->salvar($salvar);
+			$idOrcamento = $this->model->salvar($salvarOrcamento);
 
 			if ($idOrcamento) {
-				$modelProduto = new ProdutoModel();
 				$total = 0;
+				$valorTotal = 0;
 
 				foreach ($_SESSION["carrinho"] as $key => $value) {
-					$salvarProduto = array(
-						"valor" => $value["preco_compra"] + ($value["preco_compra"] * ($value["margem"] / 100)),
+					$itemVenda = array(
 						"id_produto" 	=> $value["id_produto"],
-						"id_orcamento" 	=> $idOrcamento,
-						"quantidade" 	=> $_SESSION["totalProduto"][$value["id_produto"]]
+						"quantidade" 	=> $_SESSION["totalProduto"][$value["id_produto"]],
+						"venda_id_venda" => $idOrcamento
 					);
 
-					$total += $modelProduto->salvarOrcamento($salvarProduto);
+					$total += $this->model->salvarItensVenda($itemVenda);
+					$valorTotal += ($value["preco_venda"] * $_SESSION["totalProduto"][$value["id_produto"]]);
 				}
+
+				$this->model->salvar(array("total" => $valorTotal), $idOrcamento);
 
 				if ($total == count($_SESSION["carrinho"])) {
 					return true;
