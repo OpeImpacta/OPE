@@ -4,28 +4,25 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.SQLException;
+import java.math.MathContext;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.PostActivate;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
 
+import org.omnifaces.cdi.ViewScoped;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 
-import br.edu.impacta.dao.ImagemDAO;
 import br.edu.impacta.dao.ProdutoDAO;
 import br.edu.impacta.entity.Imagem;
 import br.edu.impacta.entity.Modelo;
@@ -37,19 +34,17 @@ import br.edu.impacta.entity.ProdutoModelo;
  */
 
 @Named(value = "produtoControl")
-@SessionScoped
+@ViewScoped
 public class ProdutoController extends BasicControlCad<Produto> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	private static ProdutoDAO produtoDAO = new ProdutoDAO();
-	private static ImagemDAO imagemDAO = new ImagemDAO();
 	
 	private boolean disableButton = true;
 	private List<Produto> produtosControlaEstoque;
 	private List<Modelo> modeloSelectedList = new ArrayList<>();
 	
-	private StreamedContent imagem = new DefaultStreamedContent();
 	private List<Imagem> fotos = new ArrayList<Imagem>();
 	
 	@PostConstruct
@@ -67,14 +62,9 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
 	
 	//Upload das imagens
 	public void enviaImagem(FileUploadEvent event) {
-        try {
-            imagem = new DefaultStreamedContent(event.getFile().getInputstream());
-            ((Produto)getSelected()).getImagemList().add(new Imagem(event.getFile().getContents(), (Produto)getSelected()));
-            FacesMessage message = new FacesMessage("Sucesso!", event.getFile().getFileName() + " foi carregada.");
-            FacesContext.getCurrentInstance().addMessage(null, message);
-        } catch (IOException ex) {
-            Logger.getLogger(ProdutoController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+		fotos.add(new Imagem(event.getFile().getContents(), (Produto)getSelected(), UtilityTela.dateFormatFull(new Date())));
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.addMessage(null, new FacesMessage("Sucesso!", "A(s) foto(s) foram carregada(s)"));
     }
 	
 	//Cria o arquivo de imagem
@@ -91,30 +81,27 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
         }
     }
  
-	//Carrega as fotos do banco e salva na pasta temp
-    public void carregaFotosProduto() {
-        fotos = imagemDAO.findImagemByProduto(this.getSelected());
+	public void carregaFotosProduto() {
+    	FacesContext context = FacesContext.getCurrentInstance();
+        ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
+        String realPath = servletContext.getContextPath();
+        
+        // Cria o diretorio caso não exista
+        File file = new File(realPath + "/temp/");
+        if(!file.exists()) {
+        	file.mkdirs();
+        }
 		for (Imagem f : fotos) {
-		    FacesContext facesContext = FacesContext.getCurrentInstance();
-		    ServletContext scontext = (ServletContext) facesContext.getExternalContext().getContext();
-		    String nomeArquivo = f.getIdImagem().toString() + ".jpg";
-		    String arquivo = scontext.getRealPath("/temp/" + nomeArquivo);
+		    String arquivo = servletContext.getRealPath("/temp/" + f.getNome() + ".jpg");
 		    criaArquivo(f.getFoto(), arquivo);
 		}
+		((Produto)getSelected()).getImagemList().addAll(fotos);
     }
     
   //Exclui as fotos
     public void excluirFotos() {
     	fotos = new ArrayList<>();
     	((Produto)getSelected()).setImagemList(new ArrayList<>());
-    }
-    
-  //Verificação para renderizar o upload de imagens
-    public boolean verificaFotos() {
-    	if(((Produto)getSelected()).getImagemList().size() < 4) {
-    		return true;
-    	}
-    	return false;
     }
     
     @Override
@@ -127,6 +114,7 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
     //Ao gravar fexa o dialog na tela
   	@Override
   	public void treatRecord() {
+  		carregaFotosProduto();
   		super.treatRecord();
   		UtilityTela.executarJavascript("PF('dlgCadastro').hide()");
   		limpaSelecteds();
@@ -148,7 +136,7 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
   			BigDecimal margem = getSelected().getMargem();
 
   			BigDecimal mult = prCompra.multiply(margem);
-  			getSelected().setPrecoVenda(mult.divide(new BigDecimal(100)).add(getSelected().getPrecoCompra()));
+  			getSelected().setPrecoVenda(mult.divide(new BigDecimal(100)).add(getSelected().getPrecoCompra(), MathContext.DECIMAL128));
   		}
   	}
 
@@ -165,9 +153,9 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
   			BigDecimal prCompra = getSelected().getPrecoCompra();
   			BigDecimal prVenda = getSelected().getPrecoVenda();
 
-  			BigDecimal div = prVenda.divide(prCompra);
+  			BigDecimal div = prVenda.divide(prCompra, MathContext.DECIMAL128);
 
-  			BigDecimal mult = div.multiply(new BigDecimal(100));
+  			BigDecimal mult = div.multiply(new BigDecimal(100), MathContext.DECIMAL128);
   			getSelected().setMargem(mult.subtract(new BigDecimal(100)));
   		}
   	}
@@ -227,13 +215,5 @@ public class ProdutoController extends BasicControlCad<Produto> implements Seria
 
 	public void setFotos(List<Imagem> fotos) {
 		this.fotos = fotos;
-	}
-
-	public StreamedContent getImagem() {
-		return imagem;
-	}
-
-	public void setImagem(StreamedContent imagem) {
-		this.imagem = imagem;
 	}
 }	

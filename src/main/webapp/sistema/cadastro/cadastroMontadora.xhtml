@@ -42,7 +42,7 @@
                                          type="submit" update="frmList:tabela @(.ui-button)"
                                          disabled="#{montadoraControl.disableButton}">
                         	<p:confirm header="Confirmação" message="Você tem certeza que deseja excluir este item?" global="true" showEffect="fade" hideEffect="fade" styleClass="box-warning" />
-                                <p:confirmDialog global="true" closable="true" closeOnEscape="true">
+                                <p:confirmDialog appendTo="@(body)" global="true" closable="true" closeOnEscape="true">
                                     <p:commandButton value="Sim" type="button" styleClass="btn-primary ui-confirmdialog-yes" icon="fa fa-check" />
                                     <p:commandButton value="Não" type="button" styleClass="btn-danger ui-confirmdialog-no" icon="fa fa-close" />
                         	</p:confirmDialog>

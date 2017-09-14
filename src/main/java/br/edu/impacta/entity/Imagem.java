@@ -9,12 +9,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -39,14 +37,18 @@ public class Imagem implements Serializable {
     @Column(name = "foto")
     private byte[] foto;
 	
+	@Column(name="nome", nullable =  false, length =  50)
+	private String nome;
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Produto produto;
 	
 	public Imagem() {}
 	
-	public Imagem(byte[] foto, Produto produto) {
+	public Imagem(byte[] foto, Produto produto, String nome) {
 		this.foto = foto;
 		this.produto = produto;
+		this.nome = nome;
 	}
 
 	public Imagem(Integer idImagem, byte[] foto) {
@@ -80,6 +82,14 @@ public class Imagem implements Serializable {
 
 	public void setProduto(Produto produto) {
 		this.produto = produto;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	@Override

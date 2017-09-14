@@ -97,4 +97,28 @@ public class UtilityTela implements Serializable{
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy - HH:mm");
 		return sdf.format(data);
 	}
+	
+	// ***********************************************************
+	// * Converte data em String dd/MM/yyyy
+	// ***********************************************************
+	public static String dateFormat(Date data) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		return sdf.format(data);
+	}
+	
+	// ***********************************************************
+	// * Converte data em String dd/MM/yyyy
+	// ***********************************************************
+	public static String dateFormatSimple(Date data) {
+		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
+		return sdf.format(data);
+	}
+	
+	// ***********************************************************
+		// * Converte data em String dd/MM/yyyy
+		// ***********************************************************
+		public static String dateFormatFull(Date data) {
+			SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyHHmmssSSS");
+			return sdf.format(data);
+		}
 }
