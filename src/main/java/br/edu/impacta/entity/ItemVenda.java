@@ -29,7 +29,8 @@ public class ItemVenda implements Serializable,  Cloneable {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_item_venda;
+	@Column(name = "id_item_venda")
+    private Integer idItemVenda;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Venda venda;
@@ -64,13 +65,13 @@ public class ItemVenda implements Serializable,  Cloneable {
 		return null;
 	}
 
-	
-	public Integer getId_item_venda() {
-		return id_item_venda;
+
+	public Integer getIdItemVenda() {
+		return idItemVenda;
 	}
 
-	public void setId_item_venda(Integer id_item_venda) {
-		this.id_item_venda = id_item_venda;
+	public void setIdItemVenda(Integer idItemVenda) {
+		this.idItemVenda = idItemVenda;
 	}
 
 	public Venda getVenda() {
@@ -157,13 +158,28 @@ public class ItemVenda implements Serializable,  Cloneable {
 
 
 	@Override
+	public String toString() {
+		return "ItemVenda [idItemVenda=" + idItemVenda + ", venda=" + venda + ", quantidade=" + quantidade
+				+ ", produto=" + produto + ", totalItemVenda=" + totalItemVenda + ", totalItemFormatado="
+				+ totalItemFormatado + ", corFundo=" + corFundo + ", corTexto=" + corTexto + "]";
+	}
+
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id_item_venda == null) ? 0 : id_item_venda.hashCode());
+		result = prime * result + ((corFundo == null) ? 0 : corFundo.hashCode());
+		result = prime * result + ((corTexto == null) ? 0 : corTexto.hashCode());
+		result = prime * result + ((idItemVenda == null) ? 0 : idItemVenda.hashCode());
 		result = prime * result + ((produto == null) ? 0 : produto.hashCode());
+		result = prime * result + ((quantidade == null) ? 0 : quantidade.hashCode());
+		result = prime * result + ((totalItemFormatado == null) ? 0 : totalItemFormatado.hashCode());
+		result = prime * result + ((totalItemVenda == null) ? 0 : totalItemVenda.hashCode());
+		result = prime * result + ((venda == null) ? 0 : venda.hashCode());
 		return result;
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -174,23 +190,47 @@ public class ItemVenda implements Serializable,  Cloneable {
 		if (getClass() != obj.getClass())
 			return false;
 		ItemVenda other = (ItemVenda) obj;
-		if (id_item_venda == null) {
-			if (other.id_item_venda != null)
+		if (corFundo == null) {
+			if (other.corFundo != null)
 				return false;
-		} else if (!id_item_venda.equals(other.id_item_venda))
+		} else if (!corFundo.equals(other.corFundo))
+			return false;
+		if (corTexto == null) {
+			if (other.corTexto != null)
+				return false;
+		} else if (!corTexto.equals(other.corTexto))
+			return false;
+		if (idItemVenda == null) {
+			if (other.idItemVenda != null)
+				return false;
+		} else if (!idItemVenda.equals(other.idItemVenda))
 			return false;
 		if (produto == null) {
 			if (other.produto != null)
 				return false;
 		} else if (!produto.equals(other.produto))
 			return false;
+		if (quantidade == null) {
+			if (other.quantidade != null)
+				return false;
+		} else if (!quantidade.equals(other.quantidade))
+			return false;
+		if (totalItemFormatado == null) {
+			if (other.totalItemFormatado != null)
+				return false;
+		} else if (!totalItemFormatado.equals(other.totalItemFormatado))
+			return false;
+		if (totalItemVenda == null) {
+			if (other.totalItemVenda != null)
+				return false;
+		} else if (!totalItemVenda.equals(other.totalItemVenda))
+			return false;
+		if (venda == null) {
+			if (other.venda != null)
+				return false;
+		} else if (!venda.equals(other.venda))
+			return false;
 		return true;
 	}
-
-	@Override
-	public String toString() {
-		return "ItemVenda [id_item_venda=" + id_item_venda + "]";
-	}
-	
 
 }

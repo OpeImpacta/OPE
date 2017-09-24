@@ -7,6 +7,7 @@ import java.io.Serializable;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.swing.ImageIcon;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -38,8 +39,11 @@ public class ExporterController implements Serializable {
 
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		String logo = externalContext.getRealPath("") +  File.separator + "resources" +  File.separator + "images" + File.separator + "logo.png";
-
-		pdf.add(Image.getInstance(logo));
+		
+		Image img = Image.getInstance(logo);
+		img.scaleAbsolute(70, 70);
+		img.setAlignment(Image.MIDDLE);
+		pdf.add(img);
 	}
 
 
@@ -54,7 +58,7 @@ public class ExporterController implements Serializable {
 		HSSFRow header = sheet.getRow(0);
 
 		HSSFCellStyle cellStyle = wb.createCellStyle();  
-		cellStyle.setFillForegroundColor(HSSFColor.BLUE.index);
+		cellStyle.setFillForegroundColor(HSSFColor.LIGHT_BLUE.index);
 		cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 
 		for(int i=0; i < header.getPhysicalNumberOfCells();i++) {

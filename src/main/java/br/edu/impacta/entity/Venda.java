@@ -75,6 +75,9 @@ public class Venda implements Serializable, Cloneable{
 	@Transient
 	private String totalFormatado;
 	
+	@Transient
+	private String descontoFormatado;
+	
 	
 	@Override
 	public Venda clone()  {
@@ -213,6 +216,17 @@ public class Venda implements Serializable, Cloneable{
 
 	public void setTotalFormatado(String totalFormatado) {
 		this.totalFormatado = totalFormatado;
+	}
+
+	public String getDescontoFormatado() {
+		if(desconto != null) {
+			return NumberFormat.getCurrencyInstance().format(desconto);
+		}
+		return descontoFormatado;
+	}
+
+	public void setDescontoFormatado(String descontoFormatado) {
+		this.descontoFormatado = descontoFormatado;
 	}
 
 	@Override

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+				xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+                
+   <ui:define name="head-end">
+	       <style type="text/css">
+	            .ui-datatable .ui-datatable-header {
+	                text-align: right !important;
+	       }
+	       </style>
+    </ui:define>
+
+    <ui:define name="title">
+       Relatórios
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Relatórios"/>
+		<h:form id="frmPesquisa">
+			<p:growl id="msgOk" showSummary="false" severity="info"/>
+            <p:growl id="msgErro" showSummary="false" strick="true" severity="warn,error,fatal"/>
+            
+            <p:panelGrid columns="4" layout="grid" styleClass="box-success no-border" style="overflow: auto">
+            	
+            	<p:outputLabel for="dataDe" value="De:"><br/>
+        			<p:calendar id="dataDe" value="#{relatorioControl.dataDe}" locale="de" navigator="true" pattern="dd/MM/yyyy" size="12"/>
+        		</p:outputLabel>
+        		
+        		<p:outputLabel for="dataAte" value="Até:" ><br/>
+        			<p:calendar id="dataAte" value="#{relatorioControl.dataAte}" locale="de" navigator="true" pattern="dd/MM/yyyy" size="12"/>
+        		</p:outputLabel>
+            
+            	<p:outputLabel for="tipo" value="Tipo: " >
+			        <p:selectOneMenu id="tipo" value="#{relatorioControl.tipoRelatorio}" style="width:200px" autoWidth="false">
+			            <f:selectItem itemLabel="Selecione..." itemValue="" itemDisabled="true"/>
+			            <!-- <f:selectItem itemLabel="Cliente" itemValue="1" /> -->
+			            <f:selectItem itemLabel="Estoque" itemValue="2" />
+			            <f:selectItem itemLabel="Orçamento" itemValue="3" />
+			            <f:selectItem itemLabel="Venda" itemValue="4" />
+			        </p:selectOneMenu>
+			    </p:outputLabel>
+
+	            <p:commandButton icon="fa fa-search" value="Pesquisar" styleClass="btn-primary" 
+	            				actionListener="#{relatorioControl.pesquisar()}" style="margin-top: 21px" update="frmRelatorio"/>
+            </p:panelGrid>
+		</h:form>
+		<hr/>
+		<h:form id="frmRelatorio">
+
+			<p:panel styleClass="box-success no-border" style="overflow: auto" rendered="#{relatorioControl.tipoRelatorio == 2}">
+				<p:commandButton ajax="false" icon="fa fa-file-pdf-o" styleClass="btn-danger" value="Gerar PDF">
+					<p:dataExporter preProcessor="#{exporterControl.preProcessPDF}" encoding="iso-8859-1" type="pdf" target="tabelaMovimento" fileName="rel_movto#{utilityTela.dateFormatSimple(relatorioControl.dataDe)}_#{utilityTela.dateFormatSimple(relatorioControl.dataAte)}" />
+				</p:commandButton>
+				
+				<p:commandButton ajax="false" icon="fa fa-file-excel-o" styleClass="btn-success" value="Gerar Excel">
+					<p:dataExporter postProcessor="#{exporterControl.postProcessXLS}" encoding="iso-8859-1" type="xls" target="tabelaMovimento" fileName="rel_movto#{utilityTela.dateFormatSimple(relatorioControl.dataDe)}_#{utilityTela.dateFormatSimple(relatorioControl.dataAte)}" />
+				</p:commandButton>
+							
+				<p:separator />
+			
+				<p:dataTable id="tabelaMovimento" var="registro" value="#{relatorioControl.movimentacaoList}" rowKey="#{registro.idMovimentacao}" tableStyle="table-layout:auto"
+							paginator="true" rows="15" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" emptyMessage="Nenhum Registro Encontrado"
+                            widgetVar="wvTable">
+                            
+                	<p:column headerText="Código" style="text-align: center" sortBy="#{registro.idMovimentacao}" filterBy="#{registro.idMovimentacao}" filterMatchMode="exact">
+						<h:outputText value="#{registro.idMovimentacao}" />
+					</p:column>
+					
+					<p:column id="date" style="text-align: center" 
+				             headerText="Data"
+				             sortBy="#{registro.dataMovimentacao}"
+				             filterFunction="#{utilityTela.filterByDate}"
+				             filterBy="#{registro.dataMovimentacao}">
+				         <f:facet name="filter">
+				            <p:calendar  id="cal1" pattern="dd.MM.yyyy">
+				               <p:ajax event="dateSelect" oncomplete="PF('wvTable').filter()" update="frmRelatorio:tabelaMovimento" />
+				               <p:ajax event="change" execute="@this" oncomplete="PF('wvTable').filter()" update="frmRelatorio:tabelaMovimento"/>
+				            </p:calendar>
+				         </f:facet>
+				      <p:outputLabel value="#{registro.dataMovimentacao}">
+				         <f:convertDateTime pattern="dd.MM.yyyy" />
+				      </p:outputLabel>
+				   </p:column>
+					<p:column headerText="Produto" sortBy="#{registro.produto.nome}" style="text-align: center" filterBy="#{registro.produto.nome}" filterMatchMode="contains">
+						<h:outputText value="#{registro.produto.nome}" />
+					</p:column>
+					
+					<p:column headerText="Qtd. Movimentada" style="text-align: center" sortBy="#{registro.quantidade}" filterBy="#{registro.quantidade}" filterMatchMode="exact">
+						<h:outputText value="#{registro.quantidade}" />
+					</p:column>
+				
+					<p:column headerText="Tipo de Movimentação" style="text-align: center" sortBy="#{movimentacaoControl.verificaTpMov(registro)}" filterBy="#{movimentacaoControl.verificaTpMov(registro)}" filterMatchMode="exact">
+						<f:facet name="filter">
+		                	<p:selectOneMenu id="oneMenuMovimento" onchange="PF('wvTable').filter()" autoWidth="false" style="width:100px">
+			                    <f:selectItem itemLabel="Todas" itemValue="#{null}" noSelectionOption="true" />
+			                    <f:selectItem itemLabel="Entrada" itemValue="Entrada"  />
+			                    <f:selectItem itemLabel="Saída" itemValue="Saída"  />
+			                    <f:selectItem itemLabel="Ajuste" itemValue="Ajuste"  />
+		                	</p:selectOneMenu>
+	            		</f:facet>
+	            		<h:outputText value="#{movimentacaoControl.verificaTpMov(registro)}" />
+					</p:column>             
+                </p:dataTable>  
+                          
+			</p:panel>
+			
+			<p:panel styleClass="box-success no-border" style="overflow: auto" rendered="#{relatorioControl.tipoRelatorio == 3 || relatorioControl.tipoRelatorio == 4}">
+				<p:commandButton ajax="false" icon="fa fa-file-pdf-o" styleClass="btn-danger" value="Gerar PDF">
+					<p:dataExporter preProcessor="#{exporterControl.preProcessPDF}" encoding="iso-8859-1" type="pdf" target="tabelaOrcamento" fileName="rel_movto#{utilityTela.dateFormatSimple(relatorioControl.dataDe)}_#{utilityTela.dateFormatSimple(relatorioControl.dataAte)}" />
+				</p:commandButton>
+				
+				<p:commandButton ajax="false" icon="fa fa-file-excel-o" styleClass="btn-success" value="Gerar Excel">
+					<p:dataExporter postProcessor="#{exporterControl.postProcessXLS}" encoding="iso-8859-1" type="xls" target="tabelaOrcamento" fileName="rel_movto#{utilityTela.dateFormatSimple(relatorioControl.dataDe)}_#{utilityTela.dateFormatSimple(relatorioControl.dataAte)}" />
+				</p:commandButton>
+							
+				<p:separator />
+			
+				<p:dataTable id="tabelaOrcamento" var="registro" value="#{relatorioControl.tipoRelatorio == 3 ? relatorioControl.orcamentoList : relatorioControl.vendaList}" rowKey="#{registro.idItemVenda}" tableStyle="table-layout:auto"
+							paginator="true" rows="15" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" emptyMessage="Nenhum Registro Encontrado"
+                            widgetVar="wvTable">
+                            
+                	<p:column headerText="Código" style="text-align: center" sortBy="#{registro.idItemVenda}" filterBy="#{registro.idItemVenda}" filterMatchMode="exact">
+						<h:outputText value="#{registro.idItemVenda}" />
+					</p:column>
+					
+					<p:column id="date" style="text-align: center" 
+				             headerText="Data"
+				             sortBy="#{registro.venda.data}"
+				             filterFunction="#{utilityTela.filterByDate}"
+				             filterBy="#{registro.venda.data}">
+				         <f:facet name="filter">
+				            <p:calendar  id="cal1" pattern="dd.MM.yyyy">
+				               <p:ajax event="dateSelect" oncomplete="PF('wvTable').filter()" update="tabelaOrcamento" />
+				               <p:ajax event="change" execute="@this" oncomplete="PF('wvTable').filter()" update="tabelaOrcamento"/>
+				            </p:calendar>
+				         </f:facet>
+				      <p:outputLabel value="#{registro.venda.data}">
+				         <f:convertDateTime pattern="dd.MM.yyyy" />
+				      </p:outputLabel>
+				   </p:column>
+				   
+					<p:column headerText="Produto" sortBy="#{registro.produto.nome}" style="text-align: center" filterBy="#{registro.produto.nome}" filterMatchMode="contains">
+						<h:outputText value="#{registro.produto.nome}" />
+					</p:column>
+					
+					<p:column headerText="Quantidade" style="text-align: center" sortBy="#{registro.quantidade}" filterBy="#{registro.quantidade}" filterMatchMode="exact">
+						<h:outputText value="#{registro.quantidade}" />
+					</p:column>
+					
+					<p:column headerText="Valor Unitário" style="text-align: center" sortBy="#{registro.produto.precoVenda}" filterBy="#{registro.produto.precoVenda}" filterMatchMode="exact">
+						<h:outputText value="#{registro.produto.precoVendaFormatado}" />
+					</p:column>
+				
+					<p:column headerText="Forma de Pgto." rendered="#{relatorioControl.tipoRelatorio == 4 ? true : false}" style="text-align: center" sortBy="#{relatorioControl.verificaFormaPgto(registro)}" filterBy="#{relatorioControl.verificaFormaPgto(registro)}" filterMatchMode="exact">
+						<f:facet name="filter">
+		                	<p:selectOneMenu id="oneMenuFormaPgto" onchange="PF('wvTable').filter()" autoWidth="false" style="width:100px">
+			                    <f:selectItem itemLabel="Todas" itemValue="#{null}" noSelectionOption="true" />
+			                    <f:selectItem itemLabel="Dinheiro" itemValue="Dinheiro"  />
+			                    <f:selectItem itemLabel="Débito" itemValue="Débito"  />
+			                    <f:selectItem itemLabel="Crédito" itemValue="Crédito"  />
+			                    <f:selectItem itemLabel="Cheque" itemValue="Cheque"  />
+		                	</p:selectOneMenu>
+	            		</f:facet>
+	            		<h:outputText value="#{relatorioControl.verificaFormaPgto(registro)}" />
+					</p:column> 
+					
+					<p:column headerText="Valor Total" style="text-align: center" sortBy="#{registro.venda.total}" filterBy="#{registro.venda.total}" filterMatchMode="contains">
+						<h:outputText value="#{registro.venda.totalFormatado}" />
+					</p:column>  
+					
+					<p:column headerText="Desconto" style="text-align: center" sortBy="#{registro.venda.desconto}" filterBy="#{registro.venda.desconto}" filterMatchMode="contains">
+						<h:outputText value="#{registro.venda.descontoFormatado}" />
+					</p:column>  
+					
+					<p:column headerText="Cliente" style="text-align: center" sortBy="#{registro.venda.cliente.nome}" filterBy="#{registro.venda.cliente.nome}" filterMatchMode="contains">
+						<h:outputText value="#{registro.venda.cliente.nome}" />
+					</p:column>              
+                </p:dataTable>  
+                          
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+
