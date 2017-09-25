@@ -22,7 +22,7 @@ import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.commons.collections.map.HashedMap;
 
-import br.edu.impacta.controller.ReportController;
+//import br.edu.impacta.controller.ReportController;
 
 /**
  * @author Stefany Souza
@@ -43,7 +43,7 @@ public class Email implements Serializable {
 	private String assunto;
 	
 	@Inject
-	private ReportController reportController;
+	//private ReportController reportController;
 
 
 	public Email() {}
@@ -137,9 +137,9 @@ public class Email implements Serializable {
 			
 			MimeBodyPart mbp3 = new MimeBodyPart();   
 			
-			DataSource fds = new ByteArrayDataSource(reportController.getRelatorioByte(nomeRelatorio, params), "application/pdf");   
+			//DataSource fds = new ByteArrayDataSource(reportController.getRelatorioByte(nomeRelatorio, params), "application/pdf");   
             mbp3.setDisposition(Part.ATTACHMENT);   
-            mbp3.setDataHandler(new DataHandler(fds));   
+            //mbp3.setDataHandler(new DataHandler(fds));   
             mbp3.setFileName("orcamento.pdf");   
             mpRoot.addBodyPart(mbp3);   
 
