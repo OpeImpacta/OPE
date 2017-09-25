@@ -54,16 +54,13 @@ public class ConfigEmailController extends BasicControlCad<ConfigEmail> implemen
 	
 	@Override
 	public void treatRecord() {
-		System.out.println("Email: " + configEmail.getEmail());
-		System.out.println("Servidor: " + configEmail.getServidor());
-		
 		if(configEmail.getIdConfig() == null){
 			confiEmailDAO.save(configEmail);
 		}else{
 			confiEmailDAO.update(configEmail);
 		}
 		
-		UtilityTela.criarMensagem("Sucesso!", "Configuração salva com sucesso.");
+		UtilityTela.criarMensagem("Sucesso!", "Configuração salva.");
 	}
 	
 	
@@ -84,6 +81,7 @@ public class ConfigEmailController extends BasicControlCad<ConfigEmail> implemen
 		return email.sendEmail();
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public boolean enviarEmailAnexo(String para, Map params, String nomeRelatorio){
 		this.getConfig();
 		
@@ -94,11 +92,15 @@ public class ConfigEmailController extends BasicControlCad<ConfigEmail> implemen
 		email.setPorta(configEmail.getPortaSmtp());
 		email.setSenha(configEmail.getSenha());
 		email.setServidor(configEmail.getServidor());
-		email.setTexto(configEmail.getAssinatura());
+		
+		String textoEmail = "Prezado Cliente,"
+				+ "<br/><br/><br/> Segue em anexo orçamento do(s) produto(s) conforme solicitado no site.<br/><br/><br/>";
+		
+		email.setTexto(textoEmail + configEmail.getAssinatura());
 		email.setUsuario(configEmail.getUsuario());
 		email.setEmail(configEmail.getEmail());
 	
-		return email.sendEmail();
+		return email.sendEmailAnexo(params, nomeRelatorio);
 	}
 	
 }

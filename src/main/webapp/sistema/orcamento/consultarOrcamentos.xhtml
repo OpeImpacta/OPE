@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+				xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+                
+       <ui:define name="head-end">
+	       <style type="text/css">
+	       		.ui-datatable-header 
+	       		{
+	                text-align: center !important;
+	       		}
+	       		
+	       		.ui-calendar input{
+	       			width: 100px;
+	       			text-align: center !important;
+	       		}
+	       </style>
+     </ui:define>
+
+    <ui:define name="title">
+       Gerenciamento de Orçamentos
+    </ui:define>
+
+	<ui:define name="body">
+		<!--Altera o idioma do calendario-->
+		<h:outputScript library="js" name="locale-primefaces.js"/>
+		
+		<adm:breadcrumb title="Gerenciamento Orçamentos"/>
+		
+		<h:form id="frmList">
+			<p:growl id="msgOk" showSummary="false" severity="info"/>
+            <p:growl id="msgErro" showSummary="false" strick="true" severity="warn,error,fatal"/>
+	        
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					
+					<p:commandButton id="btnAprovar" actionListener="#{orcControl.openDialogAprovar()}" update="frmAprovar" disabled="#{orcControl.disableAprovar}" icon="fa fa-check"  
+						styleClass="btn-success" value="Aprovar" />
+					
+					<p:spacer width="5"/>
+					<p:commandButton id="btnReenviar" update="frmList" disabled="#{orcControl.disableReenviar}" icon="fa fa-send" 
+						actionListener="#{orcControl.enviarEmail(orcControl.vendaSelecionada.idVenda)}" 
+						styleClass="btn-primary" value="Reenviar" />
+						
+					<p:spacer width="5"/>
+					<p:commandButton id="btn" actionListener="#{orcControl.openDialogVisualizar()}" update="frmVisualizar" disabled="#{orcControl.disableVisualizar}" icon="fa fa-search"  
+						styleClass="btn-info" value="Visualizar" />
+					
+					<p:spacer width="5"/>
+					
+					<p:commandButton id="btnCancelar" update="frmList:dtVendas @(.ui-button)" process="@form" icon="fa fa-close" value="Cancelar" styleClass="btn-danger" 
+							disabled="#{orcControl.disableCancelar}" actionListener="#{orcControl.cancelaOrcamento()}" >
+					</p:commandButton>
+					
+					<p:separator />
+					
+	                <p:selectOneButton value="#{orcControl.opcao}">
+	                	
+	                	<f:selectItem itemLabel="Pendentes" itemValue="1" />
+					   	<f:selectItem itemLabel="Aprovados" itemValue="2" />
+					   	<f:selectItem itemLabel="Finalizados" itemValue="3" />
+				        <f:selectItem itemLabel="Cancelados" itemValue="4" />
+					    <f:selectItem itemLabel="Todos" itemValue="5" />
+					            
+					    <p:ajax event="change" listener="#{orcControl.preencheOrcamentos}" update="@form" process="@form" />
+					</p:selectOneButton>   
+					    
+					<p:dataTable id="dtVendas" var="venda" widgetVar="wvTable"
+						tableStyle="table-layout: auto;" style="margin-top: 10px"
+						value="#{orcControl.orcamentos}" paginator="true" rows="10"
+						paginatorPosition="bottom" selection="#{orcControl.vendaSelecionada}" selectionMode="single" rowKey="#{venda.idVenda}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]"
+						emptyMessage="Nenhum Registro Encontrado">
+
+						<f:facet name="header">
+							#{orcControl.headerDt}
+						</f:facet>
+						
+						<p:ajax event="rowSelect" listener="#{orcControl.onRowSelectVenda()}" update="@(.ui-button)"/>
+
+						<p:column headerText="Código" style="text-align: center" filterBy="#{venda.idVenda}">
+							<h:outputText value="#{venda.idVenda}" />
+						</p:column>
+
+						<p:column headerText="Cliente" style="text-align: center" filterBy="#{venda.cliente.nome}">
+							<h:outputText value="#{venda.cliente.nome}" />
+						</p:column>
+
+						<p:column id="date" style="text-align: center" headerText="Data" filterFunction="#{utilityTela.filterByDate}" filterBy="#{venda.data}">
+							<f:facet name="filter">
+								<p:calendar id="cal1" pattern="dd.MM.yyyy">
+									<p:ajax event="dateSelect" oncomplete="PF('wvTable').filter()" update="frmList:dtVendas" />
+									<p:ajax event="change" execute="@this" oncomplete="PF('wvTable').filter()" update="frmList:dtVendas" />
+								</p:calendar>
+							</f:facet>
+								
+							<h:outputText value="#{utilityTela.dateTimeFormat(venda.data)}" />
+						</p:column>
+
+						<p:column headerText="Total" style="text-align: center">
+							<h:outputText value="#{venda.totalFormatado}" />
+						</p:column>
+					</p:dataTable>
+	                        
+	        	</div>
+	    	</div>
+	    </h:form>  
+       
+      <p:dialog width="auto" height="auto" widgetVar="dlgAprovar" resizable="false" responsive="true" 
+			header="Aprovação de Orçamento" styleClass="box-primary"  
+			modal="true" appendTo="@(body)" closable="true" closeOnEscape="true">
+        
+        	<h:form id="frmAprovar" >
+        	
+        		<p:panelGrid id="panelVls" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+         			
+         			<p:toolbar id="toolValores" style="margin-bottom: 5px; width: 740px">
+         				<f:facet name="left">
+         					<p:outputLabel value="Cliente: #{orcControl.vendaSelecionada.cliente.nome}" style="font-size: 15px; font-weight: bold"/>
+         				</f:facet>
+         				
+						<f:facet name="right">
+							<h:outputText value="Subtotal #{orcControl.subTotalFormatado}" style="font-size: 15px; font-weight: bold" />
+							
+							<span class="ui-separator"> 
+								<span class="ui-icon ui-icon-grip-dotted-vertical" />
+							</span>
+							
+							<h:outputText value="Desconto #{orcControl.vendaSelecionada.descontoFormatado}" style="font-size: 15px; font-weight: bold" />
+								 	
+							<span class="ui-separator"> 
+								<span class="ui-icon ui-icon-grip-dotted-vertical" />
+							</span>
+							
+							<h:outputText value="Total #{orcControl.vendaSelecionada.totalFormatado}" style="font-size: 18px; font-weight: bold" />
+								
+						</f:facet>
+					</p:toolbar>
+         		</p:panelGrid>
+         		<p:panelGrid id="dtTable" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+         			<p:dataTable tableStyle="table-layout: auto;"  var="item"  id="dtItens" paginatorPosition="bottom"
+							emptyMessage="Nenhum item encontrado" value="#{orcControl.vendaSelecionada.itens}" >
+						
+         				<p:column headerText="Código" style="text-align: center" >
+	                		<h:outputText value="#{item.id_item_venda}" />
+	                	</p:column>
+	                			
+	                	<p:column headerText="Produto" style="text-align: center" >
+	                		<h:outputText value="#{item.produto.nome}" />
+	                	</p:column>
+	                	
+	                	<p:column headerText="Estoque" style="text-align: center" >
+	                		<h:outputText value="#{item.produto.quantidade}" />
+	                	</p:column>
+	                	
+	                	<p:column headerText="Qtd." style="text-align: center" >
+	                		<h:outputText value="#{item.quantidade}" />
+	                	</p:column>
+	                			
+	                	<p:column headerText="Vl. Unitário" style="text-align: center" >
+	                		<h:outputText value="#{item.produto.precoVendaFormatado}" />
+	                	</p:column>
+	                	
+	                	<p:column headerText="Vl. Total" style="text-align: center" >
+	                		<h:outputText value="#{item.totalItemFormatado}" />
+	                	</p:column>
+         			</p:dataTable>
+         		</p:panelGrid>
+         		
+         		
+         		<p:panelGrid columns="4" style="margin-top: 7px; margin-bottom: 7px; margin-left: 10px" id="panelDesconto">
+					<p:outputLabel for="inDesconto" value="Desconto:"><br />
+						<p:inputNumber id="inDesconto" value="#{orcControl.desconto}" />
+					</p:outputLabel>
+					<p:commandButton value="%" id="btndescPorc" styleClass="btn-primary" actionListener="#{orcControl.calculaDescontoPorcentagem}" 
+						update="@form" style="margin-top: 24px; width: 43px"  />
+						
+					<p:commandButton value="R$" id="btndescReal" styleClass="btn-primary" actionListener="#{orcControl.calculaDescontoReal}"  
+						update="@form" style="margin-top: 24px; width: 45px" />
+				</p:panelGrid>
+				
+         		<p:panelGrid id="pnObs" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+         			<p:outputLabel value="Observação:" for="inObs"><br/>
+	         			<p:inputTextarea id="inObs" cols="100" rows="2" value="#{orcControl.vendaSelecionada.observacao}" counter="display" maxlength="400" 
+	         				counterTemplate="{0} caracteres restantes" autoResize="false" />
+	         			<br/>
+	         			<h:outputText id="display"  />
+         			</p:outputLabel>
+         			 
+	        	</p:panelGrid>
+	        	
+	        	<p:separator />
+	        	
+	        	<p:commandButton value="Fechar" onclick="PF('dlgAprovar').hide();" update="@(.ui-button)" process="@form" styleClass="btn-danger" icon="fa fa-close" />
+	        	<p:commandButton value="Finalizar" styleClass="btn-success" update="frmList:dtVendas @(.ui-button)" process="@form" actionListener="#{orcControl.aprovaOrcamento()}" oncomplete="PF('dlgAprovar').hide();" 
+	        		icon="fa fa-check" />
+	        	
+        	</h:form>
+        	
+        </p:dialog>        
+		
+		<!-- VISUALIZAR -->
+		
+		<p:dialog width="auto" height="auto" widgetVar="dlgVisualizar" resizable="false" responsive="true" 
+			header="Orçamento" styleClass="box-primary"  
+			modal="true" appendTo="@(body)" closable="true" closeOnEscape="true">
+        
+        	<h:form id="frmVisualizar" >
+        	
+        		<p:panelGrid id="panelVls" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+         			
+         			<p:toolbar id="toolValores" style="margin-bottom: 5px; width: 740px">
+         				<f:facet name="left">
+         					<p:outputLabel value="Cliente: #{orcControl.vendaSelecionada.cliente.nome}" style="font-size: 15px; font-weight: bold"/>
+         				</f:facet>
+         				
+						<f:facet name="right">
+							<h:outputText value="Subtotal #{orcControl.subTotalFormatado}" style="font-size: 15px; font-weight: bold" />
+							
+							<span class="ui-separator"> 
+								<span class="ui-icon ui-icon-grip-dotted-vertical" />
+							</span>
+							
+							<h:outputText value="Desconto #{orcControl.vendaSelecionada.descontoFormatado}" style="font-size: 15px; font-weight: bold" />
+							
+							<span class="ui-separator"> 
+								<span class="ui-icon ui-icon-grip-dotted-vertical" />
+							</span>
+							
+							<h:outputText value="Total #{orcControl.vendaSelecionada.totalFormatado}" style="font-size: 18px; font-weight: bold" />
+								
+						</f:facet>
+					</p:toolbar>
+         		</p:panelGrid>
+         		<p:panelGrid id="dtTable" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+         			<p:dataTable tableStyle="table-layout: auto;"  var="item"  id="dtItens" paginatorPosition="bottom"
+							emptyMessage="Nenhum item encontrado" value="#{orcControl.vendaSelecionada.itens}" >
+						
+         				<p:column headerText="Código" style="text-align: center" >
+	                		<h:outputText value="#{item.id_item_venda}" />
+	                	</p:column>
+	                			
+	                	<p:column headerText="Produto" style="text-align: center" >
+	                		<h:outputText value="#{item.produto.nome}" />
+	                	</p:column>
+	                	
+	                	<p:column headerText="Qtd." style="text-align: center" >
+	                		<h:outputText value="#{item.quantidade}" />
+	                	</p:column>
+	                			
+	                	<p:column headerText="Vl. Unitário" style="text-align: center" >
+	                		<h:outputText value="#{item.produto.precoVendaFormatado}" />
+	                	</p:column>
+	                	
+	                	<p:column headerText="Vl. Total" style="text-align: center" >
+	                		<h:outputText value="#{item.totalItemFormatado}" />
+	                	</p:column>
+         			</p:dataTable>
+         		</p:panelGrid>
+         		
+         		<p:panelGrid id="pnObs" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+         			<p:outputLabel value="Observação:" for="inObs"><br/>
+	         			<p:inputTextarea id="inObs" cols="100" rows="2" value="#{orcControl.vendaSelecionada.observacao}" 
+	         				readonly="true" autoResize="false" />
+	         		</p:outputLabel>
+         			 
+	        	</p:panelGrid>
+	        	
+	        	<p:separator />
+	        	
+	        	<p:commandButton value="Fechar" onclick="PF('dlgVisualizar').hide();" styleClass="btn-danger" icon="fa fa-close" />
+	        	
+        	</h:form>
+        	
+        </p:dialog>        
+		       
+          
+	</ui:define>
+</ui:composition>
+

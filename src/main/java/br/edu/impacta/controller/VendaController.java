@@ -11,6 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.omnifaces.cdi.ViewScoped;
 
@@ -19,6 +20,7 @@ import br.edu.impacta.dao.VendaDAO;
 import br.edu.impacta.entity.ItemVenda;
 import br.edu.impacta.entity.Produto;
 import br.edu.impacta.entity.Venda;
+
 
 /**
  * @author Stefany Souza
@@ -35,6 +37,9 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 	@Inject
 	private ProdutoDAO produtoDAO;
+
+	@Inject
+	private ReportController reportController;
 
 	private ItemVenda itemVenda;
 	private ItemVenda itemVendaSelecionado;
@@ -67,7 +72,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 	private List<ItemVenda> itemVendaList;
 
 	private Boolean semEstoque;
-
+	private Integer idVenda;
 
 	// *******************************************
 	// * Alterar somente neste construtor
@@ -135,7 +140,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 
 	//verifica se é uma venda ou um orçamento e grava no banco
-	public void recordVenda() {
+	public void recordVenda() throws Exception {
 
 		((Venda)this.getSelected()).setDesconto(getDescontoTotal());
 		((Venda)this.getSelected()).setTotal(getTotal());
@@ -150,10 +155,19 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 		this.gravaOrcamento();
 
 		gravaProdutos();
-		this.treatRecord();
-		limpaForm();
 
+		idVenda = ((Venda)vendaDAO.save(getSelected())).getIdVenda();
+		limpaForm();
+		UtilityTela.executarJavascript("PF('dlgImrimir').show();");
 	}
+
+	public void gerarRelatorio(int idVenda, String nomeRel){
+		HashedMap param = new HashedMap();
+		param.put("idVenda", idVenda);
+		reportController.getRelatorio(nomeRel, param);
+		this.idVenda = null;
+	}
+
 
 	//se a venda for finalizacao de um orcamento verifica o estoque novamente
 	public void retiraProdutoSemEstoque() {
@@ -264,7 +278,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 			this.setTroco(this.getVlRecebido().subtract(this.getTotal()));
 		}
 	}
-	
+
 	//calcula total desconto em reais
 	public void calculaDescontoReal() {
 		if(this.getDesconto() != null && this.getDesconto() != BigDecimal.ZERO && this.getTotal().compareTo(this.getDesconto()) == 1) {
@@ -318,8 +332,9 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 			((Venda)this.getSelected()).setAprovado(true);
 			((Venda)this.getSelected()).setFinalizado(false);
 
-			super.treatRecord();
+			idVenda = ((Venda)vendaDAO.save(getSelected())).getIdVenda();
 			limpaForm();
+			UtilityTela.executarJavascript("PF('dlgImrimir').show();");
 		}
 	}
 
@@ -332,7 +347,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 	//mostra os dados do orcamento selecionado na tela
 	public void setaOrcamento() {
 		semEstoque = false;
-		
+
 		if(idOrcamento != null) {
 			orcamentoSelecionado = vendaDAO.findById(idOrcamento);
 
@@ -418,7 +433,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 	//**************** CONSULTAR VENDAS *************
 	//***********************************************
 
-	//preenche tabela vendas conforme opï¿½ï¿½o selecionada
+	//preenche tabela vendas conforme a opção selecionada
 	public void preencheVendas() {
 		disableExcluirVenda = true;
 		vendas = new ArrayList<>();
@@ -480,7 +495,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 		removeItensVenda();
 		vendaDAO.update(vendaSelecionada);
 		this.disableButtons();
-		UtilityTela.criarMensagem("Sucesso", "DevoluÃ§Ã£o realizada com sucesso!");
+		UtilityTela.criarMensagem("Sucesso", "Devolução realizada com sucesso!");
 	}
 
 	//remove o item da venda e altera o valor total
@@ -492,7 +507,6 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 	}
 
 	public void openDialogItens() {
-		calculaTotalItens();
 		setaValores(vendaSelecionada);
 		UtilityTela.executarJavascript("PF('dlgItemVenda').show();");
 	}
@@ -502,17 +516,9 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 			return;
 		}
 
-		calculaTotalItens();
 		setaValores(vendaSelecionada);
 		UtilityTela.executarJavascript("PF('dlgExclusao').show();");
 	}
-
-	public void calculaTotalItens() {
-		for (ItemVenda item : vendaSelecionada.getItens()) {
-			item.setTotalItemVenda(calculaTotalItem(item.getQuantidade(), item.getProduto().getPrecoVenda()));
-		}
-	}
-
 
 
 	//*****************************************************
@@ -834,6 +840,16 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 	public void setSemEstoque(Boolean semEstoque) {
 		this.semEstoque = semEstoque;
 	}
+
+	public Integer getIdVenda() {
+		return idVenda;
+	}
+
+
+	public void setIdVenda(Integer idVenda) {
+		this.idVenda = idVenda;
+	}
+
 
 
 }
