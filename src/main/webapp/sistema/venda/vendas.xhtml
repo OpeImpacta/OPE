@@ -112,7 +112,7 @@
 										
 										<div class="ui-g-3">
 											<p:defaultCommand target="btnAdicionar" />
-											<p:commandButton value="Adicionar" id="btnAdicionar" styleClass="btn-primary" icon="fa fa-plus" style="margin-top: 20px; margin-left: -20px"
+											<p:commandButton value="Adicionar" id="btnAdicionar" styleClass="btn-primary" icon="fa fa-plus" style="margin-top: 24px; margin-left: -20px"
 												update="frmVenda:toolValores frmVenda:dtVenda frmVenda:cmbProduto frmVenda:inPreco frmVenda:btnFinalizar" 
 												actionListener="#{vendaControl.addItem(true)}" oncomplete="focusCampo('frmVenda:cmbProduto_input')" />
 										</div>
@@ -131,24 +131,24 @@
 									
 									<div class="ui-g-2">
 										<p:commandButton value="%" id="btndescPorc" styleClass="btn-primary" actionListener="#{vendaControl.calculaDescontoPorcentagem}" 
-												update="@form" style="margin-left: 13px; margin-top: 20px" />
+												update="@form" style="margin-left: 13px; margin-top: 24px" />
 									</div>
 										
 									<div class="ui-g-2">	
 										<p:commandButton value="R$" id="btndescReal" styleClass="btn-primary" actionListener="#{vendaControl.calculaDescontoReal}"  
-												update="@form" style="margin-top: 20px; margin-left: -110px" />
+												update="@form" style="margin-top: 24px; margin-left: -110px" />
 									</div>	
 									
 									<div class="ui-g-2">
 										<p:commandButton value="Excluir Item" actionListener="#{vendaControl.delItem}" id="btnDelItem" disabled="#{vendaControl.disableExcluir}" styleClass="btn-danger" 
-												 update="@form" icon="fa fa-trash-o" style="margin-top: 20px; margin-left: -210px" />
+												 update="@form" icon="fa fa-trash-o" style="margin-top: 24px; margin-left: -210px" />
 									</div>
 										
 									<div class="ui-g-2">
 										<p:outputLabel for="cmbCliente" value="Cliente:" style="margin-left: -120px" ><br />
 											
 											<p:autoComplete id="cmbCliente" value="#{vendaControl.selected.cliente}"
-												completeMethod="#{clienteControl.completeClientes}" styleClass="styleAutoCompleteCliente" minQueryLength="3"
+												completeMethod="#{clienteControl.completeClientes}" styleClass="styleAutoCompleteCliente"
 												var="cliente" itemLabel="#{cliente.nome}" itemValue="#{cliente}" converter="clienteConverter" forceSelection="true">
 
 												<p:column>
@@ -165,7 +165,7 @@
 									</div>
 										
 									<div class="ui-g-2">
-										<p:commandButton update="frmFinalizacao" style="margin-top: 20px; margin-left: 50px"  value="Finalizar" disabled="#{vendaControl.selected.itens.isEmpty()}"
+										<p:commandButton update="frmFinalizacao" style="margin-top: 24px; margin-left: 50px"  value="Finalizar" disabled="#{vendaControl.selected.itens.isEmpty()}"
 											icon="fa fa fa-usd" id="btnFinalizar" actionListener="#{vendaControl.abrirDialog()}" styleClass="btn-success"  />
 									</div>
 								</div>
@@ -275,9 +275,8 @@
 		                <p:row>
 		                	<p:defaultCommand target="btnSalvar" />
 		                	<p:commandButton value="Salvar" styleClass="btn-success" icon="fa fa-check" async="true" id="btnSalvar"
-		                		type="submit" onclick="PF('dlgFinalizacao').hide();" ajax="false"
-		                		actionListener="#{vendaControl.recordVenda()}" update="frmVenda" process="@form" />
-		                	
+		                		type="submit" onclick="PF('dlgFinalizacao').hide()" ajax="false"
+		                		actionListener="#{vendaControl.recordVenda()}" update="frmFinalizacao frmVenda" process="@form" />
 		                	
 		                	<p:commandButton value="Cancelar" id="btnCancelar" update="frmFinalizacao frmVenda"
 									onclick="PF('dlgFinalizacao').hide()" styleClass="btn-danger" icon="fa fa-close"/>	
@@ -334,6 +333,19 @@
                 </h:form>
           
           </p:dialog>
+          
+          <p:dialog  modal="true" appendTo="@(body)" widgetVar="dlgImrimir" responsive="true"
+          		header="Deseja imprimir comprovante?"
+                width="auto" height="auto" resizable="false" closable="true" closeOnEscape="true" dynamic="true"  >
+                
+         	<h:form id="frmImrimir" >
+         		<p:commandButton value="Sim" onclick="PF('dlgImrimir').hide(); this.form.target='_blank'" update="@this" styleClass="btn-success" ajax="false"
+         							icon="fa fa-check" actionListener="#{vendaControl.gerarRelatorio(vendaControl.idVenda, 'venda')}" />
+         		
+         		<p:commandButton value="Não" id="btnNao" update="frmFinalizacao frmVenda"
+									onclick="PF('dlgImrimir').hide()" styleClass="btn-danger" icon="fa fa-close"/>	
+         	</h:form>
+         </p:dialog>
 	</ui:define>
 </ui:composition>
 

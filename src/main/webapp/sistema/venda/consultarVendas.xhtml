@@ -42,11 +42,12 @@
 							
 						<p:commandButton id="btnExcluir" actionListener="#{vendaControl.cancelaVenda()}" update="frmList:dtVendas @(.ui-button)" process="@form" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-close" styleClass="btn-danger" value="Cancelar Venda" >
 							<p:confirm header="Confirmação" message="Deseja realmente cancelar esta venda?" global="true" showEffect="fade" hideEffect="fade" styleClass="box-warning" />
-                        	<p:confirmDialog global="true" closable="true" closeOnEscape="true">
-                            	<p:commandButton value="Sim" type="button" styleClass="btn-primary ui-confirmdialog-yes" icon="fa fa-check" />
-                                <p:commandButton value="Não" type="button" styleClass="btn-danger ui-confirmdialog-no" icon="fa fa-close" />
-                        	</p:confirmDialog>
-						</p:commandButton>
+                        </p:commandButton>
+						
+						<p:confirmDialog global="true" appendTo="@(body)" closable="true" closeOnEscape="true">
+                            <p:commandButton value="Sim" type="button" styleClass="btn-primary ui-confirmdialog-yes" icon="fa fa-check" />
+                        	<p:commandButton value="Não" type="button" styleClass="btn-danger ui-confirmdialog-no" icon="fa fa-close" />
+                        </p:confirmDialog>
 						
 						<p:spacer width="5"/>	
 						
@@ -54,6 +55,9 @@
 						<p:spacer width="5"/>	
 						
 						<p:commandButton id="btnVisualizar" actionListener="#{vendaControl.openDialogItens()}" update="frmItemVenda" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-search"  styleClass="btn-info" value="Visualizar Itens"/>
+						<p:spacer width="5"/>	
+						
+						<p:commandButton update="frmList" id="btnImprimir" actionListener="#{vendaControl.gerarRelatorio(vendaControl.vendaSelecionada.idVenda, 'venda')}" ajax="false" onclick="this.form.target='_blank'" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-print"  styleClass="btn-success" value="Imprimir"/>
 						
 						<p:separator />
 					</div>
@@ -64,6 +68,8 @@
                         <p:menuitem actionListener="#{vendaControl.openDialogDevolucao()}" update="frmExclusao" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-reply-all"  styleClass="btn-warning" value="Devolver Itens" />
 	                        			
 	                    <p:menuitem actionListener="#{vendaControl.openDialogItens()}" update="frmItemVenda" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-search"  styleClass="btn-info" value="Visualizar Itens" />
+	                    
+	                    <p:menuitem  actionListener="#{vendaControl.gerarRelatorio(vendaControl.vendaSelecionada.idVenda, 'venda')}" update="frmList" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-print"  styleClass="btn-success" value="Imprimir" ajax="false" />
 	                        
                     </p:splitButton>
 					
@@ -88,7 +94,7 @@
 							#{vendaControl.headerDt}
 						</f:facet>
 						
-						<p:ajax event="rowSelect" listener="#{vendaControl.onRowSelectVenda()}" update="frmList:btnExcluir frmList:btnVisualizar frmList:split frmList:btnDevolver"/>
+						<p:ajax event="rowSelect" listener="#{vendaControl.onRowSelectVenda()}" update="frmList:btnExcluir frmList:btnVisualizar frmList:split frmList:btnDevolver frmList:btnImprimir"/>
 
 						<p:column headerText="Código" style="text-align: center" filterBy="#{venda.idVenda}">
 							<h:outputText value="#{venda.idVenda}" />

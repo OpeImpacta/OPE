@@ -1,15 +1,16 @@
 package br.edu.impacta.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.inject.Inject;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -20,8 +21,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
-import org.apache.commons.collections.map.HashedMap;
-
 import br.edu.impacta.controller.ReportController;
 
 /**
@@ -31,7 +30,7 @@ public class Email implements Serializable {
 
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private String de;
 	private String email;
 	private String para;
@@ -41,9 +40,6 @@ public class Email implements Serializable {
 	private String senha;
 	private String texto;
 	private String assunto;
-	
-	@Inject
-	private ReportController reportController;
 
 
 	public Email() {}
@@ -88,18 +84,14 @@ public class Email implements Serializable {
 			message.setSubject(getAssunto());
 			message.setText(getTexto());
 
-			//Configuração da Mensagem
-			MimeMultipart mpRoot = new MimeMultipart("mixed");   
-			MimeMultipart mpContent = new MimeMultipart("alternative");   
-			MimeBodyPart contentPartRoot = new MimeBodyPart();   
-			contentPartRoot.setContent(mpContent);   
-			mpRoot.addBodyPart(contentPartRoot);   
+			MimeBodyPart mimeBodyPart1 = new MimeBodyPart();
+			mimeBodyPart1.setContent(getTexto(), "text/html");
 
-			MimeBodyPart mbp2 = new MimeBodyPart();
-			mbp2.setContent(getTexto(), "text/html");
-			mpContent.addBodyPart(mbp2);
-			
-			message.setContent(mpRoot);   
+			Multipart mp = new MimeMultipart();
+			mp.addBodyPart(mimeBodyPart1);
+
+			message.setContent(mp);   
+			message.setSentDate(new Date());
 			message.saveChanges();   
 
 			Transport.send(message);
@@ -107,10 +99,11 @@ public class Email implements Serializable {
 			retorno = false;
 			throw new RuntimeException(e);
 		}
-		
+
 		return retorno;
 	}
-	
+
+	@SuppressWarnings("rawtypes")
 	public boolean sendEmailAnexo(Map params, String nomeRelatorio){
 		boolean retorno = true;
 		try {
@@ -124,26 +117,22 @@ public class Email implements Serializable {
 			message.setSubject(getAssunto());
 			message.setText(getTexto());
 
-			//Configuração da Mensagem
-			MimeMultipart mpRoot = new MimeMultipart("mixed");   
-			MimeMultipart mpContent = new MimeMultipart("alternative");   
-			MimeBodyPart contentPartRoot = new MimeBodyPart();   
-			contentPartRoot.setContent(mpContent);   
-			mpRoot.addBodyPart(contentPartRoot);   
+			MimeBodyPart mimeBodyPart1 = new MimeBodyPart();
+			mimeBodyPart1.setContent(getTexto(), "text/html");
 
-			MimeBodyPart mbp2 = new MimeBodyPart();
-			mbp2.setContent(getTexto(), "text/html");
-			mpContent.addBodyPart(mbp2);
-			
-			MimeBodyPart mbp3 = new MimeBodyPart();   
-			
+			MimeBodyPart mimeBodyPart2 = new MimeBodyPart();
+			ReportController reportController = new ReportController();
 			DataSource fds = new ByteArrayDataSource(reportController.getRelatorioByte(nomeRelatorio, params), "application/pdf");   
-            mbp3.setDisposition(Part.ATTACHMENT);   
-            mbp3.setDataHandler(new DataHandler(fds));   
-            mbp3.setFileName("orcamento.pdf");   
-            mpRoot.addBodyPart(mbp3);   
+			mimeBodyPart2.setDisposition(Part.ATTACHMENT);   
+			mimeBodyPart2.setDataHandler(new DataHandler(fds));   
+			mimeBodyPart2.setFileName("orcamento.pdf"); 
 
-			message.setContent(mpRoot);   
+			Multipart mp = new MimeMultipart();
+			mp.addBodyPart(mimeBodyPart1);
+			mp.addBodyPart(mimeBodyPart2);
+
+			message.setContent(mp);   
+			message.setSentDate(new Date());
 			message.saveChanges();   
 
 			Transport.send(message);
@@ -151,11 +140,11 @@ public class Email implements Serializable {
 			retorno = false;
 			throw new RuntimeException(e);
 		}
-		
+
 		return retorno;
 	}
 
-	
+
 	public String getDe() {
 		return de;
 	}

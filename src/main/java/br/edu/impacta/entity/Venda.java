@@ -65,6 +65,9 @@ public class Venda implements Serializable, Cloneable{
 	@Column(name = "finalizado", nullable = true)
 	private Boolean finalizado;
 	
+	@Column(name = "observacao", nullable = true, length = 400)
+	private String observacao;
+	
 	@JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
 	@ManyToOne(optional = true, fetch = FetchType.EAGER)
 	private Cliente cliente;
@@ -149,6 +152,9 @@ public class Venda implements Serializable, Cloneable{
 
 
 	public BigDecimal getTotal() {
+		if(total == null){
+			total = BigDecimal.ZERO;
+		}
 		return total;
 	}
 
@@ -187,6 +193,14 @@ public class Venda implements Serializable, Cloneable{
 		this.finalizado = finalizado;
 	}
 
+	
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
 
 	public Cliente getCliente() {
 		return cliente;
@@ -217,7 +231,8 @@ public class Venda implements Serializable, Cloneable{
 	public void setTotalFormatado(String totalFormatado) {
 		this.totalFormatado = totalFormatado;
 	}
-
+	
+	
 	public String getDescontoFormatado() {
 		if(desconto != null) {
 			return NumberFormat.getCurrencyInstance().format(desconto);

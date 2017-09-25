@@ -42,7 +42,7 @@ public class ItemVenda implements Serializable,  Cloneable {
 	@ManyToOne(optional = true, fetch = FetchType.EAGER)
 	private Produto produto;
 	
-	@Transient
+	@Column(name = "total_item_venda", nullable = true)
 	private BigDecimal totalItemVenda;
 	
 	@Transient
@@ -155,7 +155,7 @@ public class ItemVenda implements Serializable,  Cloneable {
 	public void setCorTexto(String corTexto) {
 		this.corTexto = corTexto;
 	}
-
+	
 
 	@Override
 	public String toString() {

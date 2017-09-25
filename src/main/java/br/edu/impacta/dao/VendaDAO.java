@@ -1,7 +1,11 @@
 package br.edu.impacta.dao;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import br.edu.impacta.entity.Venda;
 
@@ -23,8 +27,25 @@ public class VendaDAO extends GenericDAO<Venda> implements Serializable {
 		return find(jpql);
 	}
 	
+	public List<Venda> findOrcamentosAguardAprovacao(){
+		String jpql = "from Venda v where (v.aprovado = 0) and (v.ativo = 1) and (v.finalizado = 0) and (v.tipo = 2)";
+		return find(jpql);
+	}
+	
+	
+	public List<Venda> findOrcamentosFinalizados(){
+		String jpql = "from Venda v where (v.aprovado = 1) and (v.ativo = 1) and (v.finalizado = 1) and (v.tipo = 2)";
+		return find(jpql);
+	}
+	
+	
 	public List<Venda> findVendasCanceladas(){
 		String jpql = "from Venda v where (v.ativo = 0) and (v.tipo = 1)";
+		return find(jpql);
+	}
+	
+	public List<Venda> findOrcamentosCancelados(){
+		String jpql = "from Venda v where (v.ativo = 0) and (v.tipo = 2)";
 		return find(jpql);
 	}
 	
@@ -33,9 +54,39 @@ public class VendaDAO extends GenericDAO<Venda> implements Serializable {
 		return find(jpql);
 	}
 	
+	public List<Venda> findOrcamentosAprovados() {
+		String jpql = "from Venda v where (v.ativo = 1) and (v.tipo = 2) and (v.aprovado = 1) and (v.finalizado = 0)";
+		return find(jpql);
+	}
+	
 	public List<Venda> findVendasTodas() {
 		String jpql = "from Venda v where v.tipo = 1";
 		return find(jpql);
+	}
+	
+	public List<Venda> findOrcamentosTodos() {
+		String jpql = "from Venda v where v.tipo = 2";
+		return find(jpql);
+	}
+	
+	public Long getTotalVendas(String mes, String ano){
+		String jpql = " select count(v.total) from Venda v where (v.ativo = 1) and (v.tipo = 1) "
+				+ "and (month(v.data) = " + mes + ") and (year(v.data) = " + ano + ") ";
+		
+		EntityManager em = getEntityManager();
+		Query query = em.createQuery(jpql);
+		
+		return (Long)query.getSingleResult();
+	}
+	
+	public BigDecimal getTotalVendasValor(String mes, String ano){
+		String jpql = " select sum(v.total) from Venda v where (v.ativo = 1) and (v.tipo = 1) "
+				+ "and (month(v.data) = " + mes + ") and (year(v.data) = " + ano + ") ";
+		
+		EntityManager em = getEntityManager();
+		Query query = em.createQuery(jpql);
+		
+		return (BigDecimal)query.getSingleResult();
 	}
 	
 }
