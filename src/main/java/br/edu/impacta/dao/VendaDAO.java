@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import br.edu.impacta.entity.Dashboard;
 import br.edu.impacta.entity.Venda;
 
 /**
@@ -68,25 +69,47 @@ public class VendaDAO extends GenericDAO<Venda> implements Serializable {
 		String jpql = "from Venda v where v.tipo = 2";
 		return find(jpql);
 	}
+
 	
-	public Long getTotalVendas(String mes, String ano){
-		String jpql = " select count(v.total) from Venda v where (v.ativo = 1) and (v.tipo = 1) "
+	@SuppressWarnings("unchecked")
+	public Dashboard getDashVendas(String mes, String ano){
+		
+		String jpql = " select sum(v.total), count(v.total)  from Venda v where (v.ativo = 1) and (v.tipo = 1) "
 				+ "and (month(v.data) = " + mes + ") and (year(v.data) = " + ano + ") ";
 		
 		EntityManager em = getEntityManager();
 		Query query = em.createQuery(jpql);
 		
-		return (Long)query.getSingleResult();
+		List<Object[]> result = query.getResultList();
+		Dashboard dashboard = new Dashboard();
+		
+		for (Object[] objects : result) {
+			dashboard.setTotalVendasVl((BigDecimal)objects[0]);
+			dashboard.setTotalVendas((Long)objects[1]);
+		}
+		
+		return dashboard;
 	}
 	
-	public BigDecimal getTotalVendasValor(String mes, String ano){
-		String jpql = " select sum(v.total) from Venda v where (v.ativo = 1) and (v.tipo = 1) "
+	@SuppressWarnings("unchecked")
+	public Dashboard getDashOrcamentos(String mes, String ano){
+		
+		String jpql = " select sum(v.total), count(v.total)  from Venda v where (v.ativo = 1) and (v.tipo = 2) and (v.finalizado = 1) and (v.aprovado = 1) "
 				+ "and (month(v.data) = " + mes + ") and (year(v.data) = " + ano + ") ";
 		
 		EntityManager em = getEntityManager();
 		Query query = em.createQuery(jpql);
 		
-		return (BigDecimal)query.getSingleResult();
+		List<Object[]> result = query.getResultList();
+		Dashboard dashboard = new Dashboard();
+		
+		for (Object[] objects : result) {
+			dashboard.setTotalOrcamentosVl((BigDecimal)objects[0]);
+			dashboard.setTotalOrcamentos((Long)objects[1]);
+		}
+		
+		return dashboard;
 	}
+	
 	
 }

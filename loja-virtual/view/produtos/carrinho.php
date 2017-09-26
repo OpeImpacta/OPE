@@ -22,8 +22,6 @@
 					<tr>
 						<th>Produto</th>
 						<th>Quantidade</th>
-						<th>Preço</th>
-						<th>Subtotal</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -42,20 +40,9 @@
 										</a>
 									</div>
 								</td>
-								<?php
-									$valorVenda = $value["preco_compra"] + ($value["preco_compra"] * ($value["margem"] / 100));
-									$subtotal = $_SESSION["totalProduto"][$value["id_produto"]] * $valorVenda;
-									$valorTotal[$value["id_produto"]] = $subtotal;
-								?>
-								<td>R$ <?=number_format($valorVenda, 2, ',', '.');?></td>
-								<td>R$ <?=number_format($subtotal, 2, ',', '.');?></td>
 							</tr>
 						<?php endforeach; ?>
 					<?php endif; ?>
-					<tr>
-						<th colspan="3" style="text-align: right; font-size: 15px;">Total:</th>
-						<td>R$ <?=number_format(array_sum($valorTotal), 2, ',', '.');?></td>
-					</tr>
 				</tbody>
 			</table>
 			<div class="row">
