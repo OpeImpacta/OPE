@@ -76,9 +76,6 @@
 			<div class="col-lg-5 col-md-5 col-sm-6 col-xs-12 pull-right">
 				<div class="thumbnail">
 					<div class="caption">
-						<h3>
-							R$ <?=number_format(($produto["dados"][0]["preco_compra"] + ($produto["dados"][0]["preco_compra"] * ($produto["dados"][0]["margem"] / 100))), 2, ",", ",");?>
-						</h3>
 						<?php if (!empty($produto["dados"][0]["compativel"])): ?>
 							<p>
 								<ul class="list-unstyled">

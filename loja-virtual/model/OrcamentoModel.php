@@ -25,7 +25,9 @@ class OrcamentoModel {
 				item_venda iv,
 				venda v
 			WHERE p.id_produto = iv.id_produto
-				AND v.id_venda = iv.venda_id_venda" . $condicao
+				AND v.id_venda = iv.venda_id_venda
+				AND v.tipo = 2
+				AND v.id_cliente = " . $_SESSION["id"] . $condicao
 		);
 	}
 

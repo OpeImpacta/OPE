@@ -33,13 +33,13 @@
 					<div class="panel-heading" role="tab" id="heading<?=$key;?>">
 						<h4 class="panel-title">
 							<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<?=$key;?>" aria-expanded="true" aria-controls="collapse<?=$key;?>">
-								ORÇAMENTO Nº <?=$value["id_venda"];?>
+								ORÇAMENTO Nº <?=$key;?>
 							</a>
 						</h4>
 					</div>
 					<div id="collapse<?=$key;?>" class="panel-collapse collapse <?=($count == 0 ? "in" : "");?>" role="tabpanel" aria-labelledby="heading<?=$key;?>">
 						<div class="panel-body">
-							<table class="table table-hover">
+							<table class="table">
 								<thead>
 									<tr>
 										<th>Produto</th>
@@ -49,21 +49,24 @@
 										<th>Subtotal</th>
 									</tr>
 								</thead>
-								<?php if (!empty($value)): ?>
-									<tbody>
-										<tr>
-											<td><?=ucwords(strtolower($value["nome"]));?></td>
-											<td><?=str_pad($value["quantidade"], 2, "0", STR_PAD_LEFT);?> </td>
-											<td><?=$value["datavenda"];?></td>
-											<td>R$ <?=number_format($value["preco_venda"], 2, ',', '.');?></td>
-											<td>R$ <?=number_format(($value["quantidade"] * $value["preco_venda"]), 2, ',', '.');?></td>
-										</tr>
+								<tbody>
+									<?php if (!empty($value)): $total = array();?>
+										<?php foreach ($value as $k => $v): ?>
+											<?php $total[$v["id_venda"]][] = ($v["quantidade"] * $v["preco_venda"]); ?>
+											<tr>
+												<td><?=ucwords(strtolower($v["nome"]));?></td>
+												<td><?=str_pad($v["quantidade"], 2, "0", STR_PAD_LEFT);?> </td>
+												<td><?=$v["datavenda"];?></td>
+												<td>R$ <?=number_format($v["preco_venda"], 2, ',', '.');?></td>
+												<td>R$ <?=number_format(($v["quantidade"] * $v["preco_venda"]), 2, ',', '.');?></td>
+											</tr>
+										<?php endforeach; ?>
 										<tr>
 											<th colspan="4" style="text-align: right; font-size: 15px;">Total:</th>
-											<td style="vertical-align: inherit;">R$ <?=number_format($value["total"], 2, ',', '.');?></td>
+											<td style="vertical-align: inherit;">R$ <?=number_format(array_sum($total[$key]), 2, ',', '.');?></td>
 										</tr>
-									</tbody>
-								<?php endif; ?>
+									<?php endif; ?>
+								</tbody>
 							</table>
 						</div>
 					</div>

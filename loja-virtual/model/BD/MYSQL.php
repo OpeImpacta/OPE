@@ -223,7 +223,7 @@ class MYSQL extends Conexao {
 		}
 
 		$sql .= implode(" AND ", $cond);
-		$this->query( $sql );
+		return $this->query( $sql );
 	}
 
 

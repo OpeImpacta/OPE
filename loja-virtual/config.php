@@ -1,12 +1,12 @@
 <?php 
 session_start();
 
-$httpServer = "http://".$_SERVER["SERVER_NAME"]."/";
+$httpServer = "http://".$_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"]."/";
 $rootPath = realpath($_SERVER["DOCUMENT_ROOT"]);
 
 if ($_SERVER["SERVER_NAME"] == "localhost") {
-	$httpServer.= "loja-virtual/";
-	$rootPath.= "/loja-virtual/";
+	$httpServer.= "projetos/loja-virtual/";
+	$rootPath.= "/projetos/loja-virtual/";
 }
 
 define('REALPATH', $rootPath);

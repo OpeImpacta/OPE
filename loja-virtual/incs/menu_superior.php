@@ -20,7 +20,7 @@
 					<ul class="dropdown-menu">
 						<?php if (isset($_SESSION["auth"]) && $_SESSION["auth"]): ?>
 							<li><a href="<?=BASE_URL;?>admin/view/orcamentos/index.php">Meus orçamentos</a></li>
-							<li><a href="<?=BASE_URL;?>admin/view/index.php?id=<?=$_SESSION["id"];?>">Atualizar informações</a></li>
+							<li><a href="<?=BASE_URL;?>admin/view/usuarios/index.php?id=<?=$_SESSION["id"];?>">Atualizar informações</a></li>
 							<li role="separator" class="divider"></li>
 							<li>
 								<a href="<?=BASE_URL;?>acoes/sair.php">

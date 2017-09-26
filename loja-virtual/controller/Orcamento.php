@@ -17,13 +17,14 @@ class Orcamento {
 
 		// echo "<pre>"; print_r($retorno); echo "</pre>"; exit;
 
-		// if (!empty($retorno)) {
-		// 	foreach ($retorno as $key => $value) {
-		// 		$dados[$value["nr_pedido"]][] = $value;
-		// 	}
-		// }
+		if (!empty($retorno)) {
+			foreach ($retorno as $key => $value) {
+				$dadosRetorno[$value["id_venda"]][] = $value;
+			}
+		}
 
-		return $retorno;
+		// echo "<pre>"; print_r($dadosRetorno); echo "</pre>"; exit;
+		return $dadosRetorno;
 	}
 
 	public function salvar(){
@@ -35,7 +36,7 @@ class Orcamento {
 				"tipo" => 2,
 				"aprovado" => "0",
 				"finalizado" => "0",
-				"ativo" => "1",
+				"ativo" => 1,
 				"data" => date("Y-m-d H:i:s")
 			);
 
@@ -43,7 +44,6 @@ class Orcamento {
 
 			if ($idOrcamento) {
 				$total = 0;
-				$valorTotal = 0;
 
 				foreach ($_SESSION["carrinho"] as $key => $value) {
 					$itemVenda = array(
@@ -53,10 +53,7 @@ class Orcamento {
 					);
 
 					$total += $this->model->salvarItensVenda($itemVenda);
-					$valorTotal += ($value["preco_venda"] * $_SESSION["totalProduto"][$value["id_produto"]]);
 				}
-
-				$this->model->salvar(array("total" => $valorTotal), $idOrcamento);
 
 				if ($total == count($_SESSION["carrinho"])) {
 					return true;

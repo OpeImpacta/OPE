@@ -75,7 +75,7 @@ class Usuario {
 			"senha" => $dados["senha"],
 			"cpf" 	=> $dados["cpfCnpj"],
 			"tipo"	=> $tipo,
-			"ativo" => true
+			"ativo" => 1
 		);
 
 		if (!empty($dados["codigo"])) {
