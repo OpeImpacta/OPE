@@ -155,7 +155,7 @@
 						</f:facet>
 	                	
 						<p:column headerText="Código" style="text-align: center" >
-	                		<h:outputText value="#{item.id_item_venda}" />
+	                		<h:outputText value="#{item.idItemVenda}" />
 	                	</p:column>
 	                			
 	                	<p:column headerText="Produto" style="text-align: center" >
@@ -213,7 +213,7 @@
          		<p:panelGrid layout="grid" columns="1">
          		
 	        		<p:dataTable var="item" id="dtItemVenda" value="#{vendaControl.vendaSelecionada.itens}" emptyMessage="Nenhum Item Encontrado"
-	        					selection="#{vendaControl.itemVendaList}" rowKey="#{item.id_item_venda}"
+	        					selection="#{vendaControl.itemVendaList}" rowKey="#{item.idItemVenda}"
 	                			tableStyle="table-layout: auto" widgetVar="wvTable" >
 	                			
 	                	<f:facet name="header">
@@ -221,7 +221,7 @@
 						</f:facet>
 						
 						<p:column headerText="Código" style="text-align: center" >
-	                		<h:outputText value="#{item.id_item_venda}" />
+	                		<h:outputText value="#{item.idItemVenda}" />
 	                	</p:column>
 	                			
 	                	<p:column headerText="Produto" style="text-align: center" >
