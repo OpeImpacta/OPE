@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+
+	<h:form>
+		#{dashControl.getValores()}
+		<br/>
+		<p:spacer height="15px" />
+		<div class="row">
+			<div class="col-md-3 col-sm-6 col-xs-12">
+			 	<p:link href="/sistema/orcamento/consultarOrcamentos.xhtml">
+					<div class="info-box bg-yellow" >
+						<span class="info-box-icon">
+							<i class="ion ion-ios-pricetag-outline" />
+						</span>
+						<div class="info-box-content">
+							<span class="info-box-text">Novos Orçamentos</span> 
+						
+							<span class="info-box-number">#{dashControl.novosOrcamentos}</span>
+						</div>
+					</div>
+				</p:link>
+			</div>
+
+			<div class="col-md-3 col-sm-6 col-xs-12">
+				<p:link href="/sistema/estoque/consultarEstoque.xhtml" >
+					<div class="info-box bg-aqua">
+						<span class="info-box-icon" >
+							<i class="fa fa-cart-arrow-down" />
+						</span>
+	
+						<div class="info-box-content">
+							<span class="info-box-text">Estoque Baixo</span> 
+							<span class="info-box-number">#{dashControl.estoqueBaixo}</span>
+						</div>
+					</div>
+				</p:link>
+			</div>
+			
+			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="info-box bg-green">
+					<span class="info-box-icon"><i
+						class="fa fa-calculator"></i></span>
+
+					<div class="info-box-content">
+						<span class="info-box-text">Orçamentos do Mês</span> 
+						<span class="info-box-number">#{dashControl.dashboardOrcamento.totalOrcamentos}</span>
+						
+						<span class="info-box-number">#{dashControl.dashboardOrcamento.totalOrcamentosFormatado}</span>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="info-box bg-red">
+					<span class="info-box-icon">
+						<i class="fa fa-cart-plus" />
+					</span>
+
+					<div class="info-box-content">
+						<span class="info-box-text">Vendas do Mês</span> 
+						<span class="info-box-number">#{dashControl.dashboardVenda.totalVendas}</span>
+						
+						<span class="info-box-number">#{dashControl.dashboardVenda.totalVendaFormatado}</span>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	
+	</h:form>
+</ui:composition>

@@ -6,6 +6,7 @@
                 xmlns:pe="http://primefaces.org/ui/extensions">
 
     <ul class="nav navbar-nav">
+    	<!--
         <li class="dropdown messages-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                 <i class="fa fa-cart-arrow-down"></i>
@@ -15,7 +16,7 @@
             	<li class="header align-center"><a href="#{movimentacaoControl.getUrl()}">Produtos com estoque baixo</a></li>
             </ul>
         </li>
-        <!-- <li class="dropdown notifications-menu">
+         <li class="dropdown notifications-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                 <i class="fa fa-bell-o"></i>
                 <span class="label label-warning">2</span>
@@ -40,8 +41,11 @@
         
         <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <!-- 
                 <pe:gravatar id="userImage"
                              value="nonexisting"/>
+                             -->
+                             <i class="fa fa-user" />
                 <span class="hidden-xs">#{loginControl.getUsuarioLogado().getNome()}</span>
             </a>
             <ul class="dropdown-menu">
@@ -60,7 +64,13 @@
                 <li class="user-footer">
                     <h:form prependId="false">
                         <div class="pull-left">
-                            <p:commandLink  styleClass="btn btn-danger" action="/sistema/cadastro/alterarSenha.xhtml"  value="Alterar Senha"/>
+                         <p:link href="/sistema/cadastro/alterarSenha.xhtml">
+                         	<p:outputLabel value="Alterar Senha" style="color: green; text-decoration: underline;" />
+                         </p:link>
+                         
+                         <!-- 
+                         <p:commandLink  styleClass="btn btn-danger" action="/sistema/cadastro/alterarSenha.xhtml"  value="Alterar Senha"/>
+                         -->
                         </div>
                         <div class="pull-right">
                             <p:commandLink id="logout" action="#{logoutMB.doLogout}"  title="Logoff">

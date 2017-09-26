@@ -122,6 +122,9 @@ public class Venda implements Serializable, Cloneable{
 
 
 	public BigDecimal getDesconto() {
+		if(desconto == null){
+			desconto = new BigDecimal(0);
+		}
 		return desconto;
 	}
 
