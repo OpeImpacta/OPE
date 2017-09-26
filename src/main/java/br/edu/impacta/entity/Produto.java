@@ -81,6 +81,9 @@ public class Produto implements Serializable {
 
 	@Transient
 	private String precoVendaFormatado;
+	
+	@Transient
+	private String precoCompraFormatado;
 
 
 	public Produto() {}
@@ -213,6 +216,17 @@ public class Produto implements Serializable {
 
 	public void setProdutoModeloList(List<ProdutoModelo> produtoModeloList) {
 		this.produtoModeloList = produtoModeloList;
+	}
+	
+	public String getPrecoCompraFormatado() {
+		if (this.precoCompra != null) {
+			return NumberFormat.getCurrencyInstance().format(precoCompra);
+		}
+		return precoCompraFormatado;
+	}
+
+	public void setPrecoCompraFormatado(String precoCompraFormatado) {
+		this.precoCompraFormatado = precoCompraFormatado;
 	}
 
 	@Override

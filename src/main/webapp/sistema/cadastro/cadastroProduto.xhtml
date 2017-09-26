@@ -131,9 +131,9 @@
 		                <h:outputText value="Preço de Compra : " />
 		                <h:outputText value="R$ #{registro.precoCompra}" />
 		                <h:outputText value="Margem : " />
-		                <h:outputText value="R$ #{registro.margem}" />
+		                <h:outputText value="#{registro.margem} %" />
 		                <h:outputText value="Preço de Venda : " />
-		                <h:outputText value="#{registro.precoVenda} %" />
+		                <h:outputText value="R$ #{registro.precoVenda}" />
 						<h:outputText value="Ativo : " />
 						<h:outputText value="#{utilityTela.getDescBoolean(registro.ativo)}" />
 	                </p:panelGrid>
