@@ -135,6 +135,7 @@ public class OrcamentoController extends BasicControlCad<Venda> implements Seria
 	public void calculaTotalItens() {
 		for (ItemVenda item : vendaSelecionada.getItens()) {
 			if(vendaSelecionada.getAprovado() == false){
+				item.setTotalItemVenda(item.getProduto().getPrecoVenda().multiply(new BigDecimal( item.getQuantidade())));
 				vendaSelecionada.setTotal(vendaSelecionada.getTotal().add(item.getTotalItemVenda()));
 			}
 			this.setSubTotal(vendaSelecionada.getTotal().add(vendaSelecionada.getDesconto()));
