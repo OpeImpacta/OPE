@@ -21,10 +21,12 @@ class Orcamento {
 			foreach ($retorno as $key => $value) {
 				$dadosRetorno[$value["id_venda"]][] = $value;
 			}
+
+			return $dadosRetorno;
 		}
 
 		// echo "<pre>"; print_r($dadosRetorno); echo "</pre>"; exit;
-		return $dadosRetorno;
+		return $retorno;
 	}
 
 	public function salvar(){

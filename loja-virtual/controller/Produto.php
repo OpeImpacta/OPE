@@ -16,6 +16,7 @@ class Produto {
 		if (!empty($dados["dados"])) {
 			foreach ($dados["dados"] as $key => $value) {
 				$dados["dados"][$key]["compativel"] = $this->model->listarPorMontadora($value["id_produto"]);
+				$dados["dados"][$key]["imagem"] = $this->model->listarImagem($value["id_produto"]);
 			}
 
 			/** Paginação */
@@ -43,6 +44,7 @@ class Produto {
 		if (!empty($dados["dados"])) {
 			foreach ($dados["dados"] as $key => $value) {
 				$dados["dados"][$key]["compativel"] = $this->model->listarPorMontadora($value["id_produto"]);
+				$dados["dados"][$key]["imagem"] = $this->model->listarImagem($value["id_produto"]);
 			}
 
 			/** Paginação */

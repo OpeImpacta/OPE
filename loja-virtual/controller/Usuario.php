@@ -101,7 +101,7 @@ class Usuario {
 				$_SESSION["cpf"] 	= $dados["cpf"];
 				$_SESSION["telefone"] = $dados["telefone"];
 
-				header('Location: '.BASE_URL.'admin/view/orcamentos/index.php');
+				return $idContato;
 			}
 		}
 	}

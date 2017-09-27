@@ -49,4 +49,8 @@ class ProdutoModel {
 				AND pm.id_produto = " . $idProduto
 		);
 	}
+
+	public function listarImagem($idProduto){
+		return $this->bd->query("SELECT * FROM imagem WHERE produto_id_produto = ".$idProduto);
+	}
 }

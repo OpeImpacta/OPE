@@ -26,8 +26,8 @@
 				<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 box-produto">
 					<div class="thumbnail">
 						<a href="<?=BASE_URL;?>view/produtos/index.php?id=<?=$value["id_produto"];?>">
-							<!-- <img class="imgProduto" width="320" height="180" src="data:image;base64,<?=base64_encode($value["imagem"]);?>" alt=""> -->
-							<img src="<?=BASE_URL;?>imagens/produtos/320x180.png" alt="">
+							<img class="imgProduto" width="320" height="180" src="data:image;base64,<?=base64_encode($value["imagem"][0]["foto"]);?>" alt="">
+							<!-- <img src="<?=BASE_URL;?>imagens/produtos/320x180.png" alt=""> -->
 						</a>
 						<div class="caption">
 							<h4>
@@ -48,6 +48,9 @@
 									</ul>
 								</div>
 							<?php endif ?>
+
+							<hr/>
+
 							<div class="ratings">
 								<p class="pull-right">
 									<a href="<?=BASE_URL;?>acoes/carrinho.php?acao=adicionar&id=<?=$value["id_produto"];?>" class="btn btn-primary btn-sm">
