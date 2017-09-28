@@ -85,6 +85,10 @@ public class ConfigEmailController extends BasicControlCad<ConfigEmail> implemen
 	public boolean enviarEmailAnexo(String para, Map params, String nomeRelatorio){
 		this.getConfig();
 		
+		if(configEmail.getIdConfig() == null){
+			return false;
+		}
+		
 		Email email = new Email();
 		email.setAssunto(configEmail.getAssunto());
 		email.setDe(configEmail.getEmail());

@@ -118,11 +118,22 @@ public class MovimentacaoController extends BasicControlCad<Movimentacao> implem
 	}
 	
 
-	//verifica se os campos do produto foram preenchidos, senão forem mostra mensagem na tela
+	//verifica se os campos do produto foram preenchidos
 	public boolean validaCamposProduto(){
 		if(movimentacao.getProduto() == null){
 			return false;
 		}
+		
+		if(movimentacao.getQuantidade() <= 0 ){
+			return false;
+		}
+		
+		if(tpMovimentacao == 2){
+			if(movimentacao.getQuantidade() > movimentacao.getProduto().getQuantidade() ){
+				return false;
+			}
+		}
+		
 		return true;
 	}
 
