@@ -20,6 +20,11 @@ import br.edu.impacta.entity.Usuario;
 @Specializes
 public class LoginController extends AdminSession implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static UsuarioDAO usuarioDAO = new UsuarioDAO();
 	
 	private String currentUser;
@@ -47,8 +52,8 @@ public class LoginController extends AdminSession implements Serializable {
     	
     	// Para habilitar o login substituir o return true pela linha comentada
     	
-    	// return currentUser != null;
-    	return true;
+    	 return currentUser != null;
+    	//return true;
     }
     
     public String getEmail() {

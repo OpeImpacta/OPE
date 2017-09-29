@@ -54,7 +54,7 @@ public class Cliente implements Serializable {
 	@Column(name="ativo")
 	private boolean ativo = true;
 	
-	@OneToMany(mappedBy = "cliente", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, orphanRemoval = true )
+	@OneToMany(mappedBy = "cliente", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, orphanRemoval = true )
 	private List<TelCliente> telefones;
 	
 	public Cliente() {}

@@ -22,6 +22,10 @@ public class VendaDAO extends GenericDAO<Venda> implements Serializable {
 		super(Venda.class);
 	}
 	
+	public Venda findVendaById(Integer id) {
+		String jpql = "from Venda v where v.idVenda = ?";
+		return findOne(jpql, id);
+	}
 	
 	public List<Venda> findOrcamentosPendentes(){
 		String jpql = "from Venda v where (v.aprovado = 1) and (v.ativo = 1) and (v.finalizado = 0) and (v.tipo = 2)";

@@ -69,14 +69,14 @@ public class Produto implements Serializable {
 	@Column(name = "controla_estoque", nullable = true)
 	private Boolean controlaEstoque;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
 	private Categoria categoria;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "produto", fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "produto", fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<Imagem> imagemList = new ArrayList<>();
 	
-	@OneToMany(mappedBy="produto", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, orphanRemoval = true )
+	@OneToMany(mappedBy="produto", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true )
 	private List<ProdutoModelo> produtoModeloList = new ArrayList<>();
 
 	@Transient

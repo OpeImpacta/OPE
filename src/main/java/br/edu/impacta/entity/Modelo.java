@@ -43,7 +43,7 @@ public class Modelo implements Serializable {
     @JoinColumn(name = "id_montadora", referencedColumnName = "id_montadora")
     private Montadora montadora;   
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Produto produto;
 
 	public Modelo(Integer idModelo, String nome) {

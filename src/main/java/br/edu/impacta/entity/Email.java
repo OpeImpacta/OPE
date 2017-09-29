@@ -21,9 +21,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
-import org.apache.commons.collections.map.HashedMap;
-
-//import br.edu.impacta.controller.ReportController;
+import br.edu.impacta.controller.ReportController;
 
 /**
  * @author Stefany Souza
@@ -43,8 +41,6 @@ public class Email implements Serializable {
 	private String texto;
 	private String assunto;
 	
-	//@Inject
-	//private ReportController reportController;
 
 	public Email() {}
 
@@ -121,32 +117,14 @@ public class Email implements Serializable {
 			message.setSubject(getAssunto());
 			message.setText(getTexto());
 
-			//Configuração da Mensagem
-			MimeMultipart mpRoot = new MimeMultipart("mixed");   
-			MimeMultipart mpContent = new MimeMultipart("alternative");   
-			MimeBodyPart contentPartRoot = new MimeBodyPart();   
-			contentPartRoot.setContent(mpContent);   
-			mpRoot.addBodyPart(contentPartRoot);   
-
-			MimeBodyPart mbp2 = new MimeBodyPart();
-			mbp2.setContent(getTexto(), "text/html");
-			mpContent.addBodyPart(mbp2);
-			
-			MimeBodyPart mbp3 = new MimeBodyPart();   
-			
-			//DataSource fds = new ByteArrayDataSource(reportController.getRelatorioByte(nomeRelatorio, params), "application/pdf");   
-            mbp3.setDisposition(Part.ATTACHMENT);   
-            //mbp3.setDataHandler(new DataHandler(fds));   
-            mbp3.setFileName("orcamento.pdf");   
-            mpRoot.addBodyPart(mbp3);   
 			MimeBodyPart mimeBodyPart1 = new MimeBodyPart();
 			mimeBodyPart1.setContent(getTexto(), "text/html");
 
 			MimeBodyPart mimeBodyPart2 = new MimeBodyPart();
-			//ReportController reportController = new ReportController();
-			//DataSource fds = new ByteArrayDataSource(reportController.getRelatorioByte(nomeRelatorio, params), "application/pdf");   
+			ReportController reportController = new ReportController();
+			DataSource fds = new ByteArrayDataSource(reportController.getRelatorioByte(nomeRelatorio, params), "application/pdf");   
 			mimeBodyPart2.setDisposition(Part.ATTACHMENT);   
-			//mimeBodyPart2.setDataHandler(new DataHandler(fds));   
+			mimeBodyPart2.setDataHandler(new DataHandler(fds));   
 			mimeBodyPart2.setFileName("orcamento.pdf"); 
 
 			Multipart mp = new MimeMultipart();
@@ -165,7 +143,6 @@ public class Email implements Serializable {
 
 		return retorno;
 	}
-
 
 	public String getDe() {
 		return de;

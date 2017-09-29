@@ -15,4 +15,14 @@ public class ClienteDAO extends GenericDAO<Cliente> implements Serializable {
 		super(Cliente.class);
 	}
 	
+	public Boolean findByEmail(String email){
+		String jpql = "from Cliente c where c.email = '" + email + "'";
+		Cliente cliente = findOne(jpql);
+		
+		if(cliente == null)
+			return true;
+		
+		return false;
+	}
+	
 }

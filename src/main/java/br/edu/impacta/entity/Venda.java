@@ -69,10 +69,10 @@ public class Venda implements Serializable, Cloneable{
 	private String observacao;
 	
 	@JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
-	@ManyToOne(optional = true, fetch = FetchType.EAGER)
+	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	private Cliente cliente;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "venda", fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "venda", fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<ItemVenda> itens = new ArrayList<>();
 	
 	@Transient

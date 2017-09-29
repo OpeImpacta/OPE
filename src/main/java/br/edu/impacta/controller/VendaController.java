@@ -131,7 +131,7 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 
 		if(((Venda)this.getSelected()).getItens().isEmpty()) {
-			desconto = total = subTotal = null;
+			desconto = total = subTotal = descontoTotal = null;
 			descontoFormatado = totalFormatado = subTotalFormatado = null;
 		}
 
@@ -268,8 +268,10 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 	public void abrirDialog() {
 		System.out.println("***************** Abrindo Dialog ********************");
-		vlRecebido = troco = null;
-		UtilityTela.executarJavascript("PF('dlgFinalizacao').show();");
+		if(this.getTotal().compareTo(new BigDecimal(0)) == 1){
+			vlRecebido = troco = null;
+			UtilityTela.executarJavascript("PF('dlgFinalizacao').show();");
+		}
 	}
 
 	//calcula o valor do troco conforme valor recebido
@@ -349,15 +351,11 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 		semEstoque = false;
 
 		if(idOrcamento != null) {
-			orcamentoSelecionado = vendaDAO.findById(idOrcamento);
+			orcamentoSelecionado = vendaDAO.findVendaById(idOrcamento);
 
 			if(verificaOrcamento()) {
 				this.setaValores(orcamentoSelecionado);
 				this.setSelected(orcamentoSelecionado.clone());
-
-				for(ItemVenda i : orcamentoSelecionado.getItens()) {
-					i.setTotalItemVenda(i.getProduto().getPrecoVenda().multiply(new BigDecimal(i.getQuantidade())));
-				}
 
 				configSelected();
 			} else {
@@ -389,7 +387,8 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 		setDescontoTotal(venda.getDesconto());
 		setSubTotal(venda.getTotal().add(venda.getDesconto()));
 	}
-
+	
+	
 	public void configSelected() {
 		((Venda)getSelected()).setIdVenda(null);
 		List<ItemVenda> itens = ((Venda)getSelected()).getItens();
