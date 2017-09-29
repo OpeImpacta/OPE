@@ -40,7 +40,7 @@ public class Imagem implements Serializable {
 	@Column(name="nome", nullable =  false, length =  50)
 	private String nome;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Produto produto;
 	
 	public Imagem() {}

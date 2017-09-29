@@ -41,8 +41,6 @@ public class Email implements Serializable {
 	private String texto;
 	private String assunto;
 	
-	//@Inject
-	//private ReportController reportController;
 
 	public Email() {}
 

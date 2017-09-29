@@ -50,7 +50,7 @@ public class Movimentacao implements Serializable {
 	private String observacao;
 	
 	@JoinColumn(name = "id_produto", referencedColumnName = "id_produto", nullable = false)
-	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
 	private Produto produto;
 
 	

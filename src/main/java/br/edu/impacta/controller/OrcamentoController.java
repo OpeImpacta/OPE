@@ -110,7 +110,8 @@ public class OrcamentoController extends BasicControlCad<Venda> implements Seria
 		vendaDAO.update(vendaSelecionada);
 		UtilityTela.criarMensagem("Sucesso!", "Orçamento Aprovado.");
 
-		enviarEmail(vendaSelecionada.getIdVenda());
+		//Tirar comentario dessa linha para enviar email
+		//enviarEmail(vendaSelecionada.getIdVenda());
 	}
 
 

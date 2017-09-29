@@ -54,10 +54,10 @@ public class Fornecedor implements Serializable {
 	@Column(name="ativo")
 	private boolean ativo = true;
 
-	@OneToMany(mappedBy = "fornecedor", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, orphanRemoval = true )
+	@OneToMany(mappedBy = "fornecedor", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, orphanRemoval = true )
 	private List<TelFornecedor> telefones;
 
-	@OneToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "id_endereco", referencedColumnName = "id_endereco")
 	private Endereco endereco;	
 
