@@ -21,7 +21,7 @@
 
 <div class="row">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-		<h2>Meus Orçamentos</h2><hr/>
+		<h2>Meus Orçamentos Aprovados</h2><hr/>
 	</div>
 
 	<?php include "../../../incs/menu_lateral.php"; ?>
@@ -29,7 +29,7 @@
 		<?php if (!empty($orcamento)): ?>
 			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 			<?php foreach ($orcamento as $key => $value): ?>
-				<div class="panel panel-info">
+				<div class="panel panel-primary">
 					<div class="panel-heading" role="tab" id="heading<?=$key;?>">
 						<h4 class="panel-title">
 							<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<?=$key;?>" aria-expanded="true" aria-controls="collapse<?=$key;?>">
