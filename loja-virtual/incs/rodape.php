@@ -29,7 +29,7 @@
 					</div>
 				</div>
 				<hr>
-				<p>Desenvolvido por ONBUS S/A<br/> Casa do Ônibus © 2017. Todos os direitos reservados.</p>
+				<p>© Casa de Material do Ônibus 2017.<br/> Todos os direitos reservados.</p>
 			</div>
 		</footer>
 		<input type="hidden" id="base_url" value="<?=BASE_URL;?>" />
