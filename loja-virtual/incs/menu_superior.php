@@ -7,10 +7,19 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="<?=BASE_URL;?>">Casa de Material do Ônibus</a>
+			<a class="navbar-brand" href="<?=BASE_URL;?>">
+				<!-- <img src="<?=BASE_URL;?>imagens/logo.png" width="100" alt="" /> -->
+				Casa de Material do Onibus
+			</a>
 		</div>
 
 		<div class="collapse navbar-collapse" id="navbarCollapse">
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control input-sm" placeholder="Buscar">
+				</div>
+				<button type="submit" class="btn btn-default btn-sm">Buscar</button>
+			</form>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">

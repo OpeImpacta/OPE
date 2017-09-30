@@ -73,68 +73,60 @@
 				</div>
 			</div>
 
-			<div class="col-lg-5 col-md-5 col-sm-6 col-xs-12 pull-right">
-				<div class="thumbnail">
-					<div class="caption">
-						<?php if (!empty($produto["dados"][0]["compativel"])): ?>
-							<p>
-								<ul class="list-unstyled">
-									<li><strong>Compatibilidade:</strong></li>
+			<div class="col-lg-5 col-md-5 col-sm-6 col-xs-12">
+				<div class="panel panel-primary">
+					<div class="panel-heading" role="tab" id="headingOne">
+						<h4 class="panel-title">
+							Descrição do Produto
+						</h4>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<?php if (!empty($produto["dados"][0]["compativel"])): ?>
+								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
+									<strong>Compatibilidade:</strong>
 									<?php foreach ($produto["dados"][0]["compativel"] as $kCompativel => $vCompativel): ?>
-										<li>
-											<?=ucwords(strtolower($vCompativel["montadora"]));?> - 
-											<?=ucwords(strtolower($vCompativel["modelo"]));?>
-										</li>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											- <strong>Montadora:</strong> <?=ucwords(strtolower($vCompativel["montadora"]));?> / 
+											<strong>Modelo:</strong> <?=ucwords(strtolower($vCompativel["modelo"]));?>
+										</div>
 									<?php endforeach ?>
-								</ul>
-							</p>
-						<?php endif ?>
-						<div class="ratings">
-							<p class="pull-right">
+								</div>
+							<?php endif ?>
+
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
+								<?=$produto["dados"][0]["descricao"];?>
+								<hr/>
+							</div>
+
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 form-group">
+								<?=($produto["dados"][0]["quantidade"] > 0 ? "Produto em estoque" : "Produto esgotado");?>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 form-group">
 								<?php if (!empty($_SESSION["totalProduto"])): ?>
 									<a href="<?=BASE_URL;?>acoes/carrinho.php?acao=remover&id=<?=$id;?>" class="btn btn-danger btn-sm">Remover</a>
 								<?php endif; ?>
 
 								<a href="<?=BASE_URL;?>acoes/carrinho.php?acao=adicionar&id=<?=$id;?>" class="btn btn-primary btn-sm">Adicionar</a>
-							</p>
-							<p><?=($produto["dados"][0]["quantidade"] > 0 ? "Produto em estoque" : "Produto esgotado");?></p>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div><br/>
+		</div> <br/>
+
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-				<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-					<div class="panel panel-primary">
-						<div class="panel-heading" role="tab" id="headingOne">
-							<h4 class="panel-title">
-								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-									Descrição do Produto
-								</a>
-							</h4>
-						</div>
-						<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-							<div class="panel-body">
-								<?=$produto["dados"][0]["descricao"];?>
-							</div>
-						</div>
+				<div class="panel panel-primary">
+					<div class="panel-heading" role="tab" id="headingTwo">
+						<h4 class="panel-title">
+							Informações adicionais
+						</h4>
 					</div>
-					<div class="panel panel-primary">
-						<div class="panel-heading" role="tab" id="headingTwo">
-							<h4 class="panel-title">
-								<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-									Informações adicionais
-								</a>
-							</h4>
-						</div>
-						<div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
-							<div class="panel-body">
-								Informações gerais aplicáveis aos produtos <br/>
-								Informações gerais aplicáveis aos produtos <br/>
-								Informações gerais aplicáveis aos produtos <br/>
-							</div>
-						</div>
+					<div class="panel-body">
+						Informações gerais aplicáveis aos produtos <br/>
+						Informações gerais aplicáveis aos produtos <br/>
+						Informações gerais aplicáveis aos produtos <br/>
 					</div>
 				</div>
 			</div>
