@@ -13,10 +13,12 @@ import br.edu.impacta.dao.ClienteDAO;
 import br.edu.impacta.dao.ItemVendaDAO;
 import br.edu.impacta.dao.MovimentacaoDAO;
 import br.edu.impacta.dao.ProdutoDAO;
+import br.edu.impacta.dao.VendaDAO;
 import br.edu.impacta.entity.Cliente;
 import br.edu.impacta.entity.ItemVenda;
 import br.edu.impacta.entity.Movimentacao;
 import br.edu.impacta.entity.Produto;
+import br.edu.impacta.entity.Venda;
 
 /**
  * @author Paulo Pasinato
@@ -32,18 +34,21 @@ public class RelatorioGeralController implements Serializable {
 	private static ItemVendaDAO itemVendaDAO = new ItemVendaDAO();
 	private static ClienteDAO clienteDAO = new ClienteDAO();
 	private static ProdutoDAO produtoDAO = new ProdutoDAO();
+	private static VendaDAO vendaDAO = new VendaDAO();
 	
 	private int tipoRelatorio;
 	private Date dataDe;
 	private Date dataAte;
 	private boolean mostraData = true;
 	private List<Movimentacao> movimentacaoList = new ArrayList<>();
-	private List<ItemVenda> orcamentoList = new ArrayList<>();
-	private List<ItemVenda> vendaList = new ArrayList<>();
+	private List<ItemVenda> produtoOrcadoList = new ArrayList<>();
+	private List<ItemVenda> produtoVendidoList = new ArrayList<>();
 	private List<Cliente> clienteList = new ArrayList<>();
 	private List<Produto> produtoList = new ArrayList<>();
+	private List<Venda> vendaList = new ArrayList<>();
+	private List<Venda> orcamentoList = new ArrayList<>();
 	
-	// 1 - Cliente | 2 - Estoque | 3 - Orçamento | 4 - Venda | 5 - Produto
+	// 1 - Cliente | 2 - Estoque | 3 - Orçamento | 4 - Produtos Vendidos | 5 - Produtos Orçados | 6 - Orçamento | 7 - Venda 
 	public void pesquisar() {
 		if(tipoRelatorio != 1 && tipoRelatorio != 5) {
 			if(dataDe == null || dataAte == null) {
@@ -59,13 +64,19 @@ public class RelatorioGeralController implements Serializable {
 				movimentacaoList = movimentacaoDAO.getMovimentacaoByDate(dataDe, dataAte);
 				break;
 			case 3:
-				orcamentoList = itemVendaDAO.getOrcamentoByDate(dataDe, dataAte);
+				produtoOrcadoList = itemVendaDAO.getProdutoOrcadoByDate(dataDe, dataAte);
 				break;
 			case 4:
-				vendaList = itemVendaDAO.getVendaByDate(dataDe, dataAte);
+				produtoVendidoList = itemVendaDAO.getProdutoVendidoByDate(dataDe, dataAte);
 				break;
 			case 5:
 				produtoList = produtoDAO.findAll();
+				break;
+			case 6:
+				orcamentoList = vendaDAO.getOrcamentoByDate(dataDe, dataAte);
+				break;
+			case 7:
+				vendaList = vendaDAO.getVendaByDate(dataDe, dataAte);
 				break;
 		}
 	}	
@@ -113,6 +124,32 @@ public class RelatorioGeralController implements Serializable {
 		return "";
 	}
 	
+	public String verificaSituacaoVenda(Venda venda) {
+		if(venda.getAtivo() != null) {
+			switch(tipoRelatorio) {
+				case 6:
+					if(venda.getAtivo() && !venda.getAprovado() && !venda.getFinalizado()) {
+						return "Pendentes";
+					}
+					if(venda.getAtivo() && venda.getAprovado() && !venda.getFinalizado()) {
+						return "Aprovados";
+					}
+					if(venda.getAtivo() && venda.getAprovado() && venda.getFinalizado()) {
+						return "Finalizados";
+					}
+					if(!venda.getAtivo()) {
+						return "Cancelados";
+					}
+				case 7:
+					if(venda.getAtivo()) {
+						return "Realizadas";
+					}
+						return "Canceladas";
+			}
+		}
+		return "";
+	}
+	
 	public String verificaAtivoCliente(Cliente cliente) {
 		if(cliente.getAtivo()) {
 			return "Sim";
@@ -131,20 +168,43 @@ public class RelatorioGeralController implements Serializable {
 		switch (tipoRelatorio) {
 			case 1:
 				mostraData = true;
+				limpaRelatorioList();
 				break;
 			case 2:
 				mostraData = false;
+				limpaRelatorioList();
 				break;
 			case 3:
 				mostraData = false;
+				limpaRelatorioList();
 				break;
 			case 4:
 				mostraData = false;
+				limpaRelatorioList();
 				break;
 			case 5:
 				mostraData = true;
+				limpaRelatorioList();
+				break;
+			case 6:
+				mostraData = false;
+				limpaRelatorioList();
+				break;
+			case 7:
+				mostraData = false;
+				limpaRelatorioList();
 				break;
 		}
+	}
+	
+	public void limpaRelatorioList() {
+		clienteList.isEmpty();
+		movimentacaoList.isEmpty();
+		produtoOrcadoList.isEmpty();
+		produtoVendidoList.isEmpty();
+		produtoList.isEmpty();
+		orcamentoList.isEmpty();
+		vendaList.isEmpty();
 	}
 	
 	
@@ -175,22 +235,6 @@ public class RelatorioGeralController implements Serializable {
 		this.movimentacaoList = movimentacaoList;
 	}
 
-	public List<ItemVenda> getOrcamentoList() {
-		return orcamentoList;
-	}
-
-	public void setOrcamentoList(List<ItemVenda> orcamentoList) {
-		this.orcamentoList = orcamentoList;
-	}
-
-	public List<ItemVenda> getVendaList() {
-		return vendaList;
-	}
-
-	public void setVendaList(List<ItemVenda> vendaList) {
-		this.vendaList = vendaList;
-	}
-
 	public List<Cliente> getClienteList() {
 		return clienteList;
 	}
@@ -213,5 +257,37 @@ public class RelatorioGeralController implements Serializable {
 
 	public void setMostraData(boolean mostraData) {
 		this.mostraData = mostraData;
+	}
+
+	public List<ItemVenda> getProdutoOrcadoList() {
+		return produtoOrcadoList;
+	}
+
+	public void setProdutoOrcadoList(List<ItemVenda> produtoOrcadoList) {
+		this.produtoOrcadoList = produtoOrcadoList;
+	}
+
+	public List<ItemVenda> getProdutoVendidoList() {
+		return produtoVendidoList;
+	}
+
+	public void setProdutoVendidoList(List<ItemVenda> produtoVendidoList) {
+		this.produtoVendidoList = produtoVendidoList;
+	}
+
+	public List<Venda> getVendaList() {
+		return vendaList;
+	}
+
+	public void setVendaList(List<Venda> vendaList) {
+		this.vendaList = vendaList;
+	}
+
+	public List<Venda> getOrcamentoList() {
+		return orcamentoList;
+	}
+
+	public void setOrcamentoList(List<Venda> orcamentoList) {
+		this.orcamentoList = orcamentoList;
 	}
 }

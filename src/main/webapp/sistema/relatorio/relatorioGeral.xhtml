@@ -33,9 +33,11 @@
 			            <f:selectItem itemLabel="Selecione..." itemValue="" itemDisabled="true"/>
 			            <f:selectItem itemLabel="Cliente" itemValue="1" />
 			            <f:selectItem itemLabel="Estoque" itemValue="2" />
-			            <f:selectItem itemLabel="Orçamento" itemValue="3" />
+			            <f:selectItem itemLabel="Orçamento" itemValue="6" />
 			            <f:selectItem itemLabel="Produto" itemValue="5" />
-			            <f:selectItem itemLabel="Venda" itemValue="4" />
+			            <f:selectItem itemLabel="Produtos Orçados" itemValue="3" />
+			            <f:selectItem itemLabel="Produtos Vendidos" itemValue="4" />
+			            <f:selectItem itemLabel="Venda" itemValue="7" />
 			            <p:ajax listener="#{relatorioControl.verificaTipoRelatorio()}" update="dataDe dataAte"/>
 			        </p:selectOneMenu>
 			    </p:outputLabel>
@@ -58,9 +60,6 @@
 			<!-- ###################################### ESTOQUE  ######################################-->
 
 			<p:panel styleClass="box-success no-border" style="overflow: auto" rendered="#{relatorioControl.tipoRelatorio == 2}">
-				<p:commandButton ajax="false" icon="fa fa-file-pdf-o" styleClass="btn-danger" value="Gerar PDF">
-					<p:dataExporter preProcessor="#{exporterControl.preProcessPDF}" encoding="iso-8859-1" type="pdf" target="tabelaMovimento" fileName="rel_movto#{utilityTela.dateFormatSimple(relatorioControl.dataDe)}_#{utilityTela.dateFormatSimple(relatorioControl.dataAte)}" />
-				</p:commandButton>
 				
 				<p:commandButton ajax="false" icon="fa fa-file-excel-o" styleClass="btn-success" value="Gerar Excel">
 					<p:dataExporter postProcessor="#{exporterControl.postProcessXLS}" encoding="iso-8859-1" type="xls" target="tabelaMovimento" fileName="rel_movto#{utilityTela.dateFormatSimple(relatorioControl.dataDe)}_#{utilityTela.dateFormatSimple(relatorioControl.dataAte)}" />
@@ -114,12 +113,9 @@
                 </p:dataTable>   
 			</p:panel>
 			
-			<!-- ###################################### ORÇAMENTO E VENDA  ######################################-->
+			<!-- ###################################### PRODUTOS ORÇADOS E VENDIDOS  ######################################-->
 			
 			<p:panel styleClass="box-success no-border" style="overflow: auto" rendered="#{relatorioControl.tipoRelatorio == 3 || relatorioControl.tipoRelatorio == 4}">
-				<p:commandButton ajax="false" icon="fa fa-file-pdf-o" styleClass="btn-danger" value="Gerar PDF">
-					<p:dataExporter preProcessor="#{exporterControl.preProcessPDF}" encoding="iso-8859-1" type="pdf" target="tabelaOrcamento" fileName="rel_movto#{utilityTela.dateFormatSimple(relatorioControl.dataDe)}_#{utilityTela.dateFormatSimple(relatorioControl.dataAte)}" />
-				</p:commandButton>
 				
 				<p:commandButton ajax="false" icon="fa fa-file-excel-o" styleClass="btn-success" value="Gerar Excel">
 					<p:dataExporter postProcessor="#{exporterControl.postProcessXLS}" encoding="iso-8859-1" type="xls" target="tabelaOrcamento" fileName="rel_movto#{utilityTela.dateFormatSimple(relatorioControl.dataDe)}_#{utilityTela.dateFormatSimple(relatorioControl.dataAte)}" />
@@ -127,7 +123,7 @@
 							
 				<p:separator />
 			
-				<p:dataTable id="tabelaOrcamento" var="registro" value="#{relatorioControl.tipoRelatorio == 3 ? relatorioControl.orcamentoList : relatorioControl.vendaList}" rowKey="#{registro.idItemVenda}" tableStyle="table-layout:auto"
+				<p:dataTable id="tabelaOrcamento" var="registro" value="#{relatorioControl.tipoRelatorio == 3 ? relatorioControl.produtoOrcadoList : relatorioControl.produtoVendidoList}" rowKey="#{registro.idItemVenda}" tableStyle="table-layout:auto"
 							paginator="true" rows="15" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                             currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" emptyMessage="Nenhum Registro Encontrado"
                             widgetVar="wvTable">
@@ -218,10 +214,7 @@
 			<!-- ###################################### CLIENTE  ######################################-->
 			
 			<p:panel styleClass="box-success no-border" style="overflow: auto" rendered="#{relatorioControl.tipoRelatorio == 1}">
-				<p:commandButton ajax="false" icon="fa fa-file-pdf-o" styleClass="btn-danger" value="Gerar PDF">
-					<p:dataExporter preProcessor="#{exporterControl.preProcessPDF}" encoding="iso-8859-1" type="pdf" target="tabelaCliente" fileName="rel_cliente" />
-				</p:commandButton>
-				
+
 				<p:commandButton ajax="false" icon="fa fa-file-excel-o" styleClass="btn-success" value="Gerar Excel">
 					<p:dataExporter postProcessor="#{exporterControl.postProcessXLS}" encoding="iso-8859-1" type="xls" target="tabelaCliente" fileName="rel_cliente" />
 				</p:commandButton>
@@ -270,9 +263,6 @@
 			<!-- ###################################### PRODUTO  ######################################-->
 			
 			<p:panel styleClass="box-success no-border" style="overflow: auto" rendered="#{relatorioControl.tipoRelatorio == 5}">
-				<p:commandButton ajax="false" icon="fa fa-file-pdf-o" styleClass="btn-danger" value="Gerar PDF">
-					<p:dataExporter preProcessor="#{exporterControl.preProcessPDF}" encoding="iso-8859-1" type="pdf" target="tabelaProduto" fileName="rel_produto" />
-				</p:commandButton>
 				
 				<p:commandButton ajax="false" icon="fa fa-file-excel-o" styleClass="btn-success" value="Gerar Excel">
 					<p:dataExporter postProcessor="#{exporterControl.postProcessXLS}" encoding="iso-8859-1" type="xls" target="tabelaProduto" fileName="rel_produto" />
@@ -326,6 +316,71 @@
 	                    	</p:selectOneButton>
 				        </f:facet>
 			        <h:outputText value="#{relatorioControl.verificaAtivoProduto(registro)}" />
+					</p:column>
+			                            
+                </p:dataTable>            
+			</p:panel>
+			
+			<!-- ###################################### ORÇAMENTOS E VENDA  ######################################-->
+			
+				<p:panel styleClass="box-success no-border" style="overflow: auto" rendered="#{relatorioControl.tipoRelatorio == 6 || relatorioControl.tipoRelatorio == 7}">
+				
+				<p:commandButton ajax="false" icon="fa fa-file-excel-o" styleClass="btn-success" value="Gerar Excel">
+					<p:dataExporter postProcessor="#{exporterControl.postProcessXLS}" encoding="iso-8859-1" type="xls" target="tabelaVenda" fileName="rel_produto" />
+				</p:commandButton>
+							
+				<p:separator />
+				
+				<p:dataTable id="tabelaVenda" var="registro" value="#{relatorioControl.tipoRelatorio == 6 ? relatorioControl.orcamentoList : relatorioControl.vendaList}" rowKey="#{registro.idVenda}" tableStyle="table-layout:auto"
+							paginator="true" rows="15" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]" emptyMessage="Nenhum Registro Encontrado"
+                            widgetVar="wvTable">
+                            
+					<p:column headerText="Código" style="text-align: center" filterBy="#{registro.idVenda}">
+							<h:outputText value="#{registro.idVenda}" />
+						</p:column>
+
+						<p:column headerText="Cliente" style="text-align: center" filterBy="#{registro.cliente.nome}">
+							<h:outputText value="#{registro.cliente.nome}" />
+						</p:column>
+
+						<p:column id="date" style="text-align: center" headerText="Data" filterFunction="#{utilityTela.filterByDate}" filterBy="#{registro.data}">
+							<f:facet name="filter">
+								<p:calendar id="cal1" pattern="dd.MM.yyyy">
+									<p:ajax event="dateSelect" oncomplete="PF('wvTable').filter()" update="tabelaVenda" />
+									<p:ajax event="change" execute="@this" oncomplete="PF('wvTable').filter()" update="tabelaVenda" />
+								</p:calendar>
+							</f:facet>
+								
+							<h:outputText value="#{utilityTela.dateTimeFormat(registro.data)}" />
+						</p:column>
+
+						<p:column headerText="Total" style="text-align: center">
+							<h:outputText value="#{registro.totalFormatado}" />
+						</p:column>
+						
+						<p:column headerText="Situação" rendered="#{relatorioControl.tipoRelatorio == 6 ? true : false}" style="text-align: center" sortBy="#{relatorioControl.verificaSituacaoVenda(registro)}" filterBy="#{relatorioControl.verificaSituacaoVenda(registro)}" filterMatchMode="exact">
+						<f:facet name="filter">
+		                	<p:selectOneMenu id="oneMenuSituacaoOrcamento" onchange="PF('wvTable').filter()" autoWidth="false" style="width:100px" rendered="#{relatorioControl.tipoRelatorio == 6 ? true : false}">
+			                    <f:selectItem itemLabel="Todas" itemValue="#{null}" noSelectionOption="true" />
+			                    <f:selectItem itemLabel="Pendentes" itemValue="Pendentes" />
+							   	<f:selectItem itemLabel="Aprovados" itemValue="Aprovados" />
+							   	<f:selectItem itemLabel="Finalizados" itemValue="Finalizados" />
+						        <f:selectItem itemLabel="Cancelados" itemValue="Cancelados" />
+		                	</p:selectOneMenu>
+	            		</f:facet>
+	            		<h:outputText value="#{relatorioControl.verificaSituacaoVenda(registro)}" />
+					</p:column> 
+					
+					<p:column headerText="Situação" rendered="#{relatorioControl.tipoRelatorio == 7 ? true : false}" style="text-align: center" sortBy="#{relatorioControl.verificaSituacaoVenda(registro)}" filterBy="#{relatorioControl.verificaSituacaoVenda(registro)}" filterMatchMode="exact">
+						<f:facet name="filter">		                	
+		                	<p:selectOneMenu id="oneMenuSituacaoVenda" onchange="PF('wvTable').filter()" autoWidth="false" style="width:100px" rendered="#{relatorioControl.tipoRelatorio == 7 ? true : false}">
+			                    <f:selectItem itemLabel="Todas" itemValue="#{null}" noSelectionOption="true" />
+			                    <f:selectItem itemLabel="Realizadas" itemValue="Realizadas" />
+				        		<f:selectItem itemLabel="Canceladas" itemValue="Canceladas" />
+		                	</p:selectOneMenu>
+	            		</f:facet>
+	            		<h:outputText value="#{relatorioControl.verificaSituacaoVenda(registro)}" />
 					</p:column>
 			                            
                 </p:dataTable>            

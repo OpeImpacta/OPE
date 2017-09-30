@@ -2,12 +2,15 @@ package br.edu.impacta.dao;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import br.edu.impacta.entity.Dashboard;
+import br.edu.impacta.entity.ItemVenda;
 import br.edu.impacta.entity.Venda;
 
 /**
@@ -71,6 +74,20 @@ public class VendaDAO extends GenericDAO<Venda> implements Serializable {
 	
 	public List<Venda> findOrcamentosTodos() {
 		String jpql = "from Venda v where v.tipo = 2";
+		return find(jpql);
+	}
+	
+	public List<Venda> getOrcamentoByDate(Date dataDe, Date dataAte){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String jpql = "from Venda v where v.tipo = 2 AND v.data BETWEEN '" + sdf.format(dataDe) + " 00:00:00.000"
+                + "' AND '" + sdf.format(dataAte) + " 23:59:59.999'";
+		return find(jpql);
+	}
+	
+	public List<Venda> getVendaByDate(Date dataDe, Date dataAte){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String jpql = "from Venda v where v.tipo = 1 AND v.data BETWEEN '" + sdf.format(dataDe) + " 00:00:00.000"
+                + "' AND '" + sdf.format(dataAte) + " 23:59:59.999'";
 		return find(jpql);
 	}
 
