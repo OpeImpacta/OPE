@@ -110,7 +110,7 @@ public class DashController implements Serializable {
 	private void createAnimatedModels() {
 		Calendar cal = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
-		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH) -1);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
 		cal2.set(Calendar.DAY_OF_MONTH, cal.getMaximum(Calendar.DAY_OF_MONTH));
 		
         animatedModel = initLinearModel();
@@ -132,6 +132,8 @@ public class DashController implements Serializable {
 	
 	private LineChartModel initLinearModel() {
         LineChartModel model = new LineChartModel();
+        model.setSeriesColors("008000,FF0000");
+        model.setShowPointLabels(true);
  
         LineChartSeries series1 = new LineChartSeries();
         series1.setLabel("Orçamentos");
@@ -141,6 +143,7 @@ public class DashController implements Serializable {
 	        for(Venda venda : orcamentoList) {
 	        	series1.set(UtilityTela.dateTimeFormatYMD(venda.getData()), verificaQtdeOrcamento(getData(venda.getData())));
 	        }
+	        model.addSeries(series1);
         }
  
         LineChartSeries series2 = new LineChartSeries();
@@ -151,13 +154,8 @@ public class DashController implements Serializable {
 	        for(Venda venda : vendaList) {
 	        	series2.set(UtilityTela.dateTimeFormatYMD(venda.getData()), verificaQtdeVenda(getData(venda.getData())));
 	        }
+	        model.addSeries(series2);
         }
-
-        model.setSeriesColors("008000,FF0000");
-        model.setShowPointLabels(true);
-        model.addSeries(series1);
-        model.addSeries(series2);
-         
         return model;
     }	
 	
