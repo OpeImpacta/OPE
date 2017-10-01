@@ -8,8 +8,10 @@
 				<span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand" href="<?=BASE_URL;?>">
-				<!-- <img src="<?=BASE_URL;?>imagens/logo.png" width="100" alt="" /> -->
-				Casa de Material do Onibus
+				<div class="pull-left">
+					<img src="<?=BASE_URL;?>imagens/logo_transparente.png" width="85" alt="" />
+					Casa de Material do Onibus
+				</div>
 			</a>
 		</div>
 

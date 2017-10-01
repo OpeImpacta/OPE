@@ -4,11 +4,13 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-		<meta name="description" content="Produtos inovadores e com a mais alta qualidade do mercado">
-	    <meta name="author" content="">
-	    <link rel="icon" href="<?=BASE_URL;?>favicon.ico">
+		<!-- SEO -->
+		<title>Casa de Material do Ônibus</title>
+		<meta name="description" content="Loja de auto peças para veículos pesados: Produtos com alta qualidade e preço justo.">
+	    <meta name="keywords" content="casa de material do onibus,casa de material do ônibus,onibus,micro-onibus,ônibus,micro-ônibus,auto-pecas,auto-peças,loja,lanterna,parachoque,material,van"/>
 
-		<title>Loja Virtual</title>
+	    <link rel="icon" href="<?=BASE_URL;?>imagens/ope_favicon.ico" type="image/x-icon">
+
 		<link rel="stylesheet" href="<?=BASE_URL;?>libs/bootstrap_3.3.6/css/bootstrap.min.css">
 		<link rel="stylesheet" href="<?=BASE_URL;?>libs/bootstrap_3.3.6/css/datepicker.css">
 		<link rel="stylesheet" href="<?=BASE_URL;?>css/main.css?<?=date("YH");?>">
