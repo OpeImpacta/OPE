@@ -2,10 +2,10 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html">
-
+	
 
 	<h:form>
-		#{dashControl.getValores()}
+		#{dashControl.init()}
 		<br/>
 		<p:spacer height="15px" />
 		<div class="row">
@@ -70,6 +70,13 @@
 			</div>
 			
 		</div>
+		
+		<hr/>
+		
+		<p:panelGrid styleClass="box-success no-border" style="overflow: auto">
+			<p:chart type="line" model="#{dashControl.animatedModel}" style="width:100%; height: 400px" responsive="true"/>
+		</p:panelGrid>
+
 	
 	</h:form>
 </ui:composition>

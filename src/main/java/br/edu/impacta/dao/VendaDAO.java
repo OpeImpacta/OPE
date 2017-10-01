@@ -10,7 +10,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import br.edu.impacta.entity.Dashboard;
-import br.edu.impacta.entity.ItemVenda;
 import br.edu.impacta.entity.Venda;
 
 /**
@@ -74,6 +73,16 @@ public class VendaDAO extends GenericDAO<Venda> implements Serializable {
 	
 	public List<Venda> findOrcamentosTodos() {
 		String jpql = "from Venda v where v.tipo = 2";
+		return find(jpql);
+	}
+	
+	public List<Venda> findOrcamentosNotCancelados(String mes, String ano) {
+		String jpql = "from Venda v where v.tipo = 2 AND v.ativo = 1 AND (month(v.data) = " + mes + ") AND (year(v.data) = " + ano + ") ";
+		return find(jpql);
+	}
+	
+	public List<Venda> findVendasNotCancelados(String mes, String ano) {
+		String jpql = "from Venda v where v.tipo = 1 AND v.ativo = 1 AND (month(v.data) = " + mes + ") AND (year(v.data) = " + ano + ") ";
 		return find(jpql);
 	}
 	
