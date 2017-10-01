@@ -119,6 +119,7 @@ public class DashController implements Serializable {
         animatedModel.setLegendPosition("ne");
         Axis yAxis = animatedModel.getAxis(AxisType.Y);
         yAxis.setLabel("Quantidade");
+        yAxis.setTickInterval("1");
         yAxis.setMin(0);
         
         DateAxis xAxis = new DateAxis("Dias");
