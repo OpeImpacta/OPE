@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.omnifaces.cdi.ViewScoped;
@@ -12,6 +13,7 @@ import org.omnifaces.cdi.ViewScoped;
 import br.edu.impacta.dao.ClienteDAO;
 import br.edu.impacta.entity.Cliente;
 import br.edu.impacta.entity.TelCliente;
+import br.edu.impacta.entity.Venda;
 
 /**
  * @author Stefany Souza
@@ -22,6 +24,9 @@ import br.edu.impacta.entity.TelCliente;
 public class ClienteController extends BasicControlCad<Cliente> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	@Inject
+	private VendaController vendaController;
 
 	private static ClienteDAO clienteDAO = new ClienteDAO();
 	private TelCliente telCliente = new TelCliente();
@@ -46,8 +51,7 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 	//Verifica se telefone já existe e altera, senão adiciona na lista
 	public void addTelefone(){
 		if(verificaTelefone()){
-			List<TelCliente> telefones = ((Cliente)this.getSelected()).getTelefones();
-			for (TelCliente telefone : telefones) {
+			for (TelCliente telefone : ((Cliente)this.getSelected()).getTelefones()) {
 				if(Objects.equals(telCliente, telefone)){
 					telefone.setNumero(telCliente.getNumero());
 					telefone.setComplemento(telCliente.getComplemento());
@@ -61,7 +65,7 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 			telCliente = new TelCliente();
 		}
 	}
-	
+
 	public void openDialog(){
 		setaPessoa();
 		UtilityTela.executarJavascript("PF('dlgCadastro').show();");
@@ -88,6 +92,26 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 			return false;
 		}
 		return true;
+	}
+
+	//verifica se o email já esta cadastrado
+	public void verificaEmail(){
+		if(((Cliente)getSelected()).getEmail() != null){
+			if(!clienteDAO.findByEmail(((Cliente)getSelected()).getEmail())){
+				((Cliente)getSelected()).setEmail(null);
+				UtilityTela.criarMensagemErro("Erro!", "E-mail em uso por outro cliente.");
+			}
+		}
+	}
+
+	//verifica se o cpf já esta cadastrado
+	public void verificaCPF(){
+		if(((Cliente)getSelected()).getCpf() != null){
+			if(!clienteDAO.findByCPF(((Cliente)getSelected()).getCpf())){
+				((Cliente)getSelected()).setCpf(null);
+				UtilityTela.criarMensagemErro("Erro!", "CPF/CNPJ em uso por outro cliente.");
+			}
+		}
 	}
 
 	//Quando seleciona a linha habilita o botão cancelar e visualizar
@@ -158,16 +182,42 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 	}
 
 
-	@Override
-	public void treatRecord() {
+	//seta senha do cliente e tipo de pessoa
+	public void configCliente(){
 		if(this.getPessoa() == "1" || this.getPessoa().equals("1")){
 			((Cliente)this.getSelected()).setTipo(1);
 		}else{
 			((Cliente)this.getSelected()).setTipo(2);
 		}
+		setaSenha();
+	}
+
+	@Override
+	public void treatRecord() {
+		configCliente();
 		super.treatRecord();
+		finalizaCadastro();
+	}
+
+	//seta cliente quando cadastra na tela do orçamento ou da venda
+	public void recordCliente(){
+		configCliente();
+		Cliente cliente = getSelected();
+		super.treatRecord();
+		((Venda)vendaController.getSelected()).setCliente(cliente);
+		finalizaCadastro();
+	}
+
+	public void finalizaCadastro(){
 		this.limpaFormulario();
 		UtilityTela.executarJavascript("PF('dlgCadastro').hide()");
+	}
+
+	//grava senha padrão quando o cliente é novo
+	public void setaSenha(){
+		if(((Cliente)getSelected()).getIdCliente() == null){
+			((Cliente)getSelected()).setSenha("1234");
+		}
 	}
 
 	//****************************************************

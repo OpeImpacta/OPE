@@ -134,6 +134,8 @@
 			<p:ajax event="close" listener="#{clienteControl.limpaFormulario}" update="frmCadastro" />
 					
 			<h:form id="frmCadastro">
+				<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+				
 				<p:panelGrid id="panelInfo" columns="3" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
 					<p:outputLabel value="Código: "><br />
 						<p:inputText value="#{clienteControl.selected.idCliente}" disabled="true"/>
@@ -165,11 +167,14 @@
 						<p:inputText id="email" value="#{clienteControl.selected.email}" validatorMessage="Email Inválido!" style="width: 230px" maxlength="50" >
 							<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 							<p:message id="msgEmail" for="email"/>
+							<p:ajax event="blur" listener="#{clienteControl.verificaEmail()}" update="frmCadastro:growl" />
 						</p:inputText>
 					</p:outputLabel>
 					
 					<p:outputLabel for="cpf" value="#{clienteControl.valueCpf}: " id="lblCpf" ><br/>
-						<p:inputMask id="cpf" value="#{clienteControl.selected.cpf}" style="width: 180px" mask="#{clienteControl.maskCpf}" required="true" requiredMessage="Campo CPF é Necessário" />
+						<p:inputMask id="cpf" value="#{clienteControl.selected.cpf}" style="width: 180px" mask="#{clienteControl.maskCpf}" required="true" requiredMessage="Campo CPF é Necessário" >
+							<p:ajax event="blur" listener="#{clienteControl.verificaCPF()}" update="frmCadastro:growl" />
+						</p:inputMask>
 						<p:message id="msgCPF" for="cpf"/>
 					</p:outputLabel>
 				</p:panelGrid>
@@ -255,7 +260,7 @@
 					styleClass="btn-block btn-danger" icon="fa fa-close"/>
 					
 			</h:form>
-			</p:dialog>
+		</p:dialog>
 	</ui:define>
 </ui:composition>
 

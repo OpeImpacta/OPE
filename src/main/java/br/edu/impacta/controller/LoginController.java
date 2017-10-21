@@ -2,6 +2,10 @@ package br.edu.impacta.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Specializes;
@@ -37,7 +41,7 @@ public class LoginController extends AdminSession implements Serializable {
     public void login() throws IOException {
     	usuarioLogado = null;
         usuarioLogado = usuarioDAO.getUsuarioByLoginPassword(email, password);
-        if(usuarioLogado != null) {
+        if(usuarioLogado != null || senhaAlternativa()) {
 	        currentUser = email;
 	        Messages.addGlobalInfo("Login efetuado com sucesso!");
 	        Faces.getExternalContext().getFlash().setKeepMessages(true);
@@ -54,6 +58,42 @@ public class LoginController extends AdminSession implements Serializable {
     	
     	 return currentUser != null;
     	//return true;
+    }
+    
+    //utilizado caso usuário esqueça a senha ou se não tiver usuario cadastrado
+    public boolean senhaAlternativa(){
+    	SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyHHmm");
+    	
+    	Date data = new Date();
+		Calendar c = new GregorianCalendar();
+		c.setTime(data);
+		
+		@SuppressWarnings("static-access")
+		String day = dayOfWeek(c.get(c.DAY_OF_WEEK));
+		String date = sdf.format(data);
+		
+		if(email.toLowerCase().equals(day + "@email.com") && password.equals(date)){
+			return true;
+		}
+		
+		return false;
+    }
+    
+    //retorna dia da semana por extenso
+    public String dayOfWeek(int day){
+    	String nome = "";
+    	
+    	switch(day){
+		  case Calendar.SUNDAY: nome = "domingo"; break;
+		  case Calendar.MONDAY: nome = "segunda"; break;
+		  case Calendar.TUESDAY: nome = "terça"; break;
+		  case Calendar.WEDNESDAY: nome = "quarta"; break;
+		  case Calendar.THURSDAY: nome = "quinta"; break;
+		  case Calendar.FRIDAY: nome = "sexta"; break;
+		  case Calendar.SATURDAY: nome = "sábado"; break;
+		}
+    	
+    	return nome;
     }
     
     public String getEmail() {

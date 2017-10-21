@@ -69,7 +69,7 @@
 	                        			
 	                    <p:menuitem actionListener="#{vendaControl.openDialogItens()}" update="frmItemVenda" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-search"  styleClass="btn-info" value="Visualizar Itens" />
 	                    
-	                    <p:menuitem  actionListener="#{vendaControl.gerarRelatorio(vendaControl.vendaSelecionada.idVenda, 'venda')}" update="frmList" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-print"  styleClass="btn-success" value="Imprimir" ajax="false" />
+	                    <p:menuitem actionListener="#{vendaControl.gerarRelatorio(vendaControl.vendaSelecionada.idVenda, 'venda')}" update="frmList" disabled="#{vendaControl.disableExcluirVenda}" icon="fa fa-print"  styleClass="btn-success" value="Imprimir" ajax="false" />
 	                        
                     </p:splitButton>
 					
@@ -125,7 +125,7 @@
 	    </h:form>  
        
        <p:dialog  modal="true" appendTo="@(body)" widgetVar="dlgItemVenda" responsive="true"
-                width="1000px" height="auto" resizable="false" closable="true" closeOnEscape="true" dynamic="true"  >
+                width="auto" height="auto" resizable="false" closable="true" closeOnEscape="true" dynamic="true"  >
                  
             <p:ajax event="close" update="frmList" listener="#{vendaControl.disableButtons()}" />   
             
@@ -190,7 +190,7 @@
           </p:dialog>
           
           <p:dialog  modal="true" appendTo="@(body)" widgetVar="dlgExclusao" responsive="true"
-                width="1000px" height="auto" resizable="false" closable="true" closeOnEscape="true" dynamic="true"  
+                width="auto" height="auto" resizable="false" closable="true" closeOnEscape="true" dynamic="true"  
                 header="Selecione os itens para devolução">
                  
             <p:ajax event="close" update="frmList" listener="#{vendaControl.disableButtons()}" />   

@@ -128,6 +128,9 @@ public class Produto implements Serializable {
 	}
 
 	public Boolean getMostraVitrine() {
+		if(mostraVitrine == null){
+			mostraVitrine = true;
+		}
 		return mostraVitrine;
 	}
 
@@ -176,6 +179,9 @@ public class Produto implements Serializable {
 	}
 
 	public List<Imagem> getImagemList() {
+		if(imagemList == null){
+			imagemList = new ArrayList<>();
+		}
 		return imagemList;
 	}
 
@@ -195,6 +201,9 @@ public class Produto implements Serializable {
 	}
 
 	public Boolean getControlaEstoque() {
+		if(controlaEstoque == null){
+			controlaEstoque = true;
+		}
 		return controlaEstoque;
 	}
 

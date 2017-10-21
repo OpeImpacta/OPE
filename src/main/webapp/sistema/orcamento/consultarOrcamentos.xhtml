@@ -38,25 +38,38 @@
 	        
 			<div class="box box-primary">
 				<div class="box-header with-border">
+					<div id="main-buttons" class="hidden-sm hidden-xs">
 					
-					<p:commandButton id="btnAprovar" actionListener="#{orcControl.openDialogAprovar()}" update="frmAprovar" disabled="#{orcControl.disableAprovar}" icon="fa fa-check"  
-						styleClass="btn-success" value="Aprovar" />
-					
-					<p:spacer width="5"/>
-					<p:commandButton id="btnReenviar" update="frmList" disabled="#{orcControl.disableReenviar}" icon="fa fa-send" 
-						styleClass="btn-primary" value="Reenviar" />
+						<p:commandButton id="btnAprovar" actionListener="#{orcControl.openDialogAprovar()}" update="frmAprovar" disabled="#{orcControl.disableButtons}" icon="fa fa-check"  
+							styleClass="btn-success" value="Aprovar" />
 						
-					<p:spacer width="5"/>
-					<p:commandButton id="btn" actionListener="#{orcControl.openDialogVisualizar()}" update="frmVisualizar" disabled="#{orcControl.disableVisualizar}" icon="fa fa-search"  
-						styleClass="btn-info" value="Visualizar" />
+						<p:spacer width="5"/>
+						<p:commandButton id="btnReenviar" update="frmList" disabled="#{orcControl.disableButtons}" icon="fa fa-send" 
+							styleClass="btn-primary" value="Reenviar" />
+							
+						<p:spacer width="5"/>
+						<p:commandButton id="btn" actionListener="#{orcControl.openDialogVisualizar()}" update="frmVisualizar" disabled="#{orcControl.disableButtons}" icon="fa fa-search"  
+							styleClass="btn-info" value="Visualizar" />
+						
+						<p:spacer width="5"/>
+						
+						<p:commandButton id="btnCancelar" update="frmList:dtVendas @(.ui-button)" process="@form" icon="fa fa-close" value="Cancelar" styleClass="btn-danger" 
+								disabled="#{orcControl.disableButtons}" actionListener="#{orcControl.cancelaOrcamento()}" >
+						</p:commandButton>
+						
+						<p:separator />
+					</div>
 					
-					<p:spacer width="5"/>
-					
-					<p:commandButton id="btnCancelar" update="frmList:dtVendas @(.ui-button)" process="@form" icon="fa fa-close" value="Cancelar" styleClass="btn-danger" 
-							disabled="#{orcControl.disableCancelar}" actionListener="#{orcControl.cancelaOrcamento()}" >
-					</p:commandButton>
-					
-					<p:separator />
+					<p:splitButton id="split" actionListener="#{orcControl.openDialogAprovar()}" update="frmAprovar" disabled="#{orcControl.disableButtons}" icon="fa fa-check" value="Aprovar"
+	                    	styleClass="hidden-md hidden-lg btn-success" >
+	                        
+	                    <p:menuitem update="frmList" disabled="#{orcControl.disableButtons}" icon="fa fa-send" styleClass="btn-primary" value="Reenviar"  />
+		                        			
+		                <p:menuitem actionListener="#{orcControl.openDialogVisualizar()}" update="frmVisualizar" disabled="#{orcControl.disableButtons}" icon="fa fa-search" styleClass="btn-info" value="Visualizar" />
+		                    
+		            	<p:menuitem  update="frmList:dtVendas @(.ui-button)" process="@form" icon="fa fa-close" value="Cancelar" styleClass="btn-danger" disabled="#{orcControl.disableButtons}" actionListener="#{orcControl.cancelaOrcamento()}" />
+		                        
+	                </p:splitButton>
 					
 	                <p:selectOneButton value="#{orcControl.opcao}">
 	                	
@@ -119,7 +132,7 @@
         	
         		<p:panelGrid id="panelVls" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
          			
-         			<p:toolbar id="toolValores" style="margin-bottom: 5px; width: 740px">
+         			<p:toolbar id="toolValores" style="margin-bottom: 5px">
          				<f:facet name="left">
          					<p:outputLabel value="Cliente: #{orcControl.vendaSelecionada.cliente.nome}" style="font-size: 15px; font-weight: bold"/>
          				</f:facet>
@@ -197,7 +210,7 @@
 	        	<p:separator />
 	        	
 	        	<p:commandButton value="Fechar" onclick="PF('dlgAprovar').hide();" update="@(.ui-button)" process="@form" styleClass="btn-danger" icon="fa fa-close" />
-	        	<p:commandButton value="Finalizar" styleClass="btn-success" update="frmList:dtVendas @(.ui-button)" process="@form" actionListener="#{orcControl.aprovaOrcamento()}" oncomplete="PF('dlgAprovar').hide();" 
+	        	<p:commandButton value="Aprovar" styleClass="btn-success" update="frmList:dtVendas @(.ui-button)" process="@form" actionListener="#{orcControl.aprovaOrcamento()}" oncomplete="PF('dlgAprovar').hide();" 
 	        		icon="fa fa-check" />
 	        	
         	</h:form>
@@ -213,13 +226,12 @@
         	<h:form id="frmVisualizar" >
         	
         		<p:panelGrid id="panelVls" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
-         			
-         			<p:toolbar id="toolValores" style="margin-bottom: 5px; width: 740px">
+         			<p:toolbar id="toolValores" style="margin-bottom: 5px">
          				<f:facet name="left">
-         					<p:outputLabel value="Cliente: #{orcControl.vendaSelecionada.cliente.nome}" style="font-size: 15px; font-weight: bold"/>
-         				</f:facet>
-         				
-						<f:facet name="right">
+	         					<p:outputLabel value="Cliente: #{orcControl.vendaSelecionada.cliente.nome}" style="font-size: 15px; font-weight: bold"/>
+	         			</f:facet>
+	         			
+         				<f:facet name="right">
 							<h:outputText value="Subtotal #{orcControl.subTotalFormatado}" style="font-size: 15px; font-weight: bold" />
 							
 							<span class="ui-separator"> 
@@ -238,6 +250,7 @@
 					</p:toolbar>
          		</p:panelGrid>
          		<p:panelGrid id="dtTable" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+         		
          			<p:dataTable tableStyle="table-layout: auto;"  var="item"  id="dtItens" paginatorPosition="bottom"
 							emptyMessage="Nenhum item encontrado" value="#{orcControl.vendaSelecionada.itens}" >
 						
@@ -261,6 +274,7 @@
 	                		<h:outputText value="#{item.totalItemFormatado}" />
 	                	</p:column>
          			</p:dataTable>
+         			
          		</p:panelGrid>
          		
          		<p:panelGrid id="pnObs" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">

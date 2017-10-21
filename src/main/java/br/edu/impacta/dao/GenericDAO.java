@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import br.edu.impacta.util.JPAUtil;
@@ -59,26 +60,26 @@ public abstract class GenericDAO<T> implements Serializable{
 	
 	@SuppressWarnings("unchecked")
 	public T findOne(String jpql, Object... params) {
+		try {
+			EntityManager manager = getEntityManager();
+			manager.getTransaction().begin();
+			
+			Query query = manager.createQuery(jpql);
 
-		EntityManager manager = getEntityManager();
-		//Inicia a transação
-		manager.getTransaction().begin();
+			for (int i = 0; i < params.length; i++) {
+				query.setParameter(i+1, params[i]);
+			}
 
-		//Criação da Query
-		Query query = manager.createQuery(jpql);
-
-		for (int i = 0; i < params.length; i++) {
-			query.setParameter(i+1, params[i]);
+			T entity = (T) query.getSingleResult();
+			manager.getTransaction().commit();
+			manager.close();
+		
+			return entity;
+			
+		} catch (NoResultException e) {
+			return null;
 		}
 
-		T entity = (T) query.getSingleResult();
-
-		//Executa a ação
-		manager.getTransaction().commit();
-		manager.close();
-
-		//Retorna o que foi pedido no comando SQL
-		return entity;
 	}
 
 	@SuppressWarnings("unchecked")

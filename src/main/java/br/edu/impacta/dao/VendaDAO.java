@@ -124,7 +124,7 @@ public class VendaDAO extends GenericDAO<Venda> implements Serializable {
 	@SuppressWarnings("unchecked")
 	public Dashboard getDashOrcamentos(String mes, String ano){
 		
-		String jpql = " select sum(v.total), count(v.total)  from Venda v where (v.ativo = 1) and (v.tipo = 2) and (v.finalizado = 1) and (v.aprovado = 1) "
+		String jpql = " select sum(v.total), count(v.total)  from Venda v where (v.ativo = 1) and (v.tipo = 2) "
 				+ "and (month(v.data) = " + mes + ") and (year(v.data) = " + ano + ") ";
 		
 		EntityManager em = getEntityManager();

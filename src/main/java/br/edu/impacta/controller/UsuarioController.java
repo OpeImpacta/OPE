@@ -23,8 +23,6 @@ public class UsuarioController extends BasicControlCad<Usuario> implements Seria
 	
 	private boolean disableButton = true;
 	
-	private Boolean renderedSenha;
-	
 	private String senhaAtual;
 	private String senhaNova;
 
@@ -54,15 +52,9 @@ public class UsuarioController extends BasicControlCad<Usuario> implements Seria
 	@Override
 	public void treatRecord() {
 		super.treatRecord();
-		renderedSenha = false;
 		UtilityTela.executarJavascript("PF('dlgCadastro').hide()");
 	}
 	
-	@Override
-	public void doStartAddRecord() throws Exception {
-		renderedSenha = true;
-		super.doStartAddRecord();
-	}
 	
 	public void alterarSenha() {
 		Usuario usuario = loginControl.getUsuarioLogado();
@@ -81,13 +73,15 @@ public class UsuarioController extends BasicControlCad<Usuario> implements Seria
 		senhaAtual = "";
 		senhaNova = "";
 	}
-
-	public Boolean getRenderedSenha() {
-		return renderedSenha;
-	}
-
-	public void setRenderedSenha(Boolean renderedSenha) {
-		this.renderedSenha = renderedSenha;
+	
+	//verifica se o email já esta cadastrado
+	public void verificaEmail(){
+		if(((Usuario)getSelected()).getEmail() != null){
+			if(!usuarioDAO.findByEmail(((Usuario)getSelected()).getEmail())){
+				((Usuario)getSelected()).setEmail(null);
+				UtilityTela.criarMensagemErro("Erro!", "E-mail em uso por outro usuário.");
+			}
+		}
 	}
 
 	public String getSenhaAtual() {

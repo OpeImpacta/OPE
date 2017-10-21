@@ -50,98 +50,92 @@
 	        
 			<div class="box box-primary">
 	        	<div class="box-header with-border">
-					<div id="main-buttons" class="hidden-sm hidden-xs">
-						<p:panelGrid columns="1" style="margin-top: 10px; width: 100%" id="panelProduto">
-							<p:row>
-								<div class="ui-g">
-									<div class="ui-g-3">
-										<p:outputLabel for="cmbProduto" value="Produto:"><br />
+					<p:panelGrid columns="1" style="margin-top: 10px; margin-bottom: 10px; width: 100%" id="panelProduto" >
+						<p:row>
+							<p:outputLabel for="cmbProduto" value="Produto:"><br />
+								<p:autoComplete id="cmbProduto" value="#{vendaControl.itemVenda.produto}"
+									completeMethod="#{vendaControl.completeProdutos}" styleClass="styleAutoComplete" var="item"
+									itemLabel="#{item.nome}" itemValue="#{item}" converter="produtoConverter" forceSelection="true">
+						
+									<p:ajax event="itemSelect" update="frmVenda:inPreco" oncomplete="focusCampo('frmVenda:inQuantidade')" />
+									
+									<p:column style="width:10%">
+										<h:outputText value="#{item.idProduto}" />
+									</p:column>
 
-											<p:autoComplete id="cmbProduto" value="#{vendaControl.itemVenda.produto}"
-												completeMethod="#{vendaControl.completeProdutos}" styleClass="styleAutoComplete" var="item"
-												itemLabel="#{item.nome}" itemValue="#{item}" converter="produtoConverter" forceSelection="true">
-
-												<p:ajax event="itemSelect" update="frmVenda:inPreco" oncomplete="focusCampo('frmVenda:inQuantidade')" />
-												<p:column style="width:10%">
-													<h:outputText value="#{item.idProduto}" />
-												</p:column>
-
-												<p:column>
-													<h:outputText value="#{item.nome}" />
-												</p:column>
-											</p:autoComplete>
-										</p:outputLabel>
-									</div>
-
-									<div class="ui-g-3">
-										<p:outputLabel for="inPreco" value="Preço:" style="margin-left: 110px"><br />
-											<p:inputNumber id="inPreco" symbol="R$" decimalSeparator="," thousandSeparator="." value="#{vendaControl.itemVenda.produto.precoVenda}" readonly="true" />
-										</p:outputLabel>
-									</div>
-
-									<div class="ui-g-3">
-										<p:outputLabel for="inQuantidade" value="Quantidade:" style="margin-left: 40px"><br />
-											<p:inputText id="inQuantidade" value="#{vendaControl.itemVenda.quantidade}" />
-											<p:keyFilter for="inQuantidade" mask="num" />  
-										</p:outputLabel>
-									</div>
-
-									<div class="ui-g-3">
-										<p:defaultCommand target="btnAdicionar" />
-										<p:commandButton value="Adicionar" id="btnAdicionar" update="frmVenda:toolValores frmVenda:dtVenda frmVenda:cmbProduto frmVenda:inPreco"
-											actionListener="#{vendaControl.addItem(false)}" oncomplete="focusCampo('frmVenda:cmbProduto_input')"
-											styleClass="btn-primary" icon="fa fa-plus" style="margin-top: 24px; margin-left: -20px" />
-									</div>
-								</div>
+									<p:column>
+										<h:outputText value="#{item.nome}" />
+									</p:column>
+								</p:autoComplete>
+							</p:outputLabel>
+							<p:spacer width="20"/>
+							
+							<p:outputLabel for="inPreco" value="Preço:" ><br />
+								<p:inputNumber id="inPreco" symbol="R$" decimalSeparator="," thousandSeparator="." value="#{vendaControl.itemVenda.produto.precoVenda}" readonly="true" />
+							</p:outputLabel>
+							
+							<p:spacer width="20"/>
+							<p:outputLabel for="inQuantidade" value="Quantidade:" ><br />
+								<p:inputText id="inQuantidade" value="#{vendaControl.itemVenda.quantidade}" />
+								<p:keyFilter for="inQuantidade" mask="num" />  
+							</p:outputLabel>
+							
+							<p:spacer width="60"/>
+							<p:commandButton value="Adicionar" id="btnAdicionar" update="frmVenda:toolValores frmVenda:dtVenda frmVenda:cmbProduto frmVenda:inPreco"
+								actionListener="#{vendaControl.addItem(false)}" oncomplete="focusCampo('frmVenda:cmbProduto_input')"
+								styleClass="btn-primary" icon="fa fa-plus" style="margin-top: -4px" >
+								<p:defaultCommand target="btnAdicionar" />
+							</p:commandButton>
 							</p:row>
 						</p:panelGrid>
 						
-						<p:panelGrid columns="1" style="margin-top: 10px; width: 100%; margin-bottom: 10px" id="panelDesconto">
+						<p:panelGrid columns="1" style="margin-top: 10px; margin-bottom: 10px; width: 100%" id="panelDesconto">
 							<p:row>
-								<div class="ui-g">
-		    						<div class="ui-g-2">
-										<p:outputLabel for="inDesconto" value="Desconto:"><br />
-											<p:inputNumber id="inDesconto" value="#{vendaControl.desconto}" />
-										</p:outputLabel>
-									</div>
+								<p:outputLabel for="inDesconto" value="Desconto:"><br />
+									<p:inputNumber id="inDesconto" value="#{vendaControl.desconto}" />
+								</p:outputLabel>
+								
+								<p:spacer width="3" />
+								<p:commandButton value="%" id="btndescPorc" styleClass="btn-primary" actionListener="#{vendaControl.calculaDescontoPorcentagem}" 
+												update="@form" style="margin-top: -4px" />
+								
+								<p:spacer width="3" />
+								<p:commandButton value="R$" id="btndescReal" styleClass="btn-primary" actionListener="#{vendaControl.calculaDescontoReal}"  
+												update="@form" style="margin-top: -4px" />
+								
+								<p:spacer width="20" />
+								<p:commandButton value="Excluir Item" actionListener="#{vendaControl.delItem}" id="btnDelItem" disabled="#{vendaControl.disableExcluir}" styleClass="btn-danger" 
+												 update="@form" icon="fa fa-trash-o" style="margin-top: -4px" />
+								
+								<p:spacer width="40" />
+								<p:outputLabel for="cmbCliente" value="Cliente:" ><br />
 									
-									<div class="ui-g-2">
-										<p:commandButton value="%" id="btndescPorc" styleClass="btn-primary" actionListener="#{vendaControl.calculaDescontoPorcentagem}" 
-												update="@form" style="margin-left: 13px; margin-top: 24px" />
-									</div>
-										
-									<div class="ui-g-2">	
-										<p:commandButton value="R$" id="btndescReal" styleClass="btn-primary" actionListener="#{vendaControl.calculaDescontoReal}"  
-												update="@form" style="margin-top: 24px; margin-left: -110px" />
-									</div>	
-									<div class="ui-g-2">
-										<p:commandButton value="Excluir Item" actionListener="#{vendaControl.delItem}" id="btnDelItem" disabled="#{vendaControl.disableExcluir}" styleClass="btn-danger" 
-												 update="@form" icon="fa fa-trash-o" style="margin-top: 24px; margin-left: -210px" />
-									</div>
-										
-									<div class="ui-g-2">
-										<p:outputLabel for="cmbCliente" value="Cliente:" style="margin-left: -120px" ><br />
-											<p:autoComplete id="cmbCliente" value="#{vendaControl.selected.cliente}"
+									<p:autoComplete id="cmbCliente" value="#{vendaControl.selected.cliente}"
 												completeMethod="#{clienteControl.completeClientes}" styleClass="styleAutoCompleteCliente"
 												var="cliente" itemLabel="#{cliente.nome}" itemValue="#{cliente}" converter="clienteConverter" forceSelection="true">
 
-												<p:column>
-													<h:outputText value="#{cliente.nome}" />
-												</p:column>
+										<p:column>
+											<h:outputText value="#{cliente.nome}" />
+										</p:column>
 
-												<p:column>
-													<h:outputText value="#{cliente.cpf}" />
-												</p:column>
-											</p:autoComplete>
-										</p:outputLabel>
-										<p:keyFilter for="cmbCliente" mask="alpha" />
-									</div>
-										
-									<div class="ui-g-2">
-										<p:commandButton value="Finalizar" id="btnFinalizar" icon="fa fa-check"  styleClass="btn-success" ajax="false"
-												 update="frmVenda" actionListener="#{vendaControl.recordOrcamento()}" style="margin-top: 24px; margin-left: 50px"  />
-									</div>
-								</div>
+										<p:column>
+											<h:outputText value="#{cliente.cpf}" />
+										</p:column>
+									</p:autoComplete>
+								</p:outputLabel>
+								
+								<p:keyFilter for="cmbCliente" mask="alpha" />
+								
+								<p:spacer width="3" />
+								<p:commandButton style="margin-top: -5px" icon="fa fa-plus" 
+									id="btnAddCliente" update="frmCadastro" onclick="PF('dlgCadastro').show();" styleClass="btn-info">
+									<p:tooltip value="Cadastrar Cliente" position="top" for="btnAddCliente" />
+								</p:commandButton>
+								
+								<p:spacer width="60" />
+								<p:commandButton value="Finalizar" id="btnFinalizar" icon="fa fa-check"  styleClass="btn-success" ajax="false"
+												 update="frmVenda" actionListener="#{vendaControl.recordOrcamento()}" style="margin-top: -5px"  />
+							
 							</p:row>
 						</p:panelGrid>
 					
@@ -196,7 +190,7 @@
 						</p:dataTable>
 	                </div>
 	            </div>
-	        </div>  
+	          
 	        
         </h:form>  
         
@@ -212,6 +206,140 @@
 									onclick="PF('dlgImrimir').hide()" styleClass="btn-danger" icon="fa fa-close"/>	
          	</h:form>
          </p:dialog>
+         
+         <p:dialog width="auto" height="auto" widgetVar="dlgCadastro" resizable="false" responsive="true" 
+			header="Cliente" styleClass="box-primary" focus="frmCadastro:panelNomeEmail"
+			modal="true" appendTo="@(body)" closable="true" closeOnEscape="true">
+					
+			<p:ajax event="close" listener="#{clienteControl.limpaFormulario}" update="frmCadastro" />
+					
+			<h:form id="frmCadastro">
+				<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+				
+				<p:panelGrid id="panelInfo" columns="3" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+					<p:outputLabel value="Código: "><br />
+						<p:inputText value="#{clienteControl.selected.idCliente}" disabled="true"/>
+					</p:outputLabel>
+							
+					<p:outputLabel for="tipoPessoa" value="Pessoa:"><br/>
+			        	<p:selectOneButton id="tipoPessoa" value="#{clienteControl.pessoa}" >
+				        	<f:selectItem itemLabel="Física" itemValue="1"/>
+				            <f:selectItem itemLabel="Jurídica" itemValue="2"/>
+				                        
+				            <p:ajax event="change" update="@form" listener="#{clienteControl.updateForm}" />
+				        </p:selectOneButton>
+					</p:outputLabel>
+			                    
+			        <p:selectOneButton id="manyBtn" style="margin-top: 24px; width: 130px" value="#{clienteControl.selected.ativo}">
+						<f:converter converterId="javax.faces.Boolean" />
+				        <f:selectItem itemLabel="Ativo" itemValue="true"/>
+				        <f:selectItem itemLabel="Inativo" itemValue="false"/>
+					</p:selectOneButton>
+				</p:panelGrid>
+					
+		        <p:panelGrid id="panelNomeEmail" columns="3" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+		        	<p:outputLabel for="nome" id="lblNome" value="#{clienteControl.valueNome}: " ><br />
+						<p:inputText id="nome" value="#{clienteControl.selected.nome}" style="width: 230px"  required="true" requiredMessage="Campo Nome é Necessário" maxlength="50"/>
+						<p:message id="msgNome" for="nome"/>
+					</p:outputLabel>
+							
+					<p:outputLabel for="email" value="Email "><br />
+						<p:inputText id="email" value="#{clienteControl.selected.email}" validatorMessage="Email Inválido!" style="width: 230px" maxlength="50" >
+							<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<p:message id="msgEmail" for="email"/>
+							<p:ajax event="blur" listener="#{clienteControl.verificaEmail()}" update="frmCadastro:growl frmCadastro:email" />
+						</p:inputText>
+					</p:outputLabel>
+					
+					<p:outputLabel for="cpf" value="#{clienteControl.valueCpf}: " id="lblCpf" ><br/>
+						<p:inputMask id="cpf" value="#{clienteControl.selected.cpf}" style="width: 180px" mask="#{clienteControl.maskCpf}" required="true" requiredMessage="Campo CPF é Necessário" >
+							<p:ajax event="blur" listener="#{clienteControl.verificaCPF()}" update="frmCadastro:growl frmCadastro:cpf" />
+						</p:inputMask>
+						<p:message id="msgCPF" for="cpf"/>
+					</p:outputLabel>
+				</p:panelGrid>
+		
+				<p:separator/>
+		
+				<p:panelGrid columns="4" cellpadding="5" id="panelContato" layout="grid" styleClass="no-border ui-fluid">
+						
+					<p:outputLabel value="Tipo:" for="tpFone" ><br/>
+			        	<p:selectOneMenu value="#{clienteControl.telCliente.tipo}" id="tpFone" required="#{not empty clienteControl.telCliente.numero}" requiredMessage="Campo tipo é necessário" style="width:125px">
+							<f:selectItem itemLabel="Selecione" noSelectionOption="true" itemValue=""/>
+				            <f:selectItem itemLabel="Residencial" itemValue="Residencial"/>
+				            <f:selectItem itemLabel="Celular" itemValue="Celular"/>
+				            <f:selectItem itemLabel="Comercial" itemValue="Comercial"/>
+				                        
+				            <p:ajax event="change" update="frmCadastro:numero" listener="#{clienteControl.updateMaskTelefone}" />
+						</p:selectOneMenu>
+						<p:message id="msgTipo" for="tpFone"/>
+				    </p:outputLabel>
+				       
+				   	<p:outputLabel for="numero" value="Número:" ><br/>
+				    	<p:inputMask id="numero" required="#{not empty clienteControl.telCliente.tipo}" style="width: 150px" requiredMessage="Campo número é necessário" mask="#{clienteControl.maskTelefone}" value="#{clienteControl.telCliente.numero}" >
+				    		<p:ajax event="blur" update="frmCadastro:tpFone" />
+				    	</p:inputMask>
+				    	<p:message id="msgNumero" for="numero"/>
+				    </p:outputLabel>
+				       
+				    <p:outputLabel for="compl" value="Complemento" ><br/>
+				     	<p:inputText id="compl" value="#{clienteControl.telCliente.complemento}" style="width: 150px" maxlength="20" />
+					</p:outputLabel>
+
+					<p:commandButton icon="fa fa-plus" style="margin-top: 23px; width: 120px"
+						actionListener="#{clienteControl.addTelefone()}" value="Adicionar" styleClass="btn-primary" id="btnAddFone"
+						update="frmCadastro:panelContato frmCadastro:panelDtTable" process="frmCadastro:panelContato frmCadastro:panelDtTable" />
+						
+				</p:panelGrid>
+				
+				<p:panelGrid columns="1" cellpadding="5" id="panelDtTable" layout="grid" styleClass="no-border ui-fluid">
+				
+					<p:dataTable var="registro" emptyMessage="Nenhum Telefone Adicionado" paginator="true" rows="1" paginatorPosition="bottom" currentPageReportTemplate="[ Página: {currentPage}/{totalPages} ]"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						value="#{clienteControl.selected.telefones}" reflow="true" tableStyle="table-layout: auto;">
+						
+						<f:facet name="header">
+							Telefones
+						</f:facet>
+						<p:column headerText="Tipo">
+							<h:outputText value="#{registro.tipo}" />
+						</p:column>
+						<p:column headerText="Número">
+							<h:outputText value="#{registro.numero}" />
+						</p:column>
+						<p:column headerText="Complemento">
+							<h:outputText value="#{registro.complemento}" />
+						</p:column>
+						<p:column>
+							<p:commandButton id="btnDelFone"
+								styleClass="btn-default" style="font-size: 11px; width: 20px" update="@form"
+								process="frmCadastro:panelContato frmCadastro:panelDtTable" actionListener="#{clienteControl.delTelefone(registro)}" icon="fa fa-trash" />
+							
+							<p:commandButton id="btnAltFone"  styleClass="btn-default btn-block" style="font-size: 11px; width: 20px"
+								process="frmCadastro:panelContato frmCadastro:panelDtTable" actionListener="#{clienteControl.upTelefone(registro)}" update="@form" icon="fa fa-pencil" />
+						</p:column>
+					</p:dataTable>
+				</p:panelGrid>
+				
+				<p:separator/>
+				<p:commandButton value="Salvar"
+					id="btnEfetiva"
+					style="margin-top: -10px; width: auto"
+					update="frmVenda:panelDesconto"
+					actionListener="#{clienteControl.recordCliente()}"
+					type="submit"
+					styleClass="btn-block btn-success" icon="fa fa-floppy-o"/>
+					
+				<p:commandButton value="Cancelar"
+					id="brnCancelar"
+					style="margin-top: -10px; width: auto"
+					actionListener="#{clienteControl.limpaFormulario}"
+					update="frmCadastro:panelDtTable @(.ui-button)"
+					onclick="PF('dlgCadastro').hide()"
+					styleClass="btn-block btn-danger" icon="fa fa-close"/>
+					
+			</h:form>
+		</p:dialog>
     </ui:define>
 </ui:composition>
 

@@ -22,4 +22,14 @@ public class UsuarioDAO extends GenericDAO<Usuario> implements Serializable {
 			return null;
 		}
 	}
+	
+	public Boolean findByEmail(String email){
+		String jpql = "from Usuario u where u.email = ? ";
+		Usuario usuario = findOne(jpql, email);
+		
+		if(usuario == null)
+			return true;
+		
+		return false;
+	}
 }

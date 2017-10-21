@@ -91,7 +91,7 @@
                 	<p:rowToggler/>
                 </p:column>
 
-				<p:column headerText="Código" sortBy="#{registro.idProduto}" filterBy="#{registro.idProduto}" filterMatchMode="contains">
+				<p:column headerText="Código" sortBy="#{registro.idProduto}" style="text-align: center" filterBy="#{registro.idProduto}" filterMatchMode="contains">
 					<h:outputText value="#{registro.idProduto}" />
 				</p:column>
 				
@@ -147,65 +147,72 @@
             </div>
 
 		</h:form>
-			<p:dialog width="700px" height="auto" widgetVar="dlgCadastro" resizable="false" 
+			<p:dialog width="auto" height="auto" widgetVar="dlgCadastro" resizable="false" 
 					header="Produto" focus="frmCadastro:tabViewGeral:nome" styleClass="box-primary"
 					modal="true" appendTo="@(body)" closable="true" closeOnEscape="true" responsive="true" dynamic="true" maximizable="true">
 				<h:form id="frmCadastro">
-
-					<h:panelGrid columns="2" style="width:100%">
-							<p:column width="50%">
+					<style type="text/css">
+	        			.styleInNumber input{
+		        			width: 120px !important; 
+		        		}
+	        		</style>
+				
+					<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+					   
+	                <p:tabView id="tabViewGeral">
+        				<p:tab title="Dados do Produto">	
+        					<p:panelGrid id="panelCodigo" columns="2" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
 								<p:outputLabel value="Código: ">
 									<p:inputText value="#{produtoControl.selected.idProduto}" disabled="true"/>
 								</p:outputLabel>
-							</p:column>
-							<p:column width="50%">
-								<p:selectOneButton id="manyBtn" value="#{produtoControl.selected.ativo}" style="float:right">
+							
+								<p:selectOneButton id="manyBtn" value="#{produtoControl.selected.ativo}" style="margin-top: 24px; width: 130px" >
 									<f:converter converterId="javax.faces.Boolean" />
-			                        <f:selectItem itemLabel="Ativo" itemValue="true"/>
-			                        <f:selectItem itemLabel="Inativo" itemValue="false"/>
-	                    		</p:selectOneButton>
-	                    	</p:column>	
-	                </h:panelGrid>   
-	                <p:tabView id="tabViewGeral">
-        				<p:tab title="Dados do Produto">	
-			                <h:panelGrid style="width:100%" >
-			                	<p:row>
-									<p:outputLabel for="nome" value="Nome: " style="width:100%">
-										<p:inputText id="nome" value="#{produtoControl.selected.nome}" required="true" style="width: 100%" requiredMessage="Campo Nome é necessário"/>
+					                <f:selectItem itemLabel="Ativo" itemValue="true"/>
+					                <f:selectItem itemLabel="Inativo" itemValue="false"/>
+			                    </p:selectOneButton>
+			                </p:panelGrid>
+			                
+        					<p:panel id="panelProduto" style="margin-top: 10px">
+			               		<p:panelGrid id="panelNome" columns="1" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+									<p:outputLabel for="nome" value="Nome: " ><br/>
+										<p:inputText id="nome" value="#{produtoControl.selected.nome}" maxlength="50" required="true" style="width: 300px" requiredMessage="Campo Nome é necessário"/>
 										<p:message for="nome"/>
 									</p:outputLabel>
-								</p:row>
-								<p:row>	
-									<p:outputLabel for="selectCategoria" value="Categoria: " style="width:100%">
-										<p:selectOneMenu id="selectCategoria" value="#{produtoControl.selected.categoria}" filter="true" filterMatchMode="contains" converter="omnifaces.SelectItemsConverter" style="width:100%; height: 30px" required="true" requiredMessage="Campo Categoria é necessário">
-				                           	<f:selectItem itemLabel="Selecione..." itemValue="" />
-				                           	<f:selectItems value="#{categoriaControl.listAtivo}" var="item" itemLabel="#{item.idCategoria} - #{item.nome}" itemValue="#{item}" />
-				                       </p:selectOneMenu> 
-				                       <p:message for="selectCategoria"/>
-			                       </p:outputLabel>
-			                    </p:row> 
-							</h:panelGrid>
-		                    <h:panelGrid style="width:100%" id="gridModelos">
-									<p:outputLabel for="selectModelos" value="Modelos compatíveis: " style="width: 100%">
-											<p:selectCheckboxMenu value="#{produtoControl.modeloSelectedList}" id="selectModelos" filter="true" filterMatchMode="contains" converter="omnifaces.SelectItemsConverter" style="width:100%; height: 30px" required="true" requiredMessage="Selecione ao menos um modelo">
-					                           	<f:selectItem itemLabel="Selecione..." itemValue="" itemDisabled="true"/>
-					                           	<f:selectItems value="#{modeloControl.listAtivo}" var="item" itemLabel="#{item.idModelo} - #{item.nome}" itemValue="#{item}" />
-					                           	<p:ajax event="change" listener="#{produtoControl.addProdutoModelo()}"/>
-					                       </p:selectCheckboxMenu> 
-					                       <p:message for="selectModelos"/>
-				                       </p:outputLabel>
-		                    </h:panelGrid>	
-							<p:panelGrid columns="1" layout="grid">
-								<p:outputLabel for="descProduto" value="Descrição do Produto: ">
-									<p:inputTextarea id="descProduto" value="#{produtoControl.selected.descricao}" style="margin-left: -10px" rows="5" cols="98" required="true" requiredMessage="Campo Descrição é necessário"/>
-									<p:message for="descProduto"/>
-								</p:outputLabel>
-							</p:panelGrid>		
+								</p:panelGrid>	
+								<p:panelGrid id="panelCategoria" columns="2" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+									<p:outputLabel for="selectCategoria" value="Categoria: " >
+										<p:selectOneMenu id="selectCategoria" value="#{produtoControl.selected.categoria}" filter="true" filterMatchMode="contains" converter="omnifaces.SelectItemsConverter" style="width: 300px" required="true" requiredMessage="Campo Categoria é necessário">
+					                    	<f:selectItem itemLabel="Selecione..." itemValue="" />
+					                        	<f:selectItems value="#{categoriaControl.listAtivo}" var="item" itemLabel="#{item.idCategoria} - #{item.nome}" itemValue="#{item}" />
+					                    </p:selectOneMenu> 
+					               	<p:message for="selectCategoria"/>
+				                   </p:outputLabel>
+				                   
+				                   <p:outputLabel for="selectModelos" value="Modelos compatíveis: " >
+										<p:selectCheckboxMenu value="#{produtoControl.modeloSelectedList}" id="selectModelos" filter="true" filterMatchMode="contains" converter="omnifaces.SelectItemsConverter" style="width: 300px" required="true" requiredMessage="Selecione ao menos um modelo">
+						                	<f:selectItem itemLabel="Selecione..." itemValue="" itemDisabled="true"/>
+						                    <f:selectItems value="#{modeloControl.listAtivo}" var="item" itemLabel="#{item.idModelo} - #{item.nome}" itemValue="#{item}" />
+						                    	<p:ajax event="change" listener="#{produtoControl.addProdutoModelo()}"/>
+						                </p:selectCheckboxMenu> 
+						                <p:message for="selectModelos"/>
+					                 </p:outputLabel>
+			                    </p:panelGrid>
+								<p:panelGrid id="panelDescricao" columns="1" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+									<p:outputLabel for="descProduto" value="Descrição do Produto: ">
+										<p:inputTextarea id="descProduto" value="#{produtoControl.selected.descricao}" counter="display" counterTemplate="{0} caracteres restantes."
+										maxlength="255" rows="5" cols="42" required="true" requiredMessage="Campo Descrição é necessário"/>
+										<h:outputText id="display" />
+										<p:message for="descProduto"/>
+									</p:outputLabel>
+								</p:panelGrid>	
+							</p:panel>	
 						</p:tab>
 						<p:tab title="Financeiro">
-							<p:panelGrid columns="2" layout="grid">
-									<p:outputLabel for="mostraVitrine" value="Exibir na Vitrine: ">
-										<p:selectOneButton id="mostraVitrine" value="#{produtoControl.selected.mostraVitrine}" style="float:right" required="true" requiredMessage="Campo Exibir na Vitrine é necessário">
+							<p:panel id="panelFinanceiro" style="margin-top: 10px; width: 700px" >
+								<p:panelGrid id="panelVitrine" columns="2" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+									<p:outputLabel for="mostraVitrine" value="Exibir na Vitrine: "><br/>
+										<p:selectOneButton id="mostraVitrine" value="#{produtoControl.selected.mostraVitrine}" style="float:right; width: 130px" required="true" requiredMessage="Campo Exibir na Vitrine é necessário">
 												<f:converter converterId="javax.faces.Boolean" />
 						                        <f:selectItem itemLabel="Sim" itemValue="true"/>
 						                        <f:selectItem itemLabel="Não" itemValue="false"/>
@@ -213,74 +220,79 @@
 				                    	<p:message for="mostraVitrine"/>	
 				                    </p:outputLabel>	
 			                    	
-									<p:outputLabel for="controlaEstoque" value="Controlar Estoque: ">
-										<p:selectOneButton id="controlaEstoque" value="#{produtoControl.selected.controlaEstoque}" style="float:right" required="true" requiredMessage="Campo Controlar Estoque é necessário">
+									<p:outputLabel for="controlaEstoque" value="Controlar Estoque: "><br/>
+										<p:selectOneButton id="controlaEstoque" value="#{produtoControl.selected.controlaEstoque}" style="float:right; width: 130px" required="true" requiredMessage="Campo Controlar Estoque é necessário">
 												<f:converter converterId="javax.faces.Boolean" />
 						                        <f:selectItem itemLabel="Sim" itemValue="true"/>
 						                        <f:selectItem itemLabel="Não" itemValue="false"/>
 				                    	</p:selectOneButton>
 				                    	<p:message for="controlaEstoque"/>
 				                    </p:outputLabel>
-							</p:panelGrid>
-							<p:separator/>
-							<p:panelGrid columns="3" layout="grid">
-								<p:outputLabel for="precoCompra" value="Preço de Compra: ">
-									<p:inputNumber id="precoCompra" value="#{produtoControl.selected.precoCompra}" symbol="R$" decimalPlaces="2" decimalSeparator="," thousandSeparator="." required="true" requiredMessage="Campo Preço de Compra é necessário">
-										<p:ajax event="change" listener="#{produtoControl.calculaPrecoVenda()}" process="@this" update="frmCadastro:tabViewGeral:precoVenda" />
-									</p:inputNumber>
-									<p:message for="precoCompra"/>
-								</p:outputLabel>
-								
-								<p:outputLabel for="margem" value="Margem: ">
-									<p:inputNumber id="margem" value="#{produtoControl.selected.margem}" decimalPlaces="2" decimalSeparator="," thousandSeparator="" symbol="%" symbolPosition="s" required="true" requiredMessage="Campo Margem é necessário">
-										<p:ajax event="change" listener="#{produtoControl.calculaPrecoVenda()}" process="@this" update="frmCadastro:tabViewGeral:precoVenda" />
-									</p:inputNumber>
-									<p:message for="margem"/>
-								</p:outputLabel>
-								
-								<p:outputLabel for="precoVenda" value="Preço de Venda: ">
-									<p:inputNumber id="precoVenda" value="#{produtoControl.selected.precoVenda}" symbol="R$" decimalPlaces="2" decimalSeparator="," thousandSeparator="." required="true" requiredMessage="Campo Preço Venda é necessário">
-										<p:ajax event="change" listener="#{produtoControl.calculaMargem()}" process="@this" update="frmCadastro:tabViewGeral:margem frmCadastro:tabViewGeral:precoVenda" />
-									</p:inputNumber>
-									<p:message for="precoVenda"/>
-								</p:outputLabel>
-							</p:panelGrid>
-							<p:panelGrid columns="3" layout="grid">
-								<p:outputLabel id="teste" for="qtdeMinina" value="Qtde. Mínima para alerta: ">
-									<p:inputNumber id="qtdeMinina" value="#{produtoControl.selected.qtdMinima}" decimalPlaces="0" decimalSeparator="" thousandSeparator="" required="true" requiredMessage="Campo Qtde. Mínima é necessário"/>
-									<p:message for="qtdeMinina"/>
-								</p:outputLabel>
-								
-								<p:outputLabel for="qtdeProduto" value="Qtde. Estoque: ">
-									<p:inputNumber id="qtdeProduto" value="#{produtoControl.selected.quantidade}" decimalPlaces="0" decimalSeparator="" thousandSeparator="" required="true" requiredMessage="Campo Qtde. Total é necessário"/>
-									<p:message for="qtdeProduto"/>
-								</p:outputLabel>
-							</p:panelGrid>
+								</p:panelGrid>
+							
+								<p:separator/>
+								<p:panelGrid id="panelPreco" columns="3" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+									<p:outputLabel for="precoCompra" value="Preço de Compra: "><br/>
+										<p:inputNumber id="precoCompra" styleClass="styleInNumber" value="#{produtoControl.selected.precoCompra}" symbol="R$" decimalPlaces="2" decimalSeparator="," thousandSeparator="." required="true" requiredMessage="Campo Preço de Compra é necessário" >
+											<p:ajax event="change" listener="#{produtoControl.calculaPrecoVenda()}" process="@this" update="frmCadastro:tabViewGeral:precoVenda" />
+										</p:inputNumber>
+										<p:message for="precoCompra"/>
+									</p:outputLabel>
+									
+									<p:outputLabel for="margem" value="Margem: "><br/>
+										<p:inputNumber id="margem" styleClass="styleInNumber" value="#{produtoControl.selected.margem}" decimalPlaces="2" decimalSeparator="," thousandSeparator="" symbol="%" symbolPosition="s" required="true" requiredMessage="Campo Margem é necessário">
+											<p:ajax event="change" listener="#{produtoControl.calculaPrecoVenda()}" process="@this" update="frmCadastro:tabViewGeral:precoVenda" />
+										</p:inputNumber>
+										<p:message for="margem"/>
+									</p:outputLabel>
+									
+									<p:outputLabel for="precoVenda" value="Preço de Venda: "><br/>
+										<p:inputNumber id="precoVenda" styleClass="styleInNumber" value="#{produtoControl.selected.precoVenda}" symbol="R$" decimalPlaces="2" decimalSeparator="," thousandSeparator="." required="true" requiredMessage="Campo Preço Venda é necessário">
+											<p:ajax event="change" listener="#{produtoControl.calculaMargem()}" process="@this" update="frmCadastro:tabViewGeral:margem frmCadastro:tabViewGeral:precoVenda" />
+										</p:inputNumber>
+										<p:message for="precoVenda"/>
+									</p:outputLabel>
+								</p:panelGrid>
+								<p:panelGrid id="panelEstoque" columns="3" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+									<p:outputLabel id="teste" for="qtdeMinina" value="Qtde. Mínima para alerta: "><br/>
+										<p:inputNumber id="qtdeMinina" styleClass="styleInNumber" value="#{produtoControl.selected.qtdMinima}" decimalPlaces="0" decimalSeparator="" thousandSeparator="" required="true" requiredMessage="Campo Qtde. Mínima é necessário"/>
+										<p:message for="qtdeMinina"/>
+									</p:outputLabel>
+									
+									<p:outputLabel for="qtdeProduto" value="Qtde. Estoque: "><br/>
+										<p:inputNumber id="qtdeProduto" styleClass="styleInNumber" value="#{produtoControl.selected.quantidade}" decimalPlaces="0" decimalSeparator="" thousandSeparator="" required="true" requiredMessage="Campo Qtde. Total é necessário"/>
+										<p:message for="qtdeProduto"/>
+									</p:outputLabel>
+								</p:panelGrid>
+							</p:panel>
 						</p:tab>
 						<p:tab title="Fotos">
-							<p:commandButton value="Excluir Fotos" icon="fa fa-trash" styleClass="btn-danger"
-                                         actionListener="#{produtoControl.excluirFotos()}"
-                                         type="submit" update="frmCadastro:tabViewGeral" style="margin-top: 5px; margin-bottom: 5px; font-size: 12px" rendered="#{produtoControl.selected.imagemList.size()!=0}">
-                        	</p:commandButton>
-							<p:outputLabel value="Imagem: " style="width: 100%">
-								<p:fileUpload id="selectImagem" fileUploadListener="#{produtoControl.enviaImagem}" style="width:100%"
-		                                  sizeLimit="5000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" mode="advanced"
-		                                  dragDropSupport="true" previewWidth="70" multiple="true" auto="false" sequential="true"
-		                    			  update="messages" label="Escolher" cancelLabel="Cancelar" uploadLabel="Upload" 
-		                    			  fileLimitMessage="O limite máximo para upload já foi atingido" invalidSizeMessage="Tamanho da imagem foi excedido" invalidFileMessage="Formato inválido">		  
-		                    	</p:fileUpload>
-		                    </p:outputLabel>
-		                    <br/>
-		                    <h:panelGrid id="panelGaleria">
-								<p:galleria id="galeria" value="#{produtoControl.selected.imagemList}"
-						                            var="galeria" panelHeight="300" panelWidth="400" frameHeight="50" frameWidth="50"
-						                            filmstripPosition="bottom" rendered="#{produtoControl.selected.imagemList.size()!=0}">
-	                    			<p:graphicImage value="/temp/#{galeria.nome}.jpg" cache="false" width="400" height="300" rendered="#{produtoControl.selected.imagemList.size()!=0}"/>
-	                			</p:galleria>
-                    		</h:panelGrid>
-						</p:tab>
+							<p:panelGrid id="panelGaleria" columns="1" style="width: 700px" cellpadding="5" layout="grid"  styleClass="no-border ui-fluid">
+								<p:commandButton value="Excluir Fotos" icon="fa fa-trash" styleClass="btn-danger"
+	                            	actionListener="#{produtoControl.excluirFotos()}"
+	                                type="submit" update="frmCadastro:tabViewGeral" style="font-size: 12px; width: 140px" rendered="#{produtoControl.selected.imagemList.size()!=0}">
+	                        	</p:commandButton>
+	                        	<p:outputLabel value="Imagem: " >
+									<p:fileUpload id="selectImagem" fileUploadListener="#{produtoControl.enviaImagem}"
+				                    	sizeLimit="5000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" mode="advanced"
+				                        dragDropSupport="true" previewWidth="70" multiple="true" auto="false" sequential="true"
+				                    	update="messages frmCadastro:growl" label="Escolher" cancelLabel="Cancelar" uploadLabel="Upload" 
+				                    	fileLimitMessage="O limite máximo para upload já foi atingido" invalidSizeMessage="Tamanho da imagem foi excedido" invalidFileMessage="Formato inválido">		  
+				                    </p:fileUpload>
+				                </p:outputLabel>
+				                 
+				                 <p:galleria value="#{produtoControl.selected.imagemList}" var="image" panelWidth="410" panelHeight="187" autoPlay="false" rendered="#{not empty produtoControl.selected.imagemList}">
+			                     	<p:graphicImage value="#{imagemControl.photoImageScreen}" rendered="#{not empty image.idImagem}"
+			                        	cache="false" style="width: 220px; height: 190px; margin-top: 10px">
+			                            <f:param name="cdImagem" value="#{image.idImagem}" />
+			                        </p:graphicImage>
+	                        	</p:galleria>
+	                    			
+	                        </p:panelGrid>
+	                    </p:tab>
 					</p:tabView>
 				<p:separator/>
+				
 				<p:commandButton value="Salvar"
 					style="margin-top: -10px; width: auto"
 					update="frmList:tabela frmCadastro @(.ui-button)"

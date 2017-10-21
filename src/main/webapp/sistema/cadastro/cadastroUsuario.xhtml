@@ -137,7 +137,9 @@
 		<p:dialog width="auto" height="auto" widgetVar="dlgCadastro" resizable="false" 
 				header="Usuário" focus="frmCadastro:nome" styleClass="box-primary"
 				modal="true" appendTo="@(body)" closable="true"   closeOnEscape="true" responsive="true">
+			
 			<h:form id="frmCadastro">
+				<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
 				
 				<p:panelGrid id="panelInfo" columns="2" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
 					<p:outputLabel value="Código: "><br />
@@ -162,6 +164,7 @@
 						<p:inputText id="email" maxlength="50"
 							value="#{usuarioControl.selected.email}" required="true" style="width: 330px" requiredMessage="Campo Email é necessário" validatorMessage="Email inválido!">
 							<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+							<p:ajax event="blur" listener="#{usuarioControl.verificaEmail()}" update="@this, frmCadastro:growl" />
 						</p:inputText>
 						<p:message id="msgEmail" for="email"/>
 					</p:outputLabel>	
@@ -182,7 +185,7 @@
 					</p:outputLabel>	
 				</p:panelGrid>
 				
-				<p:panelGrid id="panelSenha" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+				<p:panelGrid id="panelSenha" rendered="#{usuarioControl.selected.id == null}" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
 					<p:outputLabel for="senha" value="Senha: " ><br />
 						<p:password id="senha" maxlength="50" value="#{usuarioControl.selected.senha}" required="true" style="width: 330px" requiredMessage="Campo Senha é necessário"/>
 						<p:message id="msgSenha" for="senha"/>

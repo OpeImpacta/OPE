@@ -41,13 +41,10 @@ public class OrcamentoController extends BasicControlCad<Venda> implements Seria
 	private BigDecimal desconto;
 	private BigDecimal descontoTotal;
 	private BigDecimal subTotal;
-	
+
 	private String subTotalFormatado;
 
-	private Boolean disableAprovar;
-	private Boolean disableCancelar;
-	private Boolean disableReenviar;
-	private Boolean disableVisualizar;
+	private Boolean disableButtons;
 
 
 	// *******************************************
@@ -59,7 +56,7 @@ public class OrcamentoController extends BasicControlCad<Venda> implements Seria
 
 	//preenche tabela orcamentos conforme a opção selecionada
 	public void preencheOrcamentos() {
-		disableAprovar = disableCancelar = disableReenviar = disableVisualizar = true;
+		disableButtons = true;
 		vendaSelecionada = null;
 		orcamentos = new ArrayList<>();
 		if(opcao.equals("1") || opcao == null) {
@@ -81,7 +78,7 @@ public class OrcamentoController extends BasicControlCad<Venda> implements Seria
 	}
 
 	public void openDialogAprovar() {
-		if(vendaSelecionada != null){
+		if(vendaSelecionada != null && getOpcao().equals("1")){
 			calculaTotalItens();
 			UtilityTela.executarJavascript("PF('dlgAprovar').show();");
 		}
@@ -96,12 +93,14 @@ public class OrcamentoController extends BasicControlCad<Venda> implements Seria
 
 	//cancela o orçamento
 	public void cancelaOrcamento(){
-		vendaSelecionada.setAtivo(false);
-		vendaDAO.update(vendaSelecionada);
-		vendaSelecionada = null;
+		if(getOpcao().equals("2")){
+			vendaSelecionada.setAtivo(false);
+			vendaDAO.update(vendaSelecionada);
+			vendaSelecionada = null;
 
-		orcamentos = vendaDAO.findOrcamentosAprovados();
-		UtilityTela.criarMensagem("Sucesso!", "Orçamento cancelado com sucesso.");
+			orcamentos = vendaDAO.findOrcamentosAprovados();
+			UtilityTela.criarMensagem("Sucesso!", "Orçamento cancelado com sucesso.");
+		}
 	}
 
 	//aprova o orçamento e manda por email
@@ -167,24 +166,7 @@ public class OrcamentoController extends BasicControlCad<Venda> implements Seria
 	}
 
 	public void onRowSelectVenda() {
-		disableVisualizar = false;
-
-		if(getOpcao().equals("1") || opcao == null) {
-			this.disableAprovar = false;
-		}else if(getOpcao().equals("2")){
-			this.disableAprovar = true;
-			this.disableCancelar = false;
-			this.disableReenviar = false;
-		}else if(getOpcao().equals("3")){
-			this.disableAprovar = true;
-			this.disableReenviar = true;
-			this.disableCancelar = true;
-		}else if(getOpcao().equals("4")){
-			this.disableAprovar = true;
-			this.disableReenviar = true;
-			this.disableCancelar = true;
-		}
-
+		this.disableButtons = false;
 	}
 
 	public String getOpcao() {
@@ -228,48 +210,15 @@ public class OrcamentoController extends BasicControlCad<Venda> implements Seria
 		this.vendaSelecionada = vendaSelecionada;
 	}
 
-	public Boolean getDisableAprovar() {
-		if(disableAprovar == null){
-			disableAprovar = true;
+	public Boolean getDisableButtons() {
+		if(disableButtons == null){
+			disableButtons = true;
 		}
-		return disableAprovar;
+		return disableButtons;
 	}
 
-	public Boolean getDisableCancelar() {
-		if(disableCancelar == null){
-			disableCancelar = true;
-		}
-		return disableCancelar;
-	}
-
-	public void setDisableCancelar(Boolean disableCancelar) {
-		this.disableCancelar = disableCancelar;
-	}
-
-	public Boolean getDisableReenviar() {
-		if(disableReenviar == null){
-			disableReenviar = true;
-		}
-		return disableReenviar;
-	}
-
-	public Boolean getDisableVisualizar() {
-		if(disableVisualizar == null){
-			disableVisualizar = true;
-		}
-		return disableVisualizar;
-	}
-
-	public void setDisableVisualizar(Boolean disableVisualizar) {
-		this.disableVisualizar = disableVisualizar;
-	}
-
-	public void setDisableReenviar(Boolean disableReenviar) {
-		this.disableReenviar = disableReenviar;
-	}
-
-	public void setDisableAprovar(Boolean disableExcluirVenda) {
-		this.disableAprovar = disableExcluirVenda;
+	public void setDisableButtons(Boolean disableButtons) {
+		this.disableButtons = disableButtons;
 	}
 
 	public List<ItemVenda> getItemVendaList() {
