@@ -12,7 +12,18 @@
 	       <style type="text/css">
 	            .ui-datatable .ui-datatable-header {
 	                text-align: right !important;
-	       }
+	       		}
+	       		
+	       		.ui-calendar input{
+	       			width: 100px;
+	       			text-align: center !important;
+	       		}
+	       		
+	       		.ui-selectonemenu{
+	       			min-width: 10px;
+	       			text-align: center !important;
+	       		}
+	       		
 	       </style>
     </ui:define>
 
@@ -21,6 +32,9 @@
     </ui:define>
 
 	<ui:define name="body">
+		<!--Altera o idioma do calendario-->
+		<h:outputScript library="js" name="locale-primefaces.js"/>
+	
 		<adm:breadcrumb title="Relatórios"/>
 		<h:form id="frmPesquisa">
 			<p:growl id="msgOk" showSummary="false" severity="info"/>
@@ -374,7 +388,7 @@
 					
 					<p:column headerText="Situação" rendered="#{relatorioControl.tipoRelatorio == 7 ? true : false}" style="text-align: center" sortBy="#{relatorioControl.verificaSituacaoVenda(registro)}" filterBy="#{relatorioControl.verificaSituacaoVenda(registro)}" filterMatchMode="exact">
 						<f:facet name="filter">		                	
-		                	<p:selectOneMenu id="oneMenuSituacaoVenda" onchange="PF('wvTable').filter()" autoWidth="false" style="width:100px" rendered="#{relatorioControl.tipoRelatorio == 7 ? true : false}">
+		                	<p:selectOneMenu id="oneMenuSituacaoVenda" onchange="PF('wvTable').filter()" autoWidth="false" style="width:50px; align: center" rendered="#{relatorioControl.tipoRelatorio == 7 ? true : false}">
 			                    <f:selectItem itemLabel="Todas" itemValue="#{null}" noSelectionOption="true" />
 			                    <f:selectItem itemLabel="Realizadas" itemValue="Realizadas" />
 				        		<f:selectItem itemLabel="Canceladas" itemValue="Canceladas" />
@@ -382,7 +396,24 @@
 	            		</f:facet>
 	            		<h:outputText value="#{relatorioControl.verificaSituacaoVenda(registro)}" />
 					</p:column>
-			                            
+					
+					
+					<p:column headerText="Forma de Pgto." rendered="#{relatorioControl.tipoRelatorio == 7 ? true : false}" style="text-align: center" sortBy="#{relatorioControl.verificaFormaPgtoVenda(registro)}" filterBy="#{relatorioControl.verificaFormaPgtoVenda(registro)}" filterMatchMode="exact">
+						
+						<f:facet name="filter">		
+							<p:selectOneMenu onchange="PF('wvTable').filter()" > 
+								<f:selectItem itemLabel="Todas" itemValue="#{null}" noSelectionOption="true" />   
+								<f:selectItem itemLabel="Dinheiro" itemValue="Dinheiro" />
+				        		<f:selectItem itemLabel="Débito" itemValue="Débito" />
+				        		<f:selectItem itemLabel="Crédito" itemValue="Crédito" />
+				        		<f:selectItem itemLabel="Cheque" itemValue="Cheque" />	            	
+		                	</p:selectOneMenu>
+	            		</f:facet>
+	            		
+	            		<h:outputText value="#{relatorioControl.verificaFormaPgtoVenda(registro)}" />
+	            		 
+					</p:column>
+			                             
                 </p:dataTable>            
 			</p:panel>
 			
