@@ -185,7 +185,7 @@
 					</p:outputLabel>	
 				</p:panelGrid>
 				
-				<p:panelGrid id="panelSenha" rendered="#{usuarioControl.selected.id == null}" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
+				<p:panelGrid id="panelSenha" rendered="#{usuarioControl.selected.id == null || loginControl.usuarioLogado == null}" columns="1" cellpadding="5" layout="grid" styleClass="no-border ui-fluid">
 					<p:outputLabel for="senha" value="Senha: " ><br />
 						<p:password id="senha" maxlength="50" value="#{usuarioControl.selected.senha}" required="true" style="width: 330px" requiredMessage="Campo Senha é necessário"/>
 						<p:message id="msgSenha" for="senha"/>
