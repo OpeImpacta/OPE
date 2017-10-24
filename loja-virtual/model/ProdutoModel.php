@@ -53,4 +53,18 @@ class ProdutoModel {
 	public function listarImagem($idProduto){
 		return $this->bd->query("SELECT * FROM imagem WHERE produto_id_produto = ".$idProduto);
 	}
+
+	public function buscarProdutos($campoBusca){
+		return $this->bd->query(
+			"SELECT tb.* 
+			FROM (
+				SELECT 
+					p.*, 
+					(SELECT c.nome FROM categoria c WHERE c.id_categoria = p.id_categoria) AS categoria 
+				FROM produto p 
+				WHERE p.ativo = 1
+			) tb 
+			WHERE (lower(tb.nome) like '%{$campoBusca}%' OR lower(tb.categoria) like '%{$campoBusca}%')"
+		);
+	}
 }

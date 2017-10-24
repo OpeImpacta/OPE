@@ -16,11 +16,11 @@
 		</div>
 
 		<div class="collapse navbar-collapse" id="navbarCollapse">
-			<form class="navbar-form navbar-left">
+			<form class="navbar-form navbar-left" action="<?=BASE_URL;?>view/produtos/buscar.php" method="GET">
 				<div class="form-group">
-					<input type="text" class="form-control input-sm" placeholder="Buscar">
+					<input type="text" name="campoBusca" class="form-control" required>
 				</div>
-				<button type="submit" class="btn btn-default btn-sm">Buscar</button>
+				<input type="submit" class="btn btn-default" value="Buscar" />
 			</form>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown">

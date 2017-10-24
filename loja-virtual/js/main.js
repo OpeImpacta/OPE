@@ -12,6 +12,8 @@ $(function(){
 			}
 		});
 
+		console.log("valida", valida);
+
 		if( valida > 0 ){
 			$(".alert-form").fadeIn("slow").removeClass("hide");
 			return false;
