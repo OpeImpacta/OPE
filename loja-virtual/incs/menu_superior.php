@@ -10,7 +10,7 @@
 			<a class="navbar-brand" href="<?=BASE_URL;?>">
 				<div class="pull-left">
 					<img src="<?=BASE_URL;?>imagens/logo_transparente.png" width="85" alt="" />
-					Casa de Material do Onibus
+					Casa de Material do &Ocircnibus
 				</div>
 			</a>
 		</div>

@@ -58,6 +58,11 @@ public class UsuarioController extends BasicControlCad<Usuario> implements Seria
 	
 	public void alterarSenha() {
 		Usuario usuario = loginControl.getUsuarioLogado();
+		
+		if(usuario == null){
+			return;
+		}
+		
 		if(senhaAtual.equalsIgnoreCase(usuario.getSenha())) {
 			if(senhaNova.equalsIgnoreCase(usuario.getSenha())) {
 				UtilityTela.criarMensagemErroSemDetail("A nova senha não pode ser igual a senha atual!");

@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('America/Sao_Paulo');
 /**
 * 
 */
@@ -33,13 +34,14 @@ class Orcamento {
 		if ((isset($_SESSION["nomeProduto"]) && !empty($_SESSION["nomeProduto"])) && 
 			(isset($_SESSION["totalProduto"]) && !empty($_SESSION["totalProduto"]))
 		) {
+			$dataLocal = date('Y/m/d H:i:s', time());
 			$salvarOrcamento = array(
 				"id_cliente" => $_SESSION["id"],
 				"tipo" => 2,
 				"aprovado" => "0",
 				"finalizado" => "0",
 				"ativo" => 1,
-				"data" => date("Y-m-d H:i:s")
+				"data" => $dataLocal 
 			);
 
 			$idOrcamento = $this->model->salvar($salvarOrcamento);
