@@ -10,6 +10,18 @@
 		<p:spacer height="15px" />
 		<div class="row">
 			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="small-box bg-yellow">
+		            <div class="inner">
+		              <h3>#{dashControl.novosOrcamentos}</h3>
+		
+		              <span class="info-box-text">Novos Orçamentos</span> 
+		            </div>
+		            <div class="icon">
+		              <i class="ion ion-ios-pricetag-outline"></i>
+		            </div>
+		            <p:link href="/sistema/orcamento/consultarOrcamentos.xhtml" class="small-box-footer">Mais Informações <i class="fa fa-arrow-circle-right"></i></p:link>
+		        </div>
+			 	<!-- 
 			 	<p:link href="/sistema/orcamento/consultarOrcamentos.xhtml">
 					<div class="info-box bg-yellow" >
 						<span class="info-box-icon">
@@ -22,9 +34,23 @@
 						</div>
 					</div>
 				</p:link>
+				-->
 			</div>
 
 			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="small-box bg-aqua">
+		            <div class="inner">
+		              <h3>#{dashControl.estoqueBaixo}</h3>
+		
+		              <span class="info-box-text">Estoque Baixo</span> 
+		            </div>
+		            <div class="icon">
+		              <i class="fa fa-cart-arrow-down"></i>
+		            </div>
+		            <p:link href="/sistema/estoque/consultarEstoque.xhtml" class="small-box-footer">Mais Informações <i class="fa fa-arrow-circle-right"></i></p:link>
+		        </div>
+				
+				<!-- 
 				<p:link href="/sistema/estoque/consultarEstoque.xhtml" >
 					<div class="info-box bg-aqua">
 						<span class="info-box-icon" >
@@ -37,22 +63,47 @@
 						</div>
 					</div>
 				</p:link>
+				-->
 			</div>
 			
 			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="small-box bg-green">
+		            <div class="inner">
+		              <h3><sup style="font-size: 20px">#{dashControl.dashboardOrcamento.totalOrcamentosFormatado}</sup></h3>
+		
+		              <span class="info-box-text">Orçamentos do Mês</span> 
+		            </div>
+		            <div class="icon">
+		              <i class="fa fa-calculator"></i>
+		            </div>
+		            <p:link href="/sistema/orcamento/consultarOrcamentos.xhtml" class="small-box-footer">Mais Informações <i class="fa fa-arrow-circle-right"></i></p:link>
+		        </div>
+				<!-- 
 				<div class="info-box bg-green">
 					<span class="info-box-icon"><i
 						class="fa fa-calculator"></i></span>
 
 					<div class="info-box-content">
 						<span class="info-box-text">Orçamentos do Mês</span>
-						<span class="info-box-number">#{dashControl.dashboardOrcamento.totalOrcamentos}</span>
-						<span class="info-box-number">#{dashControl.dashboardOrcamento.totalOrcamentosFormatado}</span>
+						<span style="font-size: 17px" class="info-box-number">#{dashControl.dashboardOrcamento.totalOrcamentos} | #{dashControl.dashboardOrcamento.totalOrcamentosFormatado}</span>
 					</div>
 				</div>
+				-->
 			</div>
 			
 			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="small-box bg-red">
+		            <div class="inner">
+		              <h3><sup style="font-size: 20px">#{dashControl.dashboardVenda.totalVendaFormatado}</sup></h3>
+		
+		              <span class="info-box-text">Vendas do Mês</span> 
+		            </div>
+		            <div class="icon">
+		              <i class="fa fa-cart-plus"></i>
+		            </div>
+		            <p:link href="/sistema/venda/consultarVendas.xhtml" class="small-box-footer">Mais Informações <i class="fa fa-arrow-circle-right"></i></p:link>
+		        </div>
+				<!-- 
 				<div class="info-box bg-red">
 					<span class="info-box-icon">
 						<i class="fa fa-cart-plus" />
@@ -60,11 +111,10 @@
 
 					<div class="info-box-content">
 						<span class="info-box-text">Vendas do Mês</span> 
-						<span class="info-box-number">#{dashControl.dashboardVenda.totalVendas}</span>
-						
-						<span class="info-box-number">#{dashControl.dashboardVenda.totalVendaFormatado}</span>
+						<span style="font-size: 17px" class="info-box-number">#{dashControl.dashboardVenda.totalVendas} | #{dashControl.dashboardVenda.totalVendaFormatado}</span>
 					</div>
 				</div>
+				-->
 			</div>
 			
 		</div>
