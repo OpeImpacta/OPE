@@ -230,7 +230,7 @@ public class ClienteController extends BasicControlCad<Cliente> implements Seria
 
 		if(allClientes != null) {
 			for(Cliente cliente : allClientes) {
-				if(cliente.getNome().toLowerCase().contains(query)) {
+				if(cliente.getNome().toLowerCase().contains(query.toLowerCase())) {
 					filteredClientes.add(cliente);
 				}
 			}

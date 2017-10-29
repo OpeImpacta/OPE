@@ -411,6 +411,16 @@ public class VendaController extends BasicControlCad<Venda> implements Serializa
 
 			((Venda)getSelected()).getItens().add(i);
 		}
+		
+		verificaValorFinal();
+	}
+	
+	//verifica se o valor final nção ficou negativo caso a venda venha de um orçamento
+	public void verificaValorFinal(){
+		if(getTotal().compareTo(new BigDecimal(0)) == -1){
+			setTotal(new BigDecimal(0));
+			setDescontoTotal(new BigDecimal(0));
+		}
 	}
 
 	public void cancelOrcamento() {

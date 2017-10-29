@@ -106,8 +106,13 @@
 								<?php if (!empty($_SESSION["totalProduto"])): ?>
 									<a href="<?=BASE_URL;?>acoes/carrinho.php?acao=remover&id=<?=$id;?>" class="btn btn-danger btn-sm">Remover</a>
 								<?php endif; ?>
-
-								<a href="<?=BASE_URL;?>acoes/carrinho.php?acao=adicionar&id=<?=$id;?>" class="btn btn-primary btn-sm">Adicionar</a>
+<?php
+	$classeBtn = "disabled";
+	if ($produto["dados"][0]["quantidade"] > 0) {
+		$classeBtn = "";
+	}
+?>
+								<a href="<?=BASE_URL;?>acoes/carrinho.php?acao=adicionar&id=<?=$id;?>" class="btn btn-primary btn-sm <?=$classeBtn;?>">Adicionar</a>
 							</div>
 						</div>
 					</div>

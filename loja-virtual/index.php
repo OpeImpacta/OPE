@@ -65,7 +65,7 @@
 									}
 								?>
 								<p class="pull-right">
-									<a href="<?=$url;?>" class="btn btn-primary btn-sm <?=$classeBtn;?>">
+									<a href="<?=$url;?>" class="btn btn-primary btn-sm <?=$classeBtn;?> ">
 										Adicionar
 									</a>
 								</p>

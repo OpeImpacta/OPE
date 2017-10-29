@@ -20,8 +20,8 @@ if(isset($_POST) && !empty($_POST['class']) && !empty($_POST['method']) && !empt
 	$retorno = $dados->$method($dadosPost);
 
 	if($retorno){
-		$_SESSION['msg_tipo'] = 'Sucesso';
-		$_SESSION['msg'] = $class.' alterado!';
+		$_SESSION['msg_tipo'] = 'Sucesso!';
+		$_SESSION['msg'] = 'Dados do ' .$class.' salvos.';
 	}
 }
 
