@@ -337,9 +337,9 @@
                 
          	<h:form id="frmImrimir" >
          		<p:commandButton value="Sim" onclick="PF('dlgImrimir').hide(); this.form.target='_blank'" update="@this" styleClass="btn-success" ajax="false"
-         							icon="fa fa-check" actionListener="#{vendaControl.gerarRelatorio(vendaControl.idVenda, 'venda')}" />
+         							icon="fa fa-check" actionListener="#{vendaControl.gerarRelatorio(vendaControl.selected.idVenda, 'venda')}" />
          		
-         		<p:commandButton value="Não" id="btnNao" update="frmFinalizacao frmVenda"
+         		<p:commandButton value="Não" id="btnNao" update="frmFinalizacao frmVenda" actionListener="#{vendaControl.limpaForm()}"
 									onclick="PF('dlgImrimir').hide()" styleClass="btn-danger" icon="fa fa-close"/>	
          	</h:form>
          </p:dialog>

@@ -200,9 +200,9 @@
                 
          	<h:form id="frmImrimir" >
          		<p:commandButton value="Sim" onclick="PF('dlgImrimir').hide(); this.form.target='_blank'" update="@this" styleClass="btn-success" ajax="false"
-         							icon="fa fa-check" actionListener="#{vendaControl.gerarRelatorio(vendaControl.idVenda, 'orcamento')}" />
+         							icon="fa fa-check" actionListener="#{vendaControl.gerarRelatorio(vendaControl.selected.idVenda, 'orcamento')}" />
          		
-         		<p:commandButton value="Não" id="btnNao" update="frmVenda"
+         		<p:commandButton value="Não" id="btnNao" update="frmVenda" actionListener="#{vendaControl.limpaForm()}"
 									onclick="PF('dlgImrimir').hide()" styleClass="btn-danger" icon="fa fa-close"/>	
          	</h:form>
          </p:dialog>
