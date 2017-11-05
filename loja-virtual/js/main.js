@@ -22,6 +22,28 @@ $(function(){
 		return true;
 	});
 
+	$('.btn-add').click(function(e) {
+		e.preventDefault();
+
+		var el = $(this);
+		var total = 0;
+
+		if ($('#badge_produto').text() > 0) {
+			total = parseInt($('#badge_produto').text());
+		} else {
+			var html = '<span class="badge" id="badge_produto" tabindex="0" data-toggle="popover" data-placement="bottom" data-trigger="manual" data-content="Produto adicionado ao carrinho.">1</span>';
+			$(html).insertBefore($('#span_carrinho'))
+		}
+
+		$('#badge_produto').popover('show');
+		$('#badge_produto').text(total + 1);
+
+		setTimeout(function() {
+			$('#badge_produto').popover('hide');
+			window.location.href=el.prop('href');
+		}, 500);
+	});
+
 	// PREENCHE O INPUT ESCONDIDO E MOSTRA MODAL DE CONFIRMAÇÃO DE EXCLUSÃO
 	$(".excluir").click(function(e){
 		e.preventDefault();

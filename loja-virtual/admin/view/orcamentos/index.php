@@ -21,10 +21,37 @@
 
 <div class="row">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-		<h2>Meus Orçamentos Aprovados</h2><hr/>
+		<h2>Meus Orçamentos</h2><hr/>
 	</div>
 
 	<?php include "../../../incs/menu_lateral.php"; ?>
+
+	<?php if (isset($_SESSION["orcamento_salvo"]) && $_SESSION["orcamento_salvo"]): ?>
+		<div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
+
+			<div class="alert alert-success alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<strong>Sucesso!</strong> Orçamento enviado para <strong>Casa de Material do Ônibus</strong>.
+			</div>
+
+			<?php
+				if (isset($_SESSION["carrinho"])) {
+					unset($_SESSION["carrinho"]);
+				}
+
+				if (isset($_SESSION["nomeProduto"])) {
+					unset($_SESSION["nomeProduto"]);
+				}
+
+				if (isset($_SESSION["totalProduto"])) {
+					unset($_SESSION["totalProduto"]);
+				}
+
+				unset($_SESSION["orcamento_salvo"]);
+			?>
+		</div> <!-- /.col-md-10 -->
+	<?php endif; ?>
+
 	<div class="col-lg-10 col-md-9 col-sm-9 col-xs-12">
 		<?php if (!empty($orcamento)): ?>
 			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -34,6 +61,7 @@
 						<h4 class="panel-title">
 							<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<?=$key;?>" aria-expanded="true" aria-controls="collapse<?=$key;?>">
 								ORÇAMENTO Nº <?=$key;?>
+								<?=($value[0]["orc_aprovado"] == 0 ? " - Aguardando Aprovação" : "");?>
 							</a>
 						</h4>
 					</div>

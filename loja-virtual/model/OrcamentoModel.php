@@ -16,7 +16,7 @@ class OrcamentoModel {
 		}
 
 		return $this->bd->query(
-			"SELECT p.*, v.*, 
+			"SELECT p.*, v.*, CAST(v.aprovado AS unsigned integer) as orc_aprovado,
 				DATE_FORMAT(v.data, \"%d/%m/%Y %T\") AS datavenda,
 				iv.quantidade,
 				(SELECT c.nome FROM categoria c WHERE c.id_categoria = p.id_categoria) AS categoria
@@ -27,8 +27,7 @@ class OrcamentoModel {
 			WHERE p.id_produto = iv.id_produto
 				AND v.id_venda = iv.venda_id_venda
 				AND v.tipo = 2
-				and v.aprovado = 1
-				AND v.id_cliente = " . $_SESSION["id"] . $condicao
+				AND v.id_cliente = " . $_SESSION["id"] . $condicao . ' ORDER BY orc_aprovado asc, v.id_venda desc'
 		);
 	}
 

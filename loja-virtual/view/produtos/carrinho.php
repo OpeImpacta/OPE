@@ -51,7 +51,7 @@
 						<form action="<?=BASE_URL;?>acoes/rota.php" method="POST">
 							<input type="hidden" name="class" value="<?=base64_encode("Orcamento");?>">
 							<input type="hidden" name="method" value="<?=base64_encode("salvar");?>">
-							<input type="hidden" name="path" value="<?=base64_encode("view/orcamento.php");?>">
+							<input type="hidden" name="path" value="<?=base64_encode("admin/view/orcamentos/");?>">
 
 							<input type="submit" value="Finalizar Orçamento" class="btn btn-primary btn-sm pull-right">
 						</form>

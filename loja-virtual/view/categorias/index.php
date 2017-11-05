@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 	include "../../config.php";
 	include "../../incs/cabecalho.php";
 	include "../../incs/menu_superior.php";
@@ -52,22 +52,12 @@
 							<hr/>
 
 							<div class="ratings">
-								<?php
-									$status =  "Produto esgotado";
-									$classeBtn = "disabled";
-									if ($value["quantidade"] > 0) {
-										$status = "Produto em estoque";
-										$classeBtn = "";
-									}
-?>
-									
 								<p class="pull-right">
-									<a href="<?=BASE_URL;?>acoes/carrinho.php?acao=adicionar&id=<?=$value["id_produto"];?>" class="btn btn-primary btn-sm <?=$classeBtn;?> ">
+									<a href="<?=BASE_URL;?>acoes/carrinho.php?acao=adicionar&id=<?=$value["id_produto"];?>" class="btn btn-primary btn-sm btn-add">
 										Adicionar
 									</a>
 								</p>
-<p><?=$status;?></p>
-								<!--<p><?=($value["quantidade"] > 0 ? "Produto em estoque" : "Produto esgotado");?></p>-->
+								<p><?=($value["quantidade"] > 0 ? "Produto em estoque" : "Produto esgotado");?></p>
 							</div>
 						</div>
 					</div>
