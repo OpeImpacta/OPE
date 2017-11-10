@@ -146,22 +146,22 @@ public class RelatorioGeralController implements Serializable {
 			switch(tipoRelatorio) {
 			case 6:
 				if(venda.getAtivo() && !venda.getAprovado() && !venda.getFinalizado()) {
-					return "Pendente";
+					return "Pendentes";
 				}
 				if(venda.getAtivo() && venda.getAprovado() && !venda.getFinalizado()) {
-					return "Aprovado";
+					return "Aprovados";
 				}
 				if(venda.getAtivo() && venda.getAprovado() && venda.getFinalizado()) {
-					return "Finalizado";
+					return "Finalizados";
 				}
 				if(!venda.getAtivo()) {
-					return "Cancelado";
+					return "Cancelados";
 				}
 			case 7:
 				if(venda.getAtivo()) {
-					return "Realizada";
+					return "Realizadas";
 				}
-				return "Cancelada";
+				return "Canceladas";
 			}
 		}
 		return "";
