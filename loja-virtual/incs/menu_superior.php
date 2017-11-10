@@ -10,7 +10,7 @@
 			<a class="navbar-brand" href="<?=BASE_URL;?>">
 				<div class="pull-left">
 					<img src="<?=BASE_URL;?>imagens/logo_transparente.png" width="85" alt="" />
-					Casa de Material do &Ocircnibus
+					Casa de Material do Onibus
 				</div>
 			</a>
 		</div>
@@ -49,8 +49,13 @@
 				</li>
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-						<?=(!empty($_SESSION["totalProduto"]) ? "<span class=\"badge\">".array_sum($_SESSION["totalProduto"])."</span>" : "");?>
-						<span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Carrinho de Produtos <span class="caret"></span>
+						<?php if (!empty($_SESSION["totalProduto"])): ?>
+							<span class="badge" id="badge_produto" tabindex="0" data-toggle="popover" data-placement="bottom" data-trigger="manual" data-content="Produto adicionado ao carrinho.">
+								<?=array_sum($_SESSION["totalProduto"]);?>
+							</span>
+						<?php endif; ?>
+
+						<span class="glyphicon glyphicon-shopping-cart" aria-hidden="true" id="span_carrinho"></span> Carrinho de Produtos <span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
 						<?php if (

@@ -113,3 +113,10 @@ footer a {
 	padding: 5px !important;
 	font-size: 14px !important;
 }
+.badge{
+	color: #337ab7 !important;
+	background-color: #fff !important;
+}
+.popover-content{
+	color:#000 !important;
+}
